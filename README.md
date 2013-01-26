@@ -5,5 +5,5 @@ bytecast-amd64
 
 ## Team Members ##
 
-Chen Qian	, cqian@syr.edu	, NonSleep\n
+Chen Qian	, cqian@syr.edu	, NonSleep  
 Sheng Wang, newton449@gmail.com, newton449
