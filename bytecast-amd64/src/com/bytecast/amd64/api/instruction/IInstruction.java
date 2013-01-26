@@ -4,6 +4,8 @@
  */
 package com.bytecast.amd64.api.instruction;
 
+
+import com.bytecast.amd64.api.constants.InstructionType;
 import java.util.List;
 
 /**
@@ -16,4 +18,14 @@ public interface IInstruction {
     public List<IOperand> getOperands();
     
     public String getOpCode();
+    
+    public void addOperand(IOperand op);
+    
+    public void setOpCode(String opcode);
+    
+    public InstructionType getInstructiontype();
+    
+    public void setInstructionType(InstructionType instructionType);
+    
 }
+
