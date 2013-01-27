@@ -14,7 +14,7 @@ import com.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 public class PUSHInstructionDecoder implements IInstructionDecoder {
 
     @Override
-    public IInstruction decodeInstruction(String instructionbytes) {
+    public IInstruction decodeInstruction(String sectionStartMemAddr, String instructionbytes) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
