@@ -18,6 +18,10 @@ public class DecoderFactory {
 
     static{
         decoders.put(InstructionType.RET, new RETInstructionDecoder());
+        decoders.put(InstructionType.MOV, new MOVInstructionDecoder());
+        decoders.put(InstructionType.NOP, new NOPInstructionDecoder());
+        decoders.put(InstructionType.POP, new POPInstructionDecoder());
+        decoders.put(InstructionType.PUSH, new PUSHInstructionDecoder());
     }
     
     
