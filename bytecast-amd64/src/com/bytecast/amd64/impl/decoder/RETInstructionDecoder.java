@@ -21,8 +21,8 @@ public class RETInstructionDecoder implements IInstructionDecoder {
 
     @Override
     public IInstruction decodeInstruction(String sectionStartMemAddr, String instructionbytes) {
-         IInstruction instruction = new AMD64Instruction();
-        instruction.setInstructionType(InstructionType.RET);
+         IInstruction instruction = new AMD64Instruction(InstructionType.RET);
+        
         
         decodeOperands(instruction, instructionbytes);
         
