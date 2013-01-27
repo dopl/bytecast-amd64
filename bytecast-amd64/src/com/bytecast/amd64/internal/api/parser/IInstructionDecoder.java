@@ -12,5 +12,5 @@ import com.bytecast.amd64.api.instruction.IInstruction;
  */
 public interface IInstructionDecoder {
     
-    IInstruction decodeInstruction(String instructionbytes);
+    IInstruction decodeInstruction(String sectionStartMemAddr, String instructionbytes);
 }
