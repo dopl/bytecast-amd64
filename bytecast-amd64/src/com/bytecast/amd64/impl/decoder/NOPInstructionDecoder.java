@@ -6,6 +6,7 @@ package com.bytecast.amd64.impl.decoder;
 
 import com.bytecast.amd64.api.instruction.IInstruction;
 import com.bytecast.amd64.internal.api.parser.IInstructionDecoder;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,7 @@ import com.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 public class NOPInstructionDecoder implements IInstructionDecoder {
 
     @Override
-    public IInstruction decodeInstruction(String sectionStartMemAddr, String instructionbytes) {
+    public IInstruction decodeInstruction(String sectionStartMemAddr, List<Byte> instructionbytes) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
