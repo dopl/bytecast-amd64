@@ -8,6 +8,7 @@ import com.bytecast.amd64.api.instruction.IInstruction;
 import com.bytecast.amd64.impl.instruction.AMD64Instruction;
 import com.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import com.bytecast.amd64.api.constants.InstructionType;
+import java.util.List;
 /**
  *
  * @author harsh
@@ -15,13 +16,13 @@ import com.bytecast.amd64.api.constants.InstructionType;
 public class RETInstructionDecoder implements IInstructionDecoder {
 
    
-    private void decodeOperands(IInstruction instruction, String instructionbytes) {
+    private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
         
     }
 
     @Override
-    public IInstruction decodeInstruction(String sectionStartMemAddr, String instructionbytes) {
-         IInstruction instruction = new AMD64Instruction(InstructionType.RET);
+    public IInstruction decodeInstruction(String sectionStartMemAddr, List<Byte> instructionbytes) {
+        IInstruction instruction = new AMD64Instruction(InstructionType.RET);
         
         
         decodeOperands(instruction, instructionbytes);
