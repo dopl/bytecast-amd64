@@ -25,7 +25,7 @@ public interface IInstruction {
     
     public InstructionType getInstructiontype();
     
-    public void setInstructionType(InstructionType instructionType);
+  
     
 }
 
