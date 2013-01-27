@@ -21,7 +21,7 @@ public class RETInstructionDecoder implements IInstructionDecoder {
     }
 
     @Override
-    public IInstruction decodeInstruction(String sectionStartMemAddr, List<Byte> instructionbytes) {
+    public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
         IInstruction instruction = new AMD64Instruction(InstructionType.RET);
         
         

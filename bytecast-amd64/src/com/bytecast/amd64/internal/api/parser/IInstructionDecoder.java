@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface IInstructionDecoder {
     
-    IInstruction decodeInstruction(String sectionStartMemAddr, List<Byte> instructionbytes);
+    IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes);
 }

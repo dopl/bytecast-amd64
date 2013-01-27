@@ -15,7 +15,7 @@ import java.util.List;
 public class POPInstructionDecoder implements IInstructionDecoder {
 
     @Override
-    public IInstruction decodeInstruction(String sectionStartMemAddr, List<Byte> instructionbytes) {
+    public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
