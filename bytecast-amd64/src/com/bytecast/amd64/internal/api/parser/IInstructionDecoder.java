@@ -5,6 +5,7 @@
 package com.bytecast.amd64.internal.api.parser;
 
 import com.bytecast.amd64.api.instruction.IInstruction;
+import java.util.List;
 
 /**
  *
@@ -12,5 +13,5 @@ import com.bytecast.amd64.api.instruction.IInstruction;
  */
 public interface IInstructionDecoder {
     
-    IInstruction decodeInstruction(String sectionStartMemAddr, String instructionbytes);
+    IInstruction decodeInstruction(String sectionStartMemAddr, List<Byte> instructionbytes);
 }
