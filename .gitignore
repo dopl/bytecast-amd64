@@ -1,3 +1,10 @@
+<<<<<<< HEAD
 build/
 dist/
 private/
+=======
+private/
+build/
+dist/
+
+>>>>>>> 2120660201a8c6eb19fc84add0406d9a301e342e

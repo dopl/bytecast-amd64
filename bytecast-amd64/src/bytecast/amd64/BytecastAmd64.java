@@ -16,4 +16,13 @@ public class BytecastAmd64 {
     public static void main(String[] args) {
         // TODO code application logic here
     }
+    
+    public BytecastAmd64()
+    {
+        
+    }
+    
+    
+   
+    
 }

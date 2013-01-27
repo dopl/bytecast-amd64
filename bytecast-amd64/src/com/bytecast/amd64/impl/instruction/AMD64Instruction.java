@@ -7,6 +7,7 @@ package com.bytecast.amd64.impl.instruction;
 import com.bytecast.amd64.api.constants.InstructionType;
 import com.bytecast.amd64.api.instruction.IInstruction;
 import com.bytecast.amd64.api.instruction.IOperand;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,34 +16,40 @@ import java.util.List;
  */
 public class AMD64Instruction implements IInstruction {
 
+    private InstructionType instructionType;
+    private String opCode;
+    private List<IOperand> operands;
+    
+    public AMD64Instruction(InstructionType instructionType) {
+        this.instructionType = instructionType;
+        operands = new ArrayList<IOperand>();
+    }
+   
+    
     @Override
     public List<IOperand> getOperands() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.operands;
     }
 
     @Override
     public String getOpCode() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.opCode;
     }
 
     @Override
     public void addOperand(IOperand op) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        operands.add(op);
     }
 
     @Override
     public void setOpCode(String opcode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.opCode = opcode;
     }
 
     @Override
     public InstructionType getInstructiontype() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.instructionType;
     }
 
-    @Override
-    public void setInstructionType(InstructionType instructionType) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
 }
