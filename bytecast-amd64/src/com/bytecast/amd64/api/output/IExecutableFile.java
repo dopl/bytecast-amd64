@@ -19,5 +19,7 @@ public interface IExecutableFile {
     
     public String getExecFileFormat();
     
+    public List<IExecutableFile> getAllDependantFiles();
+    
     
 }
