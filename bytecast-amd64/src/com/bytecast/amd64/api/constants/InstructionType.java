@@ -11,5 +11,6 @@ package com.bytecast.amd64.api.constants;
 public enum InstructionType {
     
     ADD,
-    SUB
+    SUB,
+    RET
 }
