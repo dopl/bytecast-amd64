@@ -17,4 +17,8 @@ public enum InstructionType {
     NOP,
     POP,
     PUSH,
+    JB,
+    JAE,
+    JE,
+    JNE
 }

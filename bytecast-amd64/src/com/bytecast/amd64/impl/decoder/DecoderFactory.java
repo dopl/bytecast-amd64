@@ -22,6 +22,10 @@ public class DecoderFactory {
         decoders.put(InstructionType.NOP, new NOPInstructionDecoder());
         decoders.put(InstructionType.POP, new POPInstructionDecoder());
         decoders.put(InstructionType.PUSH, new PUSHInstructionDecoder());
+        decoders.put(InstructionType.JAE, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JB, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JE, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JNE, new JCCInstructionDecoder());
     }
     
     
