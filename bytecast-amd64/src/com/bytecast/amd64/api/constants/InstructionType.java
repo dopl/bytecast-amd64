@@ -20,5 +20,8 @@ public enum InstructionType {
     JB,
     JAE,
     JE,
-    JNE
+    JNE,
+    JMP,
+    LEA,
+    LEAVE    
 }

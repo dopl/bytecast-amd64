@@ -26,6 +26,9 @@ public class DecoderFactory {
         decoders.put(InstructionType.JB, new JCCInstructionDecoder());
         decoders.put(InstructionType.JE, new JCCInstructionDecoder());
         decoders.put(InstructionType.JNE, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JMP, new JMPInstructionDecoder());
+        //decoders.put(InstructionType.LEA, new LEAInstructionDecoder());
+        decoders.put(InstructionType.LEAVE, new LEAVEInstructionDecoder());
     }
     
     

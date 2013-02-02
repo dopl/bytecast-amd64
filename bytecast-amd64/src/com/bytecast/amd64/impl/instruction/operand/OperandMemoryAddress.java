@@ -13,9 +13,9 @@ import com.bytecast.amd64.api.instruction.IOperand;
  */
 public class OperandMemoryAddress implements IOperand {
 
-    private String memory_address;
+    private Long memory_address;
     
-    public OperandMemoryAddress(String memory_address) {
+    public OperandMemoryAddress(Long memory_address) {
         this.memory_address = memory_address;
     }
 
