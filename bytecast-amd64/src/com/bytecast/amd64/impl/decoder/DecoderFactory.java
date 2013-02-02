@@ -16,14 +16,17 @@ import java.util.Map;
 public class DecoderFactory {
     private static Map<InstructionType, IInstructionDecoder> decoders = new HashMap<InstructionType, IInstructionDecoder>();
 
-    static{
+    static {
         decoders.put(InstructionType.RET, new RETInstructionDecoder());
+        decoders.put(InstructionType.JAE, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JB, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JE, new JCCInstructionDecoder());
+        decoders.put(InstructionType.JNE, new JCCInstructionDecoder());
     }
     
     
     
-    public static IInstructionDecoder getInstructionDecoder(InstructionType type)
-    {
+    public static IInstructionDecoder getInstructionDecoder(InstructionType type) {
         return decoders.get(type);
     }
 }

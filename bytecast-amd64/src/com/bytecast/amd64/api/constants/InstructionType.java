@@ -12,5 +12,9 @@ public enum InstructionType {
     
     ADD,
     SUB,
-    RET
+    RET,
+    JB,
+    JAE,
+    JE,
+    JNE
 }
