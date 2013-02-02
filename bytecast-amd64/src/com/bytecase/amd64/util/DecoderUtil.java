@@ -14,11 +14,9 @@ public class DecoderUtil {
     
     // Input is "c4" which Hex is "11000100" 
     // Output will be ret[0] = "100" ; ret[1] = "000"
-    public static List<String> DecodeHexToBinary(byte[] hexbyte){
+    public static List<String> DecodeHexToBinary(Byte hexbyte){
         List<String> ret = new ArrayList<String>();
-        String hexstring = new String(hexbyte);
-        int temp = Integer.parseInt(hexstring,16);
-        String t = Integer.toBinaryString(temp);
+        String t = Integer.toBinaryString(hexbyte);
         ret.add(t.substring(5));
         ret.add(t.substring(2,5));
         return ret;
@@ -26,12 +24,11 @@ public class DecoderUtil {
     
      // Input is "c4" which Hex is "11000100" 
      // Output will be ret[0] = "4" ; ret[1] = "0"
-     public static List<String> DecodeHexToOctal(byte[] hexbyte){
+     public static List<String> DecodeHexToOctal(Byte hexbyte){
         List<String> ret = new ArrayList<String>();
-        String hexstring = new String(hexbyte);
-        int temp = Integer.parseInt(hexstring,16);
-        String t = Integer.toBinaryString(temp);
-        temp = Integer.parseInt(t.substring(5),2);
+        String t = Integer.toBinaryString(hexbyte);
+        t = t.substring(24); //get last 8 digits.
+        int temp = Integer.parseInt(t.substring(5),2);
         ret.add(Integer.toString(temp));
         temp = Integer.parseInt(t.substring(2,5),2);
         ret.add(Integer.toString(temp));        

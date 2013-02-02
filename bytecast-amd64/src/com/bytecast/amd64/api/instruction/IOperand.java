@@ -15,4 +15,5 @@ public interface IOperand {
     public OperandType getOperandType();
     
     public Object getOperandValue();
+    
 }

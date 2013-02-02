@@ -22,8 +22,8 @@ public class DecoderFactory {
         decoders.put(InstructionType.NOP, new NOPInstructionDecoder());
         decoders.put(InstructionType.POP, new POPInstructionDecoder());
         decoders.put(InstructionType.PUSH, new PUSHInstructionDecoder());
+        decoders.put(InstructionType.ADD, new ADDInstructionDecoder());   
     }
-    
     
     
     public static IInstructionDecoder getInstructionDecoder(InstructionType type)
