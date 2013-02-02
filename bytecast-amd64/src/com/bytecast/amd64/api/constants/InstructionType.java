@@ -17,5 +17,10 @@ public enum InstructionType {
     CALLQ,
     AND,
     HLT,
-    RET
+    RET,
+    MOV,
+    NOP,
+    POP,
+    PUSH,
+
 }

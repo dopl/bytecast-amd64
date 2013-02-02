@@ -1,3 +1,4 @@
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -15,3 +16,4 @@ public interface IInstructionDecoder {
     
     IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes);
 }
+
