@@ -23,6 +23,7 @@ public class DecoderFactory {
         decoders.put(InstructionType.POP, new POPInstructionDecoder());
         decoders.put(InstructionType.PUSH, new PUSHInstructionDecoder());
         decoders.put(InstructionType.ADD, new ADDInstructionDecoder());   
+        decoders.put(InstructionType.HLT, new HLTInstructionDecoder());  
     }
     
     

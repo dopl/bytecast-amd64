@@ -11,7 +11,7 @@ import java.util.*;
  * @author chenqian
  */
 public class DecoderUtil {
-    
+
     // Input is "c4" which Hex is "11000100" 
     // Output will be ret[0] = "100" ; ret[1] = "000"
     public static List<String> DecodeHexToBinary(Byte hexbyte){

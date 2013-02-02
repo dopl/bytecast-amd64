@@ -6,9 +6,7 @@ package com.bytecast.amd64.impl.decoder;
 
 import com.bytecase.amd64.util.DecoderUtil;
 import com.bytecast.amd64.api.constants.InstructionType;
-import com.bytecast.amd64.api.constants.RegisterType;
 import com.bytecast.amd64.api.instruction.IInstruction;
-import com.bytecast.amd64.api.instruction.IOperand;
 import com.bytecast.amd64.impl.instruction.AMD64Instruction;
 import com.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import com.bytecast.amd64.impl.instruction.operand.OperandRegister;
@@ -19,11 +17,11 @@ import java.util.List;
  *
  * @author chenqian
  */
-public class ADDInstructionDecoder implements IInstructionDecoder {
+public class ANDInstructionDecoder implements IInstructionDecoder{
 
-    @Override
+  @Override
     public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
-        IInstruction instruction = new AMD64Instruction(InstructionType.ADD);      
+        IInstruction instruction = new AMD64Instruction(InstructionType.AND);      
         
         decodeOperands(instruction, instructionbytes);
         
@@ -40,14 +38,16 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
         if(instructionbytes.get(1) == 0x83){
             instruction.setOpCode("83");
            List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
-           if(tempdecodes.get(1).equals("000")){ // verify is a add insturction
-               //add constant value
-               instruction.addOperand(new OperandConstant(instructionbytes.get(3).longValue()));
+           if(tempdecodes.get(1).equals("100")){ // verify is a and insturction
+               //and constant value need add 1 in long value
+               Long operand = instructionbytes.get(3).longValue() + 0xffffffffffffff00L;
+               instruction.addOperand(new OperandConstant(operand));
                //add register
                instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
             }          
          }
-        //other add opcode to be implement
+        //other and opcode to be implement
         //else if(instructionbytes.get(1) == 0x81){}   
     }
+    
 }
