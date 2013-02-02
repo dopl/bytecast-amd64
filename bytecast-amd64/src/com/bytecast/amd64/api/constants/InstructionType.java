@@ -12,5 +12,10 @@ public enum InstructionType {
     
     ADD,
     SUB,
+    CMP,
+    CMPQ,
+    CALLQ,
+    AND,
+    HLT,
     RET
 }

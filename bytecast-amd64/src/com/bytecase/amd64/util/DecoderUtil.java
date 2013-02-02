@@ -14,8 +14,9 @@ public class DecoderUtil {
     
     // Input is "c4" which Hex is "11000100" 
     // Output will be ret[0] = "100" ; ret[1] = "000"
-    public static List<String> DecodeHexToBinary(String hexstring){
+    public static List<String> DecodeHexToBinary(byte[] hexbyte){
         List<String> ret = new ArrayList<String>();
+        String hexstring = new String(hexbyte);
         int temp = Integer.parseInt(hexstring,16);
         String t = Integer.toBinaryString(temp);
         ret.add(t.substring(5));
@@ -25,8 +26,9 @@ public class DecoderUtil {
     
      // Input is "c4" which Hex is "11000100" 
      // Output will be ret[0] = "4" ; ret[1] = "0"
-     public static List<String> DecodeHexToOctal(String hexstring){
+     public static List<String> DecodeHexToOctal(byte[] hexbyte){
         List<String> ret = new ArrayList<String>();
+        String hexstring = new String(hexbyte);
         int temp = Integer.parseInt(hexstring,16);
         String t = Integer.toBinaryString(temp);
         temp = Integer.parseInt(t.substring(5),2);
