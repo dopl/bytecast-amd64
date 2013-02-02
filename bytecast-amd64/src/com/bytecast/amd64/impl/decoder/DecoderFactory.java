@@ -16,7 +16,7 @@ import java.util.Map;
 public class DecoderFactory {
     private static Map<InstructionType, IInstructionDecoder> decoders = new HashMap<InstructionType, IInstructionDecoder>();
 
-    static{
+    static {
         decoders.put(InstructionType.RET, new RETInstructionDecoder());
         decoders.put(InstructionType.MOV, new MOVInstructionDecoder());
         decoders.put(InstructionType.NOP, new NOPInstructionDecoder());
@@ -30,8 +30,7 @@ public class DecoderFactory {
     
     
     
-    public static IInstructionDecoder getInstructionDecoder(InstructionType type)
-    {
+    public static IInstructionDecoder getInstructionDecoder(InstructionType type) {
         return decoders.get(type);
     }
 }
