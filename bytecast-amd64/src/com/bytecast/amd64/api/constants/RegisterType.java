@@ -16,6 +16,21 @@ public enum RegisterType {
     RSP,
     RBP,
     RSI,
-    RDI
-    
+    RDI,
+    R8,
+    R9,
+    R10,
+    R11,
+    R12,
+    R13,
+    R14,
+    R15,
+    EAX,
+    EBX,
+    ECX,
+    EDX,
+    EDI,
+    ESI,
+    EBP,
+    ESP
 }
