@@ -31,21 +31,18 @@ public class CALLQInstructionDecoder implements IInstructionDecoder{
     // 48 83 c0 08   add $0x8 %rsp
     // 83 : reg + imm8
     private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
-        if(instructionbytes.size()!=4) {
-            throw new UnsupportedOperationException("Not A correct C instructionbytes.");
-        }
+       
         
-        if(instructionbytes.get(1) == 0x83){
-            instruction.setOpCode("83");
-           List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
-           if(tempdecodes.get(1).equals("100")){ // verify is a and insturction
-               //and constant value need add 1 in long value
-               Long operand = instructionbytes.get(3).longValue() + 0xffffffffffffff00L;
-               instruction.addOperand(new OperandConstant(operand));
-               //add register
-               instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
-            }          
+        if(instructionbytes.get(0) == 0xe8){
+            instruction.setOpCode("e8");
+           
          }
+        else if(instructionbytes.get(0) == 0xff){
+             instruction.setOpCode("ff");
+        }
+        else if(instructionbytes.get(0)==0x41 && instructionbytes.get(1) == 0xff){
+             instruction.setOpCode("ff");
+        }
         //other add opcode to be implement
         //else if(instructionbytes.get(1) == 0x81){}   
     }
