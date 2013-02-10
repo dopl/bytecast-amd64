@@ -29,14 +29,12 @@ public class BytecastAmd64 {
    */
   public static void main(String[] args) {
     // TODO code application logic here
-        Byte b = (byte)0xc4;
-        for(String s :DecoderUtil.DecodeHexToOctal(b))
-        {
-            System.out.println(DecoderUtil.CastRegister(s));
-        }
-        
-        DecoderFactory.getInstructionDecoder(InstructionType.ADD);
+    long a = 0x00000000ffffff87L;
+    int t = (int)a;
+    int offset = 5;
 
+    long aa = 0x4006b4;
+    long ret = aa + t + offset;
     // initialize veriables 
     Long instructionMemAddr = (long)0x40043a;
     List<Byte> instructionbytes = new ArrayList<Byte>();
