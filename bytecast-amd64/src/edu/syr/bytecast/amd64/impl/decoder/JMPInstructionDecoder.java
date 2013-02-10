@@ -18,7 +18,7 @@ import java.util.List;
 public class JMPInstructionDecoder implements IInstructionDecoder {
 
   @Override
-  public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+  public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
     
     IInstruction ret = new AMD64Instruction(InstructionType.JMP);
     byte tmp = instructionbytes.get(0).byteValue();
@@ -41,7 +41,7 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
         long memAddr = 0;
         for(int i = instructionbytes.size()-1; i>1; i--) {
           memAddr = memAddr << 8;
-          memAddr += instructionbytes.get(i); 
+          memAddr += (0x00000000000000FFL & instructionbytes.get(i)); 
         }
         OperandMemoryAddress operandMemAddr = new OperandMemoryAddress(memAddr);
         ret.addOperand(operandMemAddr);

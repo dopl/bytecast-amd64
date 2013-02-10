@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class JCCInstructionDecoder implements IInstructionDecoder {
     
-  private void decodeOperands(IInstruction instruction, Long sectionStartMemAddr, List<Byte> instructionbytes) {
+  private void decodeOperands(IInstruction instruction, Long instructionMemAddress, List<Byte> instructionbytes) {
     byte tmp = instructionbytes.get(0).byteValue();
     if(tmp != 0x0F) {
       // 8 offset JCC
@@ -24,7 +24,7 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
        throw new IllegalArgumentException("For 8 offset JCC, the length of instruction should be 2 bytes"); 
       }
       
-      Long targetMemAddr = sectionStartMemAddr + instructionbytes.size() + instructionbytes.get(1);
+      Long targetMemAddr = instructionMemAddress + instructionbytes.size() + instructionbytes.get(1);
       OperandMemoryAddress operandMemAddr = new OperandMemoryAddress(targetMemAddr); 
       instruction.addOperand(operandMemAddr);
     } else {
@@ -34,7 +34,7 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
   }
     
   @Override
-  public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+  public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
     IInstruction ret = null;
     byte tmp = instructionbytes.get(0).byteValue();
     if((tmp & 0xF0) == 0x70) {
@@ -76,7 +76,7 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
       }
     }
     // need add the method to parse the operands
-    decodeOperands(ret, sectionStartMemAddr, instructionbytes);
+    decodeOperands(ret, instructionMemAddress, instructionbytes);
 
     return ret;
   }

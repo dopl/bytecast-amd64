@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface IInstructionDecoder {
     
-    IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes);
+    IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes);
 }
 

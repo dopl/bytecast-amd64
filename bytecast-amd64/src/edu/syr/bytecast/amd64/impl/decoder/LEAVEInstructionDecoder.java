@@ -17,7 +17,7 @@ import java.util.List;
 public class LEAVEInstructionDecoder implements IInstructionDecoder {
   
   @Override
-  public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+  public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
     if(instructionbytes.size() != 1) {
       throw new IllegalArgumentException("For LEAVE, the length of instruction should be 1 byte");
     }

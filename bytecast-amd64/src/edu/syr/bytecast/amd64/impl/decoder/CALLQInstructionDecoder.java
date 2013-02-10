@@ -20,7 +20,7 @@ import java.util.List;
 public class CALLQInstructionDecoder implements IInstructionDecoder{
 
     @Override
-    public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+    public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
         IInstruction instruction = new AMD64Instruction(InstructionType.CALLQ);      
         
         decodeOperands(instruction, instructionbytes);

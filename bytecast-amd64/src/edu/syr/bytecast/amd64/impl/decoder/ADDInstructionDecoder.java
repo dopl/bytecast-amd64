@@ -22,7 +22,7 @@ import java.util.List;
 public class ADDInstructionDecoder implements IInstructionDecoder {
 
     @Override
-    public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+    public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
         IInstruction instruction = new AMD64Instruction(InstructionType.ADD);      
         
         decodeOperands(instruction, instructionbytes);

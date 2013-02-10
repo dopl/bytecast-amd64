@@ -14,6 +14,16 @@ import java.util.List;
  */
 public class DecoderUtil {
   
+  /* Bits:+---------------------+
+   *      | 7 6 | 5 4 3 | 2 1 0 |
+   *      +---------------------+
+   *      | mod |  reg  |  r/m  |
+   *      +---------------------+
+   *                /       \
+   *               /         \
+   *        getRegField   getRmField
+   */
+  
   public static int getRegField(byte num) {
     return (num >> 3 & 0x07);
   }
@@ -44,6 +54,17 @@ public class DecoderUtil {
         return null;
     }
   }
+  
+  public static long ByteConcatenator(List<Byte> instructionbytes, int num) {
+    long ret = 0;
+    int size = instructionbytes.size();
+    for(int i = size-1; i>(size-1-num); i--) {
+      ret = ret << 8;
+      ret += (0x00000000000000FFL & instructionbytes.get(i));
+    }
+    return ret;
+  }
+  
   
       // Input is "c4" which Hex is "11000100" 
     // Output will be ret[0] = "100" ; ret[1] = "000"

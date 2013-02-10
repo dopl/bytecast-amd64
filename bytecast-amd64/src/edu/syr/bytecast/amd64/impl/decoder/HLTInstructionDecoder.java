@@ -21,7 +21,7 @@ public class HLTInstructionDecoder implements IInstructionDecoder{
 
     
     @Override
-    public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+    public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
         IInstruction instruction = new AMD64Instruction(InstructionType.HLT);      
         
         decodeOperands(instruction, instructionbytes);

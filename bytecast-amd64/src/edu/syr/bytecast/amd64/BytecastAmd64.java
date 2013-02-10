@@ -29,6 +29,9 @@ public class BytecastAmd64 {
    */
   public static void main(String[] args) {
     // TODO code application logic here
+    
+
+    
         Byte b = (byte)0xc4;
         for(String s :DecoderUtil.DecodeHexToOctal(b))
         {
@@ -38,14 +41,14 @@ public class BytecastAmd64 {
         DecoderFactory.getInstructionDecoder(InstructionType.ADD);
 
     // initialize veriables 
-    Long instructionMemAddr = (long)0x40043a;
+    Long instructionMemAddr = (long)0x4004a4;
     List<Byte> instructionbytes = new ArrayList<Byte>();
     
     // test JCCInstrcutionDecoder
     JCCInstructionDecoder jccInstructionDecoder = new JCCInstructionDecoder();
     instructionbytes.clear();
     instructionbytes.add((byte)0x75);
-    instructionbytes.add((byte)0x02);
+    instructionbytes.add((byte)0xe2);
     IInstruction jccInstruction = jccInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
     
     // test LEAVEInstructionDecoder
