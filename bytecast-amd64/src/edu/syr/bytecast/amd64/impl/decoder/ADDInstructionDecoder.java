@@ -38,16 +38,28 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
         }
         
         if(instructionbytes.get(1) == 0x83){
-            instruction.setOpCode("83");
-           List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
-           if(tempdecodes.get(1).equals("000")){ // verify is a add insturction
+           instruction.setOpCode("83");
+                  
+           if(DecoderUtil.getRegField(instructionbytes.get(2))==0){// verify is a add insturction
                //add constant value
                instruction.addOperand(new OperandConstant(instructionbytes.get(3).longValue()));
                //add register
-               instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
-            }          
-         }
+               instruction.addOperand(new OperandRegister(DecoderUtil.getRegister(DecoderUtil.getRmField(instructionbytes.get(2)))));
+           }
+        }
+        
         //other add opcode to be implement
         //else if(instructionbytes.get(1) == 0x81){}   
     }
 }
+
+
+//  ******old version for String type DecoderUtil 
+//            List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
+//           if(tempdecodes.get(1).equals("000")){ // verify is a add insturction
+//               //add constant value
+//               instruction.addOperand(new OperandConstant(instructionbytes.get(3).longValue()));
+//               //add register
+//               instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
+//            }          
+

@@ -28,26 +28,38 @@ public class ANDInstructionDecoder implements IInstructionDecoder{
         return instruction;
     }
     
-    // 48 83 c0 08   add $0x8 %rsp
-    // 83 : reg + imm8
+    // 48 83 e4 f0   add $0xfffffffffffffff0 %rsp
+    // 83 : reg + imm64
     private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
         if(instructionbytes.size()!=4) {
             throw new UnsupportedOperationException("Not A correct ADD instructionbytes.");
         }
         
         if(instructionbytes.get(1) == 0x83){
-            instruction.setOpCode("83");
-           List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
-           if(tempdecodes.get(1).equals("100")){ // verify is a and insturction
-               //and constant value need add 1 in long value
+           instruction.setOpCode("83");
+                  
+           if(DecoderUtil.getRegField(instructionbytes.get(2))==4){// verify is a and insturction
+                //and constant value need add 1 in long value
                Long operand = instructionbytes.get(3).longValue() + 0xffffffffffffff00L;
                instruction.addOperand(new OperandConstant(operand));
                //add register
-               instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
-            }          
-         }
+               instruction.addOperand(new OperandRegister(DecoderUtil.getRegister(DecoderUtil.getRmField(instructionbytes.get(2)))));
+           }
+        }
+        
         //other and opcode to be implement
-        //else if(instructionbytes.get(1) == 0x81){}   
+   
     }
     
 }
+
+
+//  ******old version for String type DecoderUtil 
+// List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
+//           if(tempdecodes.get(1).equals("100")){ // verify is a and insturction
+//               //and constant value need add 1 in long value
+//               Long operand = instructionbytes.get(3).longValue() + 0xffffffffffffff00L;
+//               instruction.addOperand(new OperandConstant(operand));
+//               //add register
+//               instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
+//            }          
