@@ -37,12 +37,20 @@ public class BytecastAmd64Test {
     instructionbytes.add((byte)0xFF);
     IInstruction jccInstruction = jccInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
     
+    // test 8 offset with prefix
+    jccInstructionDecoder = new JCCInstructionDecoder();
+    instructionbytes.clear();
+    instructionbytes.add((byte)0x67);
+    instructionbytes.add((byte)0x75);
+    instructionbytes.add((byte)0xFF);
+    jccInstruction = jccInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
+    
     // test 16 offset
     instructionbytes.clear();
     instructionbytes.add((byte)0x0F);
     instructionbytes.add((byte)0x85);
     instructionbytes.add((byte)0xFF);
-    //instructionbytes.add((byte)0xFF);
+    instructionbytes.add((byte)0xFF);
     jccInstruction = jccInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
     
     // test 32 offset
