@@ -54,7 +54,11 @@ public class DecoderUtil {
     }
   }
   
-  public static long ByteConcatenator(List<Byte> instructionbytes, int num) {
+  // this function will concatenate the bytes into right order
+  // take jne instruction as an example: 0f 85 e8 fc ff ff
+  // 0f 85: indicate that it is a jne instruction
+  // e8 fc ff ff: indicate an address. here it is actually ff ff fc e8
+  public static Long ByteConcatenator(List<Byte> instructionbytes, int num) {
     long ret = 0;
     int size = instructionbytes.size();
     for(int i = size-1; i>(size-1-num); i--) {
