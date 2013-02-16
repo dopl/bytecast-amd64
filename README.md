@@ -7,3 +7,4 @@ bytecast-amd64
 
 Chen Qian	, cqian@syr.edu	, NonSleep  
 Sheng Wang, newton449@gmail.com, newton449  
+Haiyang Pan, hapan@syr.edu, hapan  
