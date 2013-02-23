@@ -3,8 +3,8 @@ package edu.syr.bytecast.amd64.impl.parser;
 import java.io.EOFException;
 
 /**
- * An interface to read instruction bytes. It also support peeking and pushing
- * back.
+ * An interface to read instruction bytes. It also support peeking and skipping
+ * over.
  *
  * @author sheng
  */

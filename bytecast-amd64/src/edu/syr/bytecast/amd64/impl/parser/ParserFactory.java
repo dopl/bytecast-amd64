@@ -1,7 +1,7 @@
 package edu.syr.bytecast.amd64.impl.parser;
 
 /**
- * A factory to return all kinds of parsers.
+ * A factory to get all kinds of parsers.
  *
  * @author sheng
  */
