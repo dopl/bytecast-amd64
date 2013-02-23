@@ -19,6 +19,7 @@
 package edu.syr.bytecast.amd64.impl.dictionary;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyOpCodeTable;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodeTable;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
 
