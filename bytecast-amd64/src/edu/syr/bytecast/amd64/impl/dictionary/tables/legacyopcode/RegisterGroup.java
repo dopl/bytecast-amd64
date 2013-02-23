@@ -15,40 +15,13 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
-package edu.syr.bytecast.amd64;
-
-import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
-import edu.syr.bytecast.jimple.api.IJimple;
-
-public class BytecastAmd64 {
-
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String[] args) {
-    // TODO code application logic here
-
-    // initialize veriables 
-  }
-
-  /**
-   * BytecastAMD64 constructor which is initialized with service interfaces from Fsys and Jimple
-   * @param fsys
-   * @param jimple 
-   */
-  public BytecastAmd64(IBytecastFsys fsys, IJimple jimple)
-  {
-      
-    
-  }
-    /**
-     * This function runs the Bytecast system
-     */
-   public void run()
-   {
-       
-   }
- 
-    
+public enum RegisterGroup {
+    CS,
+    DS,
+    ES,
+    FS,
+    GS,
+    SS    
 }

@@ -18,10 +18,13 @@
 
 package edu.syr.bytecast.amd64.internal.api.dictionary;
 
+import edu.syr.bytecast.amd64.api.constants.InstructionType;
+
 public interface IAMD64Dictionary {
     
     public boolean isLegacyOpcode(Byte opcode);
     public boolean isRexPrefix(Byte opcode);
     public boolean isEscapeToSecondaryOpCode(Byte opcode);
+    public InstructionType getInstructionFromSecondaryOCTable(Byte opcode);
     
 }

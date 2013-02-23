@@ -18,16 +18,21 @@
 
 package edu.syr.bytecast.amd64.impl.dictionary;
 
+import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodeTable;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
-import java.util.Set;
 
 public class AMD64Dictionary implements IAMD64Dictionary{
 
     private static AMD64Dictionary _instance = new AMD64Dictionary();
     private static LegacyOpCodeTable legacyOpCodeTable;
+    private static SecOpCodeTable secondaryOpCodeTable;
     
     private AMD64Dictionary() {
         legacyOpCodeTable = new LegacyOpCodeTable();
+        secondaryOpCodeTable = new SecOpCodeTable();
+        
+        secondaryOpCodeTable.loadData();
         legacyOpCodeTable.loadData();
     }
     
@@ -49,6 +54,11 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     @Override
     public boolean isEscapeToSecondaryOpCode(Byte opcode) {
         return opcode == 0x0f;
+    }
+
+    @Override
+    public InstructionType getInstructionFromSecondaryOCTable(Byte opcode) {
+       return  secondaryOpCodeTable.getInstructionFromOpCode(opcode);
     }
     
 }

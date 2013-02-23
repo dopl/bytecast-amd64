@@ -15,40 +15,32 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
-package edu.syr.bytecast.amd64;
 
-import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
-import edu.syr.bytecast.jimple.api.IJimple;
 
-public class BytecastAmd64 {
+public class LegacyOpCodeTableEntry {
+    private LegacyPrefixGroup prefixGroup;
+    private Byte opCode;
 
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String[] args) {
-    // TODO code application logic here
+    public LegacyOpCodeTableEntry(LegacyPrefixGroup prefixGroup, Byte opCode) {
+        this.prefixGroup = prefixGroup;
+        this.opCode = opCode;
+    }
 
-    // initialize veriables 
-  }
-
-  /**
-   * BytecastAMD64 constructor which is initialized with service interfaces from Fsys and Jimple
-   * @param fsys
-   * @param jimple 
-   */
-  public BytecastAmd64(IBytecastFsys fsys, IJimple jimple)
-  {
-      
-    
-  }
     /**
-     * This function runs the Bytecast system
+     * @return the prefixGroup
      */
-   public void run()
-   {
-       
-   }
- 
+    public LegacyPrefixGroup getPrefixGroup() {
+        return prefixGroup;
+    }
+
+    /**
+     * @return the opCode
+     */
+    public Byte getOpCode() {
+        return opCode;
+    }
+    
     
 }

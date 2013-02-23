@@ -19,7 +19,6 @@
 package edu.syr.bytecast.amd64.impl.lexer;
 
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionLexer;
-import edu.syr.bytecast.fsys.ExeObjSegment;
 import java.util.List;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
