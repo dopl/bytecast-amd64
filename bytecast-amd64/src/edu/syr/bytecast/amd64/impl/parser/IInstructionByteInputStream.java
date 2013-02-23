@@ -1,4 +1,4 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
 
 import java.io.EOFException;
 
@@ -8,7 +8,7 @@ import java.io.EOFException;
  *
  * @author sheng
  */
-public interface IByteInstructionInputStream {
+public interface IInstructionByteInputStream {
 
     /**
      * Returns an estimate of the number of bytes that can be read (or peeked or

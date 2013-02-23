@@ -5,6 +5,8 @@
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
 public class CMPBInstructionDecoder implements IInstructionDecoder{
 
     @Override
-    public IInstruction decodeInstruction(Long sectionStartMemAddr, List<Byte> instructionbytes) {
+    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

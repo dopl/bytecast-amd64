@@ -1,7 +1,9 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
 
+import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
+import edu.syr.bytecast.amd64.impl.decoder.MOVInstructionDecoder;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
 import java.io.EOFException;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class AMD64InstructionParser {
      * @param input
      * @return
      */
-    public List<IInstruction> parse(IByteInstructionInputStream input) {
+    public List<IInstruction> parse(IInstructionByteInputStream input) {
         List<IInstruction> ret = new ArrayList<IInstruction>();
         try {
             while (true) {
@@ -53,7 +55,7 @@ public class AMD64InstructionParser {
                 // Assume we got MOV instruction.
                 InstructionType type = InstructionType.MOV;
                 // Assume we got MOVInstructionDecoder through DecoderFactory.
-                DemoMovInstructionDecoder decoder = new DemoMovInstructionDecoder();
+                MOVInstructionDecoder decoder = new MOVInstructionDecoder();
                 ret.add(decoder.decode(context, input));
             }
         } catch (EOFException ex) {

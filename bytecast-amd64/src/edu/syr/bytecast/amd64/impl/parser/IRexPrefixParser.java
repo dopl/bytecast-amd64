@@ -1,4 +1,6 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
+
+import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
 
 /**
  * An interface to parse "REX Prefix".
@@ -13,5 +15,5 @@ public interface IRexPrefixParser {
      * @param context
      * @param input
      */
-    void parse(InstructionContextImpl context, IByteInstructionInputStream input);
+    void parse(InstructionContextImpl context, IInstructionByteInputStream input);
 }

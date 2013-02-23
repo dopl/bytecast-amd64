@@ -1,4 +1,4 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.instruction;
 
 /**
  * An interface to store context information of a current parsed instruction.

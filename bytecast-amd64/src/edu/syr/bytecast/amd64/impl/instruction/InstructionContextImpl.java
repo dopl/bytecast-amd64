@@ -1,4 +1,6 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.instruction;
+
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 
 /**
  * A class to store instruction context such as operand size, address size and

@@ -5,14 +5,15 @@
 package edu.syr.bytecast.amd64.internal.api.parser;
 
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
-import java.util.List;
+import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import java.io.EOFException;
 
 /**
  *
  * @author harsh
  */
 public interface IInstructionDecoder {
-    
-    IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes);
-}
 
+    IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException;
+}

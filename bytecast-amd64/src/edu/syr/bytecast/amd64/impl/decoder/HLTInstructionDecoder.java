@@ -8,8 +8,10 @@ import edu.syr.bytecast.amd64.util.DecoderUtil;
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
+import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.util.List;
 
@@ -21,10 +23,10 @@ public class HLTInstructionDecoder implements IInstructionDecoder{
 
     
     @Override
-    public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
+    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
         IInstruction instruction = new AMD64Instruction(InstructionType.HLT);      
         
-        decodeOperands(instruction, instructionbytes);
+        //decodeOperands(instruction, instructionbytes);
         
         return instruction;
     }

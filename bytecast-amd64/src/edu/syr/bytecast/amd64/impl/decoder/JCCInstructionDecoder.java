@@ -7,7 +7,9 @@ package edu.syr.bytecast.amd64.impl.decoder;
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryAddress;
+import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import edu.syr.bytecast.amd64.util.DecoderUtil;
 import java.util.List;
@@ -18,33 +20,33 @@ import java.util.List;
 public class JCCInstructionDecoder implements IInstructionDecoder {
     
   @Override
-  public IInstruction decodeInstruction(Long instructionMemAddress, List<Byte> instructionbytes) {
-    IInstruction ret = null;
-    int pos = 0;
-    byte key_byte = instructionbytes.get(pos).byteValue();
-    
-    // 0x67: address-size override prefix
-    if(key_byte == (byte)0x67) {
-      key_byte = instructionbytes.get(++pos).byteValue();
-    }
-    
-    if((byte)(key_byte & (byte)0xF0) == (byte)0x70) {
-      // 8 offset
-      ret = getInstruction((byte)(key_byte & 0x0F));
-    } else if(key_byte == (byte)0x0F) {
-      key_byte = instructionbytes.get(++pos).byteValue();
-      if((byte)(key_byte & (byte)0xF0) == (byte)0x80) {
-        // 16 offset or 32 offset
-        ret = getInstruction((byte)(key_byte & 0x0F));
-      } else {
-        throw new IllegalArgumentException("Incorrect form for JCC instruction");
-      }
-    } else {
-      throw new IllegalArgumentException("Incorrect form for JCC instruction");
-    }
-        
-    // need add the method to parse the operands
-    decodeOperands(ret, instructionMemAddress, instructionbytes);
+  public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
+      IInstruction ret = null;
+//    int pos = 0;
+//    byte key_byte = instructionbytes.get(pos).byteValue();
+//    
+//    // 0x67: address-size override prefix
+//    if(key_byte == (byte)0x67) {
+//      key_byte = instructionbytes.get(++pos).byteValue();
+//    }
+//    
+//    if((byte)(key_byte & (byte)0xF0) == (byte)0x70) {
+//      // 8 offset
+//      ret = getInstruction((byte)(key_byte & 0x0F));
+//    } else if(key_byte == (byte)0x0F) {
+//      key_byte = instructionbytes.get(++pos).byteValue();
+//      if((byte)(key_byte & (byte)0xF0) == (byte)0x80) {
+//        // 16 offset or 32 offset
+//        ret = getInstruction((byte)(key_byte & 0x0F));
+//      } else {
+//        throw new IllegalArgumentException("Incorrect form for JCC instruction");
+//      }
+//    } else {
+//      throw new IllegalArgumentException("Incorrect form for JCC instruction");
+//    }
+//        
+//    // need add the method to parse the operands
+//    decodeOperands(ret, instructionMemAddress, instructionbytes);
 
     return ret;
   }

@@ -78,7 +78,7 @@ public class BytecastAmd64Test {
     instructionbytes.clear();
     instructionbytes.add((byte)0xFF);
     instructionbytes.add((byte)0xE0);
-    IInstruction jmpInstruction = jmpInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
+    //IInstruction jmpInstruction = jmpInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
     
     // jump to memory address
     instructionbytes.clear();
@@ -88,7 +88,7 @@ public class BytecastAmd64Test {
     instructionbytes.add((byte)0x04);
     instructionbytes.add((byte)0x20);
     instructionbytes.add((byte)0x00);
-    jmpInstruction = jmpInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
+    //jmpInstruction = jmpInstructionDecoder.decodeInstruction(instructionMemAddr, instructionbytes);
   }
   
   public BytecastAmd64Test()

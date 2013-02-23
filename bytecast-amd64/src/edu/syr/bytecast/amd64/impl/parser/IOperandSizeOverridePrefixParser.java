@@ -1,4 +1,6 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
+
+import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
 
 /**
  * An interface to parse "Operand-Size Override Prefix".
@@ -14,5 +16,5 @@ public interface IOperandSizeOverridePrefixParser {
      * @param context
      * @param input
      */
-    void parse(InstructionContextImpl context, IByteInstructionInputStream input);
+    void parse(InstructionContextImpl context, IInstructionByteInputStream input);
 }

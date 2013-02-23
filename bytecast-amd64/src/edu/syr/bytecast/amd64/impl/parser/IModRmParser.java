@@ -1,5 +1,6 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
 
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import java.io.EOFException;
@@ -82,6 +83,6 @@ public interface IModRmParser {
      * @param rm_type
      * @throws EOFException
      */
-    void parse(InstructionContextImpl context, IByteInstructionInputStream input,
+    void parse(IInstructionContext context, IInstructionByteInputStream input,
             RegType reg_type, RmType rm_type) throws EOFException;
 }
