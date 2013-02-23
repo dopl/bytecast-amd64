@@ -77,11 +77,11 @@ public interface IModRmParser {
     /**
      * Parse the ModRm bytes in the input.
      *
-     * @param context
-     * @param input
-     * @param reg_type
-     * @param rm_type
-     * @throws EOFException
+     * @param context the instruction context.
+     * @param input the input of instruction bytes.
+     * @param reg_type the type of reg
+     * @param rm_type the type of reg/mem
+     * @throws EOFException if the end of the stream is reached.
      */
     void parse(IInstructionContext context, IInstructionByteInputStream input,
             RegType reg_type, RmType rm_type) throws EOFException;
