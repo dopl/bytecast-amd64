@@ -1,14 +1,14 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
 
 import java.io.EOFException;
 
 /**
- * An interface to read instruction bytes. It also support peeking and pushing
- * back.
+ * An interface to read instruction bytes. It also support peeking and skipping
+ * over.
  *
  * @author sheng
  */
-public interface IByteInstructionInputStream {
+public interface IInstructionByteInputStream {
 
     /**
      * Returns an estimate of the number of bytes that can be read (or peeked or

@@ -15,14 +15,13 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
-package edu.syr.bytecast.amd64.internal.api.dictionary;
 
-public enum RegisterGroup {
-    CS,
-    DS,
-    ES,
-    FS,
-    GS,
-    SS    
+public enum LegacyPrefixGroup {
+    OPERAND_SIZE_OVERRIDE,
+    ADDRESS_SIZE_OVERRIDE,
+    SEGMENT_OVERRIDE,
+    LOCK,
+    REPEAT
 }

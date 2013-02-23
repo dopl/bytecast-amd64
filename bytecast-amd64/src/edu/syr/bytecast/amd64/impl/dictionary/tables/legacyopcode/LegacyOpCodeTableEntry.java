@@ -15,14 +15,32 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
-package edu.syr.bytecast.amd64.internal.api.dictionary;
 
-public enum RegisterGroup {
-    CS,
-    DS,
-    ES,
-    FS,
-    GS,
-    SS    
+
+public class LegacyOpCodeTableEntry {
+    private LegacyPrefixGroup prefixGroup;
+    private Byte opCode;
+
+    public LegacyOpCodeTableEntry(LegacyPrefixGroup prefixGroup, Byte opCode) {
+        this.prefixGroup = prefixGroup;
+        this.opCode = opCode;
+    }
+
+    /**
+     * @return the prefixGroup
+     */
+    public LegacyPrefixGroup getPrefixGroup() {
+        return prefixGroup;
+    }
+
+    /**
+     * @return the opCode
+     */
+    public Byte getOpCode() {
+        return opCode;
+    }
+    
+    
 }

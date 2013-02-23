@@ -1,5 +1,6 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.parser;
 
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
@@ -20,22 +21,17 @@ public class ModRmParserImpl implements IModRmParser {
     private int m_extended_rm;
     private OperandRegister m_reg_operand;
     private IOperand m_rm_operand;
-    private InstructionContextImpl m_context;
-
-    public ModRmParserImpl(InstructionContextImpl context) {
-        this.m_context = context;
-    }
 
     @Override
-    public void parse(InstructionContextImpl context, IByteInstructionInputStream input, RegType reg_type, RmType rm_type) throws EOFException {
+    public void parse(IInstructionContext context, IInstructionByteInputStream input, RegType reg_type, RmType rm_type) throws EOFException {
         byte b = input.read();
         m_mod = b >> 6 & 3;
         m_reg = b >> 3 & 7;
-        m_extended_reg = m_reg + (m_context.isRexR() ? 0x8 : 0);
+        m_extended_reg = m_reg + (context.isRexR() ? 0x8 : 0);
         m_rm = b & 7;
-        m_extended_rm = m_rm + (m_context.isRexB() ? 0x8 : 0);
+        m_extended_rm = m_rm + (context.isRexB() ? 0x8 : 0);
         // Parse reg
-        m_reg_operand = getRegOperand(reg_type);
+        m_reg_operand = getRegOperand(context, reg_type);
         // Parse r/m
         if (m_mod == 3) {
             m_rm_operand = getRmOperandForRegisterType(rm_type);
@@ -81,10 +77,10 @@ public class ModRmParserImpl implements IModRmParser {
     private static final RegisterType[] REG32_ARRAY = new RegisterType[]{RegisterType.EAX, RegisterType.ECX, RegisterType.EDX, RegisterType.EBX, RegisterType.ESP, RegisterType.EBP, RegisterType.ESI, RegisterType.EDI};
     private static final RegisterType[] REG64_ARRAY = new RegisterType[]{RegisterType.RAX, RegisterType.RCX, RegisterType.RDX, RegisterType.RBX, RegisterType.RSP, RegisterType.RBP, RegisterType.RSI, RegisterType.RDI, RegisterType.R8, RegisterType.R9, RegisterType.R10, RegisterType.R11, RegisterType.R12, RegisterType.R13, RegisterType.R14, RegisterType.R15};
 
-    private OperandRegister getRegOperand(ModRmParserImpl.RegType type) {
+    private OperandRegister getRegOperand(IInstructionContext context, ModRmParserImpl.RegType type) {
         switch (type) {
             case REG32:
-                if (m_context.isRexR()) {
+                if (context.isRexR()) {
                     throw new UnsupportedOperationException("TODO");
                 }
                 return new OperandRegister(REG32_ARRAY[m_extended_reg]);

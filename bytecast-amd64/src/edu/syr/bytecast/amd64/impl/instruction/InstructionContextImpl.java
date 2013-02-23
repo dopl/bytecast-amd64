@@ -1,4 +1,4 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.instruction;
 
 /**
  * A class to store instruction context such as operand size, address size and
@@ -19,6 +19,7 @@ public class InstructionContextImpl implements IInstructionContext {
     }
 
     private void initFor64BitMode() {
+        // The default operand size in 64-bit mode is 32 bits.
         m_operand_size = OperandOrAddressSize.SIZE_32;
     }
 

@@ -15,11 +15,12 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
-package edu.syr.bytecast.amd64.impl.dictionary;
 
-import edu.syr.bytecast.amd64.internal.api.dictionary.LegacyOpCodeTableEntry;
-import edu.syr.bytecast.amd64.internal.api.dictionary.LegacyPrefixGroup;
+
+import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyOpCodeTableEntry;
+import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyPrefixGroup;
 import java.util.List;
 
 public class LegacyOpCodeTable {
@@ -40,7 +41,7 @@ public class LegacyOpCodeTable {
         legacyOpCodes.add(new LegacyOpCodeTableEntry(LegacyPrefixGroup.REPEAT, (byte)0xf2));
     }
     
-    public static boolean isLegacyOpCode(Byte opcode)
+    public  boolean isLegacyOpCode(Byte opcode)
     {
         for(int i=0;i<legacyOpCodes.size();++i)
         {

@@ -1,4 +1,4 @@
-package edu.syr.bytecast.amd64.impl.parserdemo;
+package edu.syr.bytecast.amd64.impl.instruction;
 
 /**
  * An interface to store context information of a current parsed instruction.
@@ -7,13 +7,26 @@ package edu.syr.bytecast.amd64.impl.parserdemo;
  */
 public interface IInstructionContext {
 
-    public static enum OperandOrAddressSize {
+    /**
+     * An enum which defines operand sizes or address sizes.
+     */
+    static enum OperandOrAddressSize {
 
         SIZE_16, SIZE_32, SIZE_64
     }
 
+    /**
+     * Return the address size.
+     *
+     * @return
+     */
     OperandOrAddressSize getAddressSize();
 
+    /**
+     * Return the operand size.
+     *
+     * @return
+     */
     OperandOrAddressSize getOperandSize();
 
     void setAddressSize(OperandOrAddressSize address_size);

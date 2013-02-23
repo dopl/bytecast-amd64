@@ -15,8 +15,7 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package edu.syr.bytecast.amd64.internal.api.dictionary;
+package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
 public enum RegisterGroup {
     CS,
