@@ -26,11 +26,18 @@ public interface IInstructionByteInputStream {
     void close();
 
     /**
-     * Returns the member address of the next readable byte.
+     * Returns the memory address of the next readable byte.
      *
-     * @return the member address.
+     * @return the memory address.
      */
-    long getMemberAddress();
+    long getNextByteAddress();
+
+    /**
+     * Returns the memory address of the current instruction.
+     *
+     * @return
+     */
+    long getInstructionAddress();
 
     /**
      * Reads the next byte of data from the input stream.
@@ -42,7 +49,7 @@ public interface IInstructionByteInputStream {
 
     /**
      * Reads some number of bytes from the input stream and stores them into the
-     * buffer array b.
+     * buffer array buf.
      *
      * @param buf the buffer into which the data is read.
      * @return the total number of bytes read into the buffer, or -1 is there is
@@ -61,7 +68,7 @@ public interface IInstructionByteInputStream {
 
     /**
      * Gets some number of bytes from the input stream without forwarding the
-     * reading position and stores them into the buffer array b.
+     * reading position and stores them into the buffer array buf.
      *
      * @param buf the buffer into which the data is read.
      * @return the total number of bytes read into the buffer, or -1 is there is

@@ -15,15 +15,23 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.internal.api.parser;
 
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
-import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import java.io.EOFException;
 
 public interface IInstructionDecoder {
 
+    /**
+     * Decode instruction bytes in the input to an instruction. The next byte of
+     * the input is the opcode.
+     *
+     * @param context the instruction context.
+     * @param input the input of instruction bytes.
+     * @return the decoded instruction.
+     * @throws EOFException if the end of the stream is reached.
+     */
     IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException;
 }
