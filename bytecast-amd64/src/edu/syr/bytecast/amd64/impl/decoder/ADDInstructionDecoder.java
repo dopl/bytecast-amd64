@@ -17,6 +17,10 @@
  *
  */
 
+/**
+ *
+ * @author Chen Qian
+ */
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
@@ -31,7 +35,6 @@ import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.io.EOFException;
 
-//package edu.syr.bytecast.amd64.impl.decoder;
 
 
 public class ADDInstructionDecoder implements IInstructionDecoder {
@@ -41,16 +44,24 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
         byte b = input.read();
 
         // Create the ret
-        AMD64Instruction ret = new AMD64Instruction(InstructionType.MOV);
+        AMD64Instruction ret = new AMD64Instruction(InstructionType.ADD);
 
         // Parse opcode. See AMD64, volume 3, page 213.
-        if (b == (byte) 0x88) {
-            // Description: Move the contents of an 8-bit register to an 8-bit
-            //     destination register or memory operand.
-            // Mnemonic:    MOV reg/mem8, reg8
-            // Opcode:      88 /r
-            // TODO MOV reg/mem8, reg8      88 /r
-        } else if (b == (byte) 0x89) {
+        if (b == (byte) 0x04) {
+            ret.setOpCode("04");
+            IImmParser imm_parser = ParserFactory.getImmParser();
+            imm_parser.parse(input, IImmParser.Type.IMM8);
+            ret.addOperand(imm_parser.getOperand());          
+            ret.addOperand(new OperandRegister(RegisterType.AL));
+            
+        }else if(b == (byte) 0x05){
+            if(context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32);
+            
+        }else if(b == (byte) 0x05){
+            
+        }else if(b == (byte) 0x05){
+            
+        }else if (b == (byte) 0x89) {
             if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
                 // Description: Move the contents of a 16-bit register to a 16-bit
                 //     destination register or memory operand.
