@@ -46,7 +46,7 @@ public class HLTInstructionDecoder implements IInstructionDecoder{
             return;
         }      
         if(instructionbytes.get(0) == 0xf4){
-            instruction.setOpCode("f4"); 
+            //instruction.setOpCode("f4"); 
         }
     }
 }

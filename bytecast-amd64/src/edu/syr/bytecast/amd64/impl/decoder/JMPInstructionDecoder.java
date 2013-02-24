@@ -22,7 +22,7 @@ import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
-import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryAddress;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.util.List;

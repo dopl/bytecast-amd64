@@ -15,7 +15,6 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.instruction;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
@@ -26,40 +25,45 @@ import java.util.List;
 
 public class AMD64Instruction implements IInstruction {
 
-    private InstructionType instructionType;
-    private String opCode;
-    private List<IOperand> operands;
-    
-    public AMD64Instruction(InstructionType instructionType) {
-        this.instructionType = instructionType;
-        operands = new ArrayList<IOperand>();
-    }
-   
-    
-    @Override
-    public List<IOperand> getOperands() {
-        return this.operands;
-    }
+  private InstructionType instructionType;
+  private String opCode;
+  private List<IOperand> operands;
+  private long instructionMemoryAddress;
 
-    @Override
-    public String getOpCode() {
-        return this.opCode;
-    }
+  public AMD64Instruction(InstructionType instructionType) {
+    this.instructionType = instructionType;
+    operands = new ArrayList<IOperand>();
+  }
 
-    @Override
-    public void addOperand(IOperand op) {
-        operands.add(op);
-    }
+  @Override
+  public List<IOperand> getOperands() {
+    return this.operands;
+  }
 
-    @Override
-    public void setOpCode(String opcode) {
-        this.opCode = opcode;
-    }
+  @Override
+  public String getOpCode() {
+    return this.opCode;
+  }
 
-    @Override
-    public InstructionType getInstructiontype() {
-        return this.instructionType;
-    }
+  public void addOperand(IOperand op) {
+    operands.add(op);
+  }
 
-    
+  public void setOpCode(String opcode) {
+    this.opCode = opcode;
+  }
+
+  @Override
+  public InstructionType getInstructiontype() {
+    return this.instructionType;
+  }
+
+  @Override
+  public long getInstructionMemoryAddress() {
+    return this.instructionMemoryAddress;
+  }
+
+  public void setInstructionMemoryAddress(long instructionMemoryAddress) {
+    this.instructionMemoryAddress = instructionMemoryAddress;
+  }
 }

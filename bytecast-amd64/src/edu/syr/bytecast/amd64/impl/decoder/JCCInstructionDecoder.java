@@ -22,7 +22,7 @@ import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
-import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryAddress;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import edu.syr.bytecast.amd64.util.DecoderUtil;
@@ -95,8 +95,8 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
         throw new IllegalArgumentException("For 16 or 32 offset JCC, the length of instruction should be either 4 or 6 bytes"); 
       }
     }
-    OperandMemoryAddress operandMemAddr = new OperandMemoryAddress(ltargetMemAddr); 
-    instruction.addOperand(operandMemAddr);
+    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(ltargetMemAddr); 
+    //instruction.addOperand(operandMemAddr);
   }
   
   private IInstruction getInstruction(byte tmp) {

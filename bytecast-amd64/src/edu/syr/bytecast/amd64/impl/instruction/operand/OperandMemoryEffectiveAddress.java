@@ -15,30 +15,37 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.instruction.operand;
 
 import edu.syr.bytecast.amd64.api.constants.OperandType;
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 
-public class OperandMemoryAddress implements IOperand {
+/**
+ *
+ * @author hapan
+ */
+public class OperandMemoryEffectiveAddress implements IOperand {
 
+  private MemoryEffectiveAddress effective_address;
 
-    private Long memory_address;
+  /**
+   * TODO: would need to add the effective_address class in api
+   */
+  public class MemoryEffectiveAddress {
     
-    public OperandMemoryAddress(Long memory_address) {
+  }
+  public OperandMemoryEffectiveAddress(Long memory_address) {
 
-        this.memory_address = memory_address;
-    }
+    this.memory_address = memory_address;
+  }
 
-    @Override
-    public OperandType getOperandType() {
-        return OperandType.MEMORY_ADDRESS;
-    }
+  @Override
+  public OperandType getOperandType() {
+    return OperandType.MEMORY_ADDRESS;
+  }
 
-    @Override
-    public Object getOperandValue() {
-        return this.memory_address;
-    }
-    
+  @Override
+  public Object getOperandValue() {
+    return this.memory_address;
+  }
 }
