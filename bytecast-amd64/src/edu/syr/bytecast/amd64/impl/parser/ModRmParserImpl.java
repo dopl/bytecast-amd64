@@ -4,6 +4,7 @@ import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryLogicalAddress;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import java.io.EOFException;
 
@@ -51,7 +52,7 @@ public class ModRmParserImpl implements IModRmParser {
                 if (m_rm == 4) {
                     // Parse SIB
                     ISibParser sib_parser = ParserFactory.getSibParser();
-                    sib_parser.parse(context, input,m_mod);
+                    sib_parser.parse(context, input, m_mod);
                     base = sib_parser.getBaseRegister();
                     index = sib_parser.getIndexRegister();
                     scale = sib_parser.getScaleFactor();
@@ -69,7 +70,11 @@ public class ModRmParserImpl implements IModRmParser {
                     offset = (int) parser.getNumber();
                 }
             }
-            m_rm_operand = new OperandMemoryEffectiveAddress(base, index, scale, offset);
+            if (context.getSegmentRegister() == null) {
+                m_rm_operand = new OperandMemoryEffectiveAddress(base, index, scale, offset);
+            } else {
+                m_rm_operand = new OperandMemoryLogicalAddress(context.getSegmentRegister(), base, index, scale, offset);
+            }
         }
     }
 
