@@ -11,6 +11,10 @@ public class ParserFactory {
         return new AddressSizeOverridePrefixParserImpl();
     }
 
+    public static IDispParser getDispParser() {
+        return new NumberParserImpl();
+    }
+
     public static IImmParser getImmParser() {
         return new NumberParserImpl();
     }
@@ -39,14 +43,22 @@ public class ParserFactory {
         throw new UnsupportedOperationException("Unsupported");
     }
 
+    public static IRexPrefixParser getRexPrefixParser() {
+        return new RexPrefixParserImpl();
+    }
+
     public static ISegmentOverridePrefixParser getSegmentOverridePrefixParser() {
         return new SegmentOverridePrefixParserImpl();
+    }
+
+    public static ISibParser getSibParser() {
+        return new SibParserImpl();
     }
 
     public static IVexXopPrefixParser getVexXopPrefixParser() {
         throw new UnsupportedOperationException("Unsupported");
     }
-    
+
     public static IRegImmParser getRegImmParser() {
         throw new UnsupportedOperationException("TODO");
     }
