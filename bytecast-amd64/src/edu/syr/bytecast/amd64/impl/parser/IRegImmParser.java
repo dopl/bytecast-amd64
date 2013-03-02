@@ -6,6 +6,7 @@ package edu.syr.bytecast.amd64.impl.parser;
 
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import java.io.EOFException;
 
@@ -28,5 +29,5 @@ public interface IRegImmParser {
     
     OperandRegister getRegOperand();
 
-    IOperand getImmOperand();
+    OperandConstant getImmOperand();
 }

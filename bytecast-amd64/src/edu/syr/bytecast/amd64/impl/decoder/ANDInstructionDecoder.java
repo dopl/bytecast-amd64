@@ -15,63 +15,56 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.util.DecoderUtil;
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
+import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
+import edu.syr.bytecast.amd64.impl.parser.IImmParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
+import edu.syr.bytecast.amd64.impl.parser.IModRmParser;
+import edu.syr.bytecast.amd64.impl.parser.IRegImmParser;
+import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
+import java.io.EOFException;
 import java.util.List;
 
-public class ANDInstructionDecoder implements IInstructionDecoder{
+public class ANDInstructionDecoder implements IInstructionDecoder {
 
-  @Override
-    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
-        IInstruction instruction = new AMD64Instruction(InstructionType.AND);      
-        
-        //decodeOperands(instruction, instructionbytes);
-        
-        return instruction;
+    @Override
+    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {
+
+        byte b = input.read();
+
+        // Create the ret
+        AMD64Instruction ret = new AMD64Instruction(InstructionType.ADD);
+
+        // AND AL,imm8
+        if (b == (byte) 0x83) {
+            if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
+                ret.setOpCode("83");
+                IRegImmParser ri_parser = ParserFactory.getRegImmParser();
+                ri_parser.parse(context, input, IRegImmParser.RegType.REG64, IRegImmParser.Type.IMM64);
+                ret.addOperand(ri_parser.getRegOperand());
+                ret.addOperand(ModifyOperand(ri_parser.getImmOperand()));
+                return ret;
+            }
+        }
+        throw new UnsupportedOperationException("just for one and case, not recongzise this one");
     }
-    
-    // 48 83 e4 f0   add $0xfffffffffffffff0 %rsp
-    // 83 : reg + imm64
-//    private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
-//        if(instructionbytes.size()!=4) {
-//            throw new UnsupportedOperationException("Not A correct ADD instructionbytes.");
-//        }
-//        
-//        if(instructionbytes.get(1) == 0x83){
-//           instruction.setOpCode("83");
-//                  
-//           if(DecoderUtil.getRegField(instructionbytes.get(2))==4){// verify is a and insturction
-//                //and constant value need add 1 in long value
-//               Long operand = instructionbytes.get(3).longValue() + 0xffffffffffffff00L;
-//               instruction.addOperand(new OperandConstant(operand));
-//               //add register
-//               instruction.addOperand(new OperandRegister(DecoderUtil.getRegister(DecoderUtil.getRmField(instructionbytes.get(2)))));
-//           }
-//        }
-//        
-//        //other and opcode to be implement
-//   
-//    }
-    
+
+    OperandConstant ModifyOperand(OperandConstant operand) throws EOFException {        
+        if( operand.getOperandValue() instanceof Long){
+            Long tmp = (Long)operand.getOperandValue() + 0xffffffffffffff00L;
+            return new OperandConstant(tmp);
+        }
+        throw new RuntimeException("AND ModifyOperand Cast Fail.");
+    }
 }
 
-
-//  ******old version for String type DecoderUtil 
-// List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
-//           if(tempdecodes.get(1).equals("100")){ // verify is a and insturction
-//               //and constant value need add 1 in long value
-//               Long operand = instructionbytes.get(3).longValue() + 0xffffffffffffff00L;
-//               instruction.addOperand(new OperandConstant(operand));
-//               //add register
-//               instruction.addOperand(new OperandRegister(DecoderUtil.CastRegister(tempdecodes.get(0))));        
-//            }          
