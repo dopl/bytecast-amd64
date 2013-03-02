@@ -31,7 +31,7 @@ public class OperandMemoryEffectiveAddress implements IOperand {
   private OperandTypeMemoryEffectiveAddress effective_address;
 
   /**
-   * TODO: would need to add the effective_address class in api
+   * 
    */
   public OperandMemoryEffectiveAddress(RegisterType base, RegisterType index, int scale, int offset) {
 
