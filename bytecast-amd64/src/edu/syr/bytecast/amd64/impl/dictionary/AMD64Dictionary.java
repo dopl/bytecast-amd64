@@ -22,29 +22,31 @@ import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyOpCodeTable;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodeTable;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
+import java.util.Hashtable;
 
 public class AMD64Dictionary implements IAMD64Dictionary{
 
-    private static AMD64Dictionary _instance = new AMD64Dictionary();
-    private static LegacyOpCodeTable legacyOpCodeTable;
-    private static SecOpCodeTable secondaryOpCodeTable;
+    private static AMD64Dictionary m_instance = new AMD64Dictionary();
+    private static LegacyOpCodeTable m_legacyOpCodeTable;
+    private static SecOpCodeTable m_secondaryOpCodeTable;
+    private Hashtable<Long, String> m_fnSymbolTable;
     
     private AMD64Dictionary() {
-        legacyOpCodeTable = new LegacyOpCodeTable();
-        secondaryOpCodeTable = new SecOpCodeTable();
+        m_legacyOpCodeTable = new LegacyOpCodeTable();
+        m_secondaryOpCodeTable = new SecOpCodeTable();
         
-        secondaryOpCodeTable.loadData();
-        legacyOpCodeTable.loadData();
+        m_secondaryOpCodeTable.loadData();
+        m_legacyOpCodeTable.loadData();
     }
     
     public static AMD64Dictionary getInstance()
     {
-       return _instance;
+       return m_instance;
     }
     
     @Override
     public boolean isLegacyOpcode(Byte opcode) {
-        return legacyOpCodeTable.isLegacyOpCode(opcode);
+        return m_legacyOpCodeTable.isLegacyOpCode(opcode);
     }
 
     @Override
@@ -59,7 +61,23 @@ public class AMD64Dictionary implements IAMD64Dictionary{
 
     @Override
     public InstructionType getInstructionFromSecondaryOCTable(Byte opcode) {
-       return  secondaryOpCodeTable.getInstructionFromOpCode(opcode);
+       return  m_secondaryOpCodeTable.getInstructionFromOpCode(opcode);
+    }
+
+    @Override
+    public String getFunctionNameFromAddress(Long address) {
+        String fnName;
+        if(m_fnSymbolTable==null ) {
+            fnName = "FUNCTION_NAME_NOT_FOUND";
+        }
+        else {
+            fnName = m_fnSymbolTable.get(address);
+        }
+        return fnName;
     }
     
+    public void setFunctionSymbolTable(Hashtable<Long,String> fnSymbolTable)
+    {
+        this.m_fnSymbolTable = fnSymbolTable;
+    }
 }

@@ -18,9 +18,13 @@
 
 package edu.syr.bytecast.amd64;
 
+import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.interfaces.fsys.ExeObj;
+import edu.syr.bytecast.interfaces.fsys.ExeObjFunction;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
 import edu.syr.bytecast.jimple.api.IJimple;
+import java.util.Hashtable;
+import java.util.List;
 
 public class BytecastAmd64 {
 
@@ -65,8 +69,10 @@ public class BytecastAmd64 {
    {
        m_fsys.setFilepath(m_filepath);
        try{
-       ExeObj exeObj = m_fsys.parse();
-       long entryPoint = exeObj.getEntryPointIndex();
+         ExeObj exeObj = m_fsys.parse();
+         List<ExeObjFunction> functions = exeObj.getFunctions();
+         createFnSymbolTableInDict(functions);
+         
        }catch(Exception ex)
        {
            System.out.println(ex.getMessage());
@@ -76,16 +82,26 @@ public class BytecastAmd64 {
    }
    public void doFsys()
    {
-        m_fsys.setFilepath(m_filepath);
+       m_fsys.setFilepath(m_filepath);
        try{
             ExeObj exeObj = m_fsys.parse();
             long entryPoint = exeObj.getEntryPointIndex();
         }
-        catch(Exception ex){
+         catch(Exception ex){
            System.out.println(ex.getMessage());
            return;
        }
    }
+
+    private void createFnSymbolTableInDict(List<ExeObjFunction> functions) {
+       Hashtable<Long,String> fnSymbolTable = new Hashtable<Long, String>();
+       
+       for(ExeObjFunction fn : functions)
+       {
+           fnSymbolTable.put(fn.getStartAddress(), fn.getName());
+       }
+       AMD64Dictionary.getInstance().setFunctionSymbolTable(fnSymbolTable);
+    }
  
     
 }

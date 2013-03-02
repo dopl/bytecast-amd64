@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 package edu.syr.bytecast.amd64.impl.decoder;
+=======
+>>>>>>> c74743b540e6578031ebddeed9960041ba52ade4
 /*
  * This file is part of Bytecast.
  *
@@ -20,6 +23,8 @@ package edu.syr.bytecast.amd64.impl.decoder;
  *
  * @author Chen Qian
  */
+package edu.syr.bytecast.amd64.impl.decoder;
+
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
