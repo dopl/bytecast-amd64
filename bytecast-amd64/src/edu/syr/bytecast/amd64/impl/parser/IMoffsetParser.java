@@ -35,4 +35,11 @@ public interface IMoffsetParser {
      * @return
      */
     IOperand getOperand();
+
+    /**
+     * Return the parsed number.
+     *
+     * @return
+     */
+    long getNumber();
 }

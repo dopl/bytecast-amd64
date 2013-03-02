@@ -33,4 +33,11 @@ public interface IImmParser {
      * @return
      */
     IOperand getOperand();
+
+    /**
+     * Return the parsed number.
+     *
+     * @return
+     */
+    long getNumber();
 }

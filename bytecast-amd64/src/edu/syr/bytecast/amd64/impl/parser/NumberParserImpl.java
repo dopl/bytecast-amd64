@@ -1,5 +1,6 @@
 package edu.syr.bytecast.amd64.impl.parser;
 
+import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import java.io.EOFException;
 
@@ -8,41 +9,77 @@ import java.io.EOFException;
  *
  * @author sheng
  */
-@Deprecated
-public class NumberParserImpl {
+public class NumberParserImpl implements IImmParser, IMoffsetParser {
 
-    private long m_number;
-    private OperandConstant m_constant;
-//
-//    @Override
-//    public void parse(IInstructionByteInputStream input, NumberType type) throws EOFException {
-//        int size;
-//        switch (type) {
-//            case SIZE8:
-//                size = 1;
-//                break;
-//            case SIZE16:
-//                size = 2;
-//                break;
-//            case SIZE32:
-//                size = 4;
-//                break;
-//            case SIZE64:
-//                size = 8;
-//                break;
-//            default:
-//                throw new RuntimeException("Unknown type.");
-//        }
-//        for (int i = 0; i < size; i++) {
-//            m_number = m_number << 8;
-//            byte b = input.read();
-//            m_number += b & 0xFF;
-//        }
-//        m_constant = new OperandConstant(m_number);
-//    }
-//
-//    @Override
-//    public OperandConstant getOperand() {
-//        return m_constant;
-//    }
+    private long number;
+
+    /**
+     * Convert the next bytes into the number in fields. Use inverted order.
+     *
+     * @param input the input stream to provide bytes.
+     * @param size the size of the next bytes to be converted.
+     * @throws EOFException if the end of the stream is reached.
+     */
+    public void parse(IInstructionByteInputStream input, int size) throws EOFException {
+        number = 0;
+        for (int i = 0; i < size; i++) {
+            number = number << 8;
+            byte b = input.read();
+            number += b & 0xFF;
+        }
+    }
+
+    @Override
+    public void parse(IInstructionByteInputStream input, IImmParser.Type type) throws EOFException {
+        int size;
+        switch (type) {
+            case IMM8:
+                size = 1;
+                break;
+            case IMM16:
+                size = 2;
+                break;
+            case IMM32:
+                size = 4;
+                break;
+            case IMM64:
+                size = 8;
+                break;
+            default:
+                throw new RuntimeException("Unknown type!");
+        }
+        parse(input, size);
+    }
+
+    @Override
+    public IOperand getOperand() {
+        return new OperandConstant(number);
+    }
+
+    @Override
+    public void parse(IInstructionByteInputStream input, IMoffsetParser.Type type) throws EOFException {
+        int size;
+        switch (type) {
+            case MOFFSET8:
+                size = 1;
+                break;
+            case MOFFSET16:
+                size = 2;
+                break;
+            case MOFFSET32:
+                size = 4;
+                break;
+            case MOFFSET64:
+                size = 8;
+                break;
+            default:
+                throw new RuntimeException("Unknown type!");
+        }
+        parse(input, size);
+    }
+
+    @Override
+    public long getNumber() {
+        return number;
+    }
 }

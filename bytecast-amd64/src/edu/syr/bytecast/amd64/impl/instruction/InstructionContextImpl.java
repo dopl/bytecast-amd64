@@ -1,5 +1,7 @@
 package edu.syr.bytecast.amd64.impl.instruction;
 
+import edu.syr.bytecast.amd64.api.constants.RegisterType;
+
 /**
  * A class to store instruction context such as operand size, address size and
  * prefix values.
@@ -13,14 +15,17 @@ public class InstructionContextImpl implements IInstructionContext {
     private boolean m_rex_r;
     private boolean m_rex_x;
     private boolean m_rex_b;
+    private RegisterType m_segment_register;
 
     public InstructionContextImpl() {
         initFor64BitMode();
     }
 
     private void initFor64BitMode() {
-        // The default operand size in 64-bit mode is 32 bits.
+        // The default operand size in 64-bit mode is 32 bits. See Section 1.2.2, Volume 3, AMD64 Manual.
         m_operand_size = OperandOrAddressSize.SIZE_32;
+        // The default address size in 64-bit mode is 64 bits. See Section 1.2.3, Volume 3, AMD64 Manual.
+        m_address_size = OperandOrAddressSize.SIZE_64;
     }
 
     @Override
@@ -71,5 +76,15 @@ public class InstructionContextImpl implements IInstructionContext {
     @Override
     public void setAddressSize(OperandOrAddressSize address_size) {
         this.m_address_size = address_size;
+    }
+
+    @Override
+    public RegisterType getSegmentRegister() {
+        return m_segment_register;
+    }
+
+    @Override
+    public void setSegmentRegister(RegisterType type) {
+        m_segment_register = type;
     }
 }
