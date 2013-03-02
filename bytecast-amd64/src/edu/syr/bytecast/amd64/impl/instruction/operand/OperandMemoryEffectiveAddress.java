@@ -18,6 +18,8 @@
 package edu.syr.bytecast.amd64.impl.instruction.operand;
 
 import edu.syr.bytecast.amd64.api.constants.OperandType;
+import edu.syr.bytecast.amd64.api.constants.OperandTypeMemoryEffectiveAddress;
+import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 
 /**
@@ -26,26 +28,23 @@ import edu.syr.bytecast.amd64.api.instruction.IOperand;
  */
 public class OperandMemoryEffectiveAddress implements IOperand {
 
-  private MemoryEffectiveAddress effective_address;
+  private OperandTypeMemoryEffectiveAddress effective_address;
 
   /**
    * TODO: would need to add the effective_address class in api
    */
-  public class MemoryEffectiveAddress {
-    
-  }
-  public OperandMemoryEffectiveAddress(Long memory_address) {
+  public OperandMemoryEffectiveAddress(RegisterType base, RegisterType index, int scale, int offset) {
 
-    this.memory_address = memory_address;
+    this.effective_address = new OperandTypeMemoryEffectiveAddress(base, index, scale, offset);
   }
 
   @Override
   public OperandType getOperandType() {
-    return OperandType.MEMORY_ADDRESS;
+    return OperandType.MEMORY_EFFECITVE_ADDRESS;
   }
 
   @Override
   public Object getOperandValue() {
-    return this.memory_address;
+    return this.effective_address;
   }
 }

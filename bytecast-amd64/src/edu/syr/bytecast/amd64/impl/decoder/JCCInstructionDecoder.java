@@ -95,7 +95,7 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
         throw new IllegalArgumentException("For 16 or 32 offset JCC, the length of instruction should be either 4 or 6 bytes"); 
       }
     }
-    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(ltargetMemAddr); 
+    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 0, 0); 
     //instruction.addOperand(operandMemAddr);
   }
   
