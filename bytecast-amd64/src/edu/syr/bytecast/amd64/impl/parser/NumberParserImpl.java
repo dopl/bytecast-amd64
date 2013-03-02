@@ -9,7 +9,7 @@ import java.io.EOFException;
  *
  * @author sheng
  */
-public class NumberParserImpl implements IImmParser, IMoffsetParser {
+public class NumberParserImpl implements IImmParser, IMoffsetParser, IDispParser {
 
     private long number;
 
@@ -81,5 +81,24 @@ public class NumberParserImpl implements IImmParser, IMoffsetParser {
     @Override
     public long getNumber() {
         return number;
+    }
+
+    @Override
+    public void parse(IInstructionByteInputStream input, IDispParser.Type type) throws EOFException {
+        int size;
+        switch (type) {
+            case DISP8:
+                size = 1;
+                break;
+            case DISP16:
+                size = 2;
+                break;
+            case DISP32:
+                size = 4;
+                break;
+            default:
+                throw new RuntimeException("Unknown type!");
+        }
+        parse(input, size);
     }
 }

@@ -53,7 +53,7 @@ public interface IModRmParser {
     int getExtendedReg();
 
     /**
-     * Return the extended number of reg bits. It includes REX.B, VEX.B or
+     * Return the extended number of rm bits. It includes REX.B, VEX.B or
      * XOP.B. It is from 0 to 15.
      *
      * @return

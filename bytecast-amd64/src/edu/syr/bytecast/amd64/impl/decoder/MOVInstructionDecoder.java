@@ -197,16 +197,4 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
 //        m_address_size = InstructionContext.OperandOrAddressSize.SIZE_32;
 //    }
 //
-//    public void applyRexPrefix(byte b) {
-//        // Check REX.W
-//        if ((b >> 3 & 1) == 1) {
-//            // For 64-bit mode, change the operand size to 64. See AMD64,
-//            // volume 3, page 8.
-//            m_operand_size = InstructionContext.OperandOrAddressSize.SIZE_64;
-//        }
-//        // Update REX.R, REX.X, REX.B
-//        m_rex_r = (b >> 2 & 1) == 1;
-//        m_rex_x = (b >> 1 & 1) == 1;
-//        m_rex_b = (b & 1) == 1;
-//    }
 }
