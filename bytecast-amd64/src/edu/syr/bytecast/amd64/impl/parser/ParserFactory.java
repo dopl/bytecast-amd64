@@ -8,19 +8,19 @@ package edu.syr.bytecast.amd64.impl.parser;
 public class ParserFactory {
 
     public static IAddressSizeOverridePrefixParser getAddressSizeOverridePrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        return new AddressSizeOverridePrefixParserImpl();
     }
 
     public static IImmParser getImmParser() {
-        throw new UnsupportedOperationException("TODO");
+        return new NumberParserImpl();
     }
 
     public static ILegacyPrefixParser getLegacyPrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        return new LegacyPrefixParserImpl();
     }
 
     public static ILockPrefixParser getLockPrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        throw new UnsupportedOperationException("Unsupported");
     }
 
     public static IModRmParser getModRmParser() {
@@ -28,22 +28,22 @@ public class ParserFactory {
     }
 
     public static IMoffsetParser getMoffsetParser() {
-        throw new UnsupportedOperationException("TODO");
+        return new NumberParserImpl();
     }
 
     public static IOperandSizeOverridePrefixParser getOperandSizeOverridePrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        return new OperandSizeOverridePrefixParserImpl();
     }
 
     public static IRepeatPrefixParser getRepeatPrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        throw new UnsupportedOperationException("Unsupported");
     }
 
     public static ISegmentOverridePrefixParser getSegmentOverridePrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        return new SegmentOverridePrefixParserImpl();
     }
 
     public static IVexXopPrefixParser getVexXopPrefixParser() {
-        throw new UnsupportedOperationException("TODO");
+        throw new UnsupportedOperationException("Unsupported");
     }
 }

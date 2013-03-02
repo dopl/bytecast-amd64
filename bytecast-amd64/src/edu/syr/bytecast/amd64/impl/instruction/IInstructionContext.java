@@ -1,5 +1,7 @@
 package edu.syr.bytecast.amd64.impl.instruction;
 
+import edu.syr.bytecast.amd64.api.constants.RegisterType;
+
 /**
  * An interface to store context information of a current parsed instruction.
  *
@@ -59,4 +61,19 @@ public interface IInstructionContext {
     void setRexR(boolean rex_r);
 
     void setRexX(boolean rex_x);
+
+    /**
+     * Return the segment register which is defined by Segment-Override
+     * prefixes.
+     *
+     * @return
+     */
+    RegisterType getSegmentRegister();
+
+    /**
+     * Set the segment register which is defined by Segment-Override prefixes.
+     *
+     * @param type
+     */
+    void setSegmentRegister(RegisterType type);
 }

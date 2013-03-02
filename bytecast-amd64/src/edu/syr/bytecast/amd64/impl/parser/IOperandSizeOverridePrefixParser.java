@@ -1,6 +1,6 @@
 package edu.syr.bytecast.amd64.impl.parser;
 
-import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import java.io.EOFException;
 
 /**
@@ -18,5 +18,5 @@ public interface IOperandSizeOverridePrefixParser {
      * @param input the input of instruction bytes.
      * @throws EOFException if the end of the stream is reached.
      */
-    void parse(InstructionContextImpl context, IInstructionByteInputStream input) throws EOFException;
+    void parse(IInstructionContext context, IInstructionByteInputStream input) throws EOFException;
 }
