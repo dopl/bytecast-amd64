@@ -62,4 +62,9 @@ public class ParserFactory {
     public static IRegImmParser getRegImmParser() {
         throw new UnsupportedOperationException("TODO");
     }
+    
+    public static IAddressFunctionParser getAddressFunctionParser(){
+        throw new UnsupportedOperationException("TODo");
+                
+    }
 }
