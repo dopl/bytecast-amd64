@@ -24,6 +24,7 @@ import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AMD64InstructionLexer implements IInstructionLexer {
 
@@ -33,7 +34,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
     }
 
     @Override
-    public List<IInstruction> convertInstructionBytesToObjects(Long sectionStartMemeAddress,List<Byte> bytes ) {
+    public Map<Long,IInstruction> convertInstructionBytesToObjects(Long sectionStartMemeAddress,List<Byte> bytes ) {
         Long memoryAddress = sectionStartMemeAddress;
         List<Byte> oneinstruction = new ArrayList<Byte>();
         boolean end=false;
