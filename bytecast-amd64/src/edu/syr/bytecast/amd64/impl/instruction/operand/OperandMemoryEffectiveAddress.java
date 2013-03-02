@@ -33,7 +33,7 @@ public class OperandMemoryEffectiveAddress implements IOperand {
   /**
    * TODO: would need to add the effective_address class in api
    */
-  public OperandMemoryEffectiveAddress(RegisterType base, RegisterType index, int scale, int offset) {
+  public OperandMemoryEffectiveAddress(RegisterType base, RegisterType index, int scale, long offset) {
 
     this.effective_address = new OperandTypeMemoryEffectiveAddress(base, index, scale, offset);
   }

@@ -75,7 +75,11 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
             throw new RuntimeException("Unknown operand size.");
         } else if (b == (byte) 0x80) {
             //TODO ADD reg/mem8, imm8
+            ret.setOpCode("80");
+            throw new UnsupportedOperationException("TODO");
         } else if (b == (byte) 0x81) {
+            ret.setOpCode("81");
+            throw new UnsupportedOperationException("TODO");
         } else if (b == (byte) 0x83) {
             ret.setOpCode("83");
             IRegImmParser ri_parser = ParserFactory.getRegImmParser();

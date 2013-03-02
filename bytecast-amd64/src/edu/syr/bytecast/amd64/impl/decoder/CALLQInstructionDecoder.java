@@ -41,8 +41,7 @@ public class CALLQInstructionDecoder implements IInstructionDecoder{
         AMD64Instruction ret = new AMD64Instruction(InstructionType.CALLQ);
         byte b = input.read();
         
-        if(b == (byte) 0xe8){
-            
+        if(b == (byte) 0xe8){            
             ret.setOpCode("e8");
             IAddressFunctionParser iaf_parser = ParserFactory.getAddressFunctionParser();
             iaf_parser.parse(context, input);
@@ -50,6 +49,7 @@ public class CALLQInstructionDecoder implements IInstructionDecoder{
             ret.addOperand(iaf_parser.getSectionNameOperand());
             return ret;
         } else if (b == (byte) 0xff) {
+            
         } else if(b == (byte) 0x41){
             
         } 

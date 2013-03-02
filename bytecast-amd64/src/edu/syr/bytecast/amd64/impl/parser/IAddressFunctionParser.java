@@ -9,6 +9,7 @@ import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandSectionName;
+import java.io.EOFException;
 
 /**
  *
@@ -22,7 +23,7 @@ public interface IAddressFunctionParser {
      * @param regtype
      * @param type
      */
-    void parse(IInstructionContext context, IInstructionByteInputStream input);
+    void parse(IInstructionContext context, IInstructionByteInputStream input) throws EOFException;
 
     /**
      *
