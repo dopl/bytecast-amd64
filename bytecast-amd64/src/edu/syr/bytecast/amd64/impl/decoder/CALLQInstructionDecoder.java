@@ -24,20 +24,38 @@ import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
+import edu.syr.bytecast.amd64.impl.parser.IAddressFunctionParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
+import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import edu.syr.bytecast.amd64.util.DecoderUtil;
+import java.io.EOFException;
 import java.util.List;
 
 public class CALLQInstructionDecoder implements IInstructionDecoder{
 
     @Override
-    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
-        IInstruction instruction = new AMD64Instruction(InstructionType.CALLQ);      
+    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {    
         //_instructionMemAddress = instructionMemAddress;
         //decodeOperands(instruction, instructionbytes);
+        AMD64Instruction ret = new AMD64Instruction(InstructionType.CALLQ);
+        byte b = input.read();
         
-        return instruction;
+        if(b == (byte) 0xe8){
+            
+            ret.setOpCode("e8");
+            IAddressFunctionParser iaf_parser = ParserFactory.getAddressFunctionParser();
+            iaf_parser.parse(context, input);
+            ret.addOperand(iaf_parser.getAddressOperand());
+            ret.addOperand(iaf_parser.getSectionNameOperand());
+            return ret;
+        } else if (b == (byte) 0xff) {
+        } else if(b == (byte) 0x41){
+            
+        } 
+        
+        
+        throw new UnsupportedOperationException("TODO");
     }
     
     private long _instructionMemAddress;

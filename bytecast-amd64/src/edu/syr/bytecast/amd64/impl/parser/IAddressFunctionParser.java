@@ -4,34 +4,17 @@
  */
 package edu.syr.bytecast.amd64.impl.parser;
 
-import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
-import java.io.EOFException;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandSectionName;
 
 /**
  *
  * @author bytecast
  */
-public interface IRegImmParser {
-
-    /**
-     *
-     */
-    static enum Type {
-
-        IMM8, IMM16, IMM32, IMM64
-    }
-
-    /**
-     *
-     */
-    public static enum RegType {
-
-        NONE, REG8, REG16, REG32, REG64
-    }
-
+public interface IAddressFunctionParser {
     /**
      *
      * @param context
@@ -39,17 +22,17 @@ public interface IRegImmParser {
      * @param regtype
      * @param type
      */
-    void parse(IInstructionContext context, IInstructionByteInputStream input, IRegImmParser.RegType regtype, IRegImmParser.Type type);
+    void parse(IInstructionContext context, IInstructionByteInputStream input);
 
     /**
      *
      * @return
      */
-    OperandRegister getRegOperand();
+    OperandMemoryEffectiveAddress getAddressOperand();
 
     /**
      *
      * @return
      */
-    OperandConstant getImmOperand();
+    OperandSectionName getSectionNameOperand();
 }
