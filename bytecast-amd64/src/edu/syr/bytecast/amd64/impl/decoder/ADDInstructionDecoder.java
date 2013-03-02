@@ -1,4 +1,3 @@
-
 /*
  * This file is part of Bytecast.
  *
@@ -21,6 +20,8 @@
  *
  * @author Chen Qian
  */
+package edu.syr.bytecast.amd64.impl.decoder;
+
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
