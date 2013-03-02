@@ -46,4 +46,8 @@ public class ParserFactory {
     public static IVexXopPrefixParser getVexXopPrefixParser() {
         throw new UnsupportedOperationException("Unsupported");
     }
+    
+    public static IRegImmParser getRegImmParser() {
+        throw new UnsupportedOperationException("TODO");
+    }
 }
