@@ -1,4 +1,4 @@
-
+package edu.syr.bytecast.amd64.impl.decoder;
 /*
  * This file is part of Bytecast.
  *
@@ -16,7 +16,6 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 /**
  *
  * @author Chen Qian
@@ -31,11 +30,10 @@ import edu.syr.bytecast.amd64.impl.parser.IImmParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.impl.parser.IModRmParser;
 import edu.syr.bytecast.amd64.impl.parser.IMoffsetParser;
+import edu.syr.bytecast.amd64.impl.parser.IRegImmParser;
 import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.io.EOFException;
-
-
 
 public class ADDInstructionDecoder implements IInstructionDecoder {
 
@@ -46,34 +44,47 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
         // Create the ret
         AMD64Instruction ret = new AMD64Instruction(InstructionType.ADD);
 
-        // Parse opcode. See AMD64, volume 3, page 213.
+        // ADD AL,imm8
         if (b == (byte) 0x04) {
             ret.setOpCode("04");
             IImmParser imm_parser = ParserFactory.getImmParser();
             imm_parser.parse(input, IImmParser.Type.IMM8);
-            ret.addOperand(imm_parser.getOperand());          
+            ret.addOperand(imm_parser.getOperand());
             ret.addOperand(new OperandRegister(RegisterType.AL));
-            
-        }else if(b == (byte) 0x05){
-            if(context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32);
-            
-        }else if(b == (byte) 0x05){
-            
-        }else if(b == (byte) 0x05){
-            
-        }else if (b == (byte) 0x89) {
+            return ret;
+        } else if (b == (byte) 0x05) { //ADD 
+            ret.setOpCode("05");
+            IImmParser imm_parser = ParserFactory.getImmParser();
+            if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
+                imm_parser.parse(input, IImmParser.Type.IMM32);
+                ret.addOperand(imm_parser.getOperand());
+                ret.addOperand(new OperandRegister(RegisterType.EAX));
+                return ret;
+            } else if (context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
+                imm_parser.parse(input, IImmParser.Type.IMM64);
+                ret.addOperand(imm_parser.getOperand());
+                ret.addOperand(new OperandRegister(RegisterType.RAX));
+                return ret;
+            } else if (context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
+                imm_parser.parse(input, IImmParser.Type.IMM16);
+                ret.addOperand(imm_parser.getOperand());
+                ret.addOperand(new OperandRegister(RegisterType.AX));
+                return ret;
+            } 
+            throw new RuntimeException("Unkonwn operand size.");
+        } else if (b == (byte) 0x80) {
+                //TODO ADD reg/mem8, imm8
+        } else if (b == (byte) 0x81) {
+        } else if (b == (byte) 0x83) {
             if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
-                // Description: Move the contents of a 16-bit register to a 16-bit
-                //     destination register or memory operand.
-                // Mnemonic:    MOV reg/mem16, reg16
-                // Opcode:      89 /r
-                // TODO MOV reg/mem16, reg16    89 /r
+                ret.setOpCode("83");
+                IRegImmParser ri_parser = ParserFactory.getRegImmParser();
+                ri_parser.parse(context, input, IRegImmParser.RegType.REG16, IRegImmParser.Type.IMM16);
+                ret.addOperand(ri_parser.getRegOperand());
+                ret.addOperand(ri_parser.getImmOperand());
+                return ret;
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
-                // Description: Move the contents of a 32-bit register to a 32-bit
-                //     destination register or memory operand.
-                // Mnemonic:    MOV reg/mem32, reg32
-                // Opcode:      89 /r
-                ret.setOpCode("89");
+                ret.setOpCode("83");
                 // TODO We should get a rm parser rather than creating an instance.
                 IModRmParser rm_parser = ParserFactory.getModRmParser();
                 rm_parser.parse(context, input, IModRmParser.RegType.REG32, IModRmParser.RmType.REG_MEM32);
@@ -208,8 +219,10 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
             throw new RuntimeException("Unkonwn operand size.");
         }
         // TODO
-        throw new UnsupportedOperationException("TODO");
-      } 
+
+        throw new UnsupportedOperationException(
+                "TODO");
+    }
 }
 //    @Override
 //    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
@@ -219,9 +232,8 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
 //        
 //        return instruction;
 //    }
-    
-    // 48 83 c0 08   add $0x8 %rsp
-    // 83 : reg + imm8
+// 48 83 c0 08   add $0x8 %rsp
+// 83 : reg + imm8
 //    private void decodeOperands(IInstruction instruction, IInstructionByteInputStream input) {
 //        if(instructionbytes.size()!=4) {
 //            throw new UnsupportedOperationException("Not A correct ADD instructionbytes.");
@@ -241,8 +253,6 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
 //        //other add opcode to be implement
 //        //else if(instructionbytes.get(1) == 0x81){}   
 //    }
-
-
 //  ******old version for String type DecoderUtil 
 //            List<String> tempdecodes = DecoderUtil.DecodeHexToOctal(instructionbytes.get(2));
 //           if(tempdecodes.get(1).equals("000")){ // verify is a add insturction
