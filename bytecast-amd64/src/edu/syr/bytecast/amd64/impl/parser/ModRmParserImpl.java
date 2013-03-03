@@ -27,53 +27,60 @@ public class ModRmParserImpl implements IModRmParser {
     @Override
     public void parse(IInstructionContext context, IInstructionByteInputStream input, RegType reg_type, RmType rm_type) throws EOFException {
         byte b = input.read();
+        // Parse bits.
         m_mod = b >> 6 & 3;
         m_reg = b >> 3 & 7;
         m_extended_reg = m_reg + (context.isRexR() ? 0x8 : 0);
         m_rm = b & 7;
         m_extended_rm = m_rm + (context.isRexB() ? 0x8 : 0);
-        // Parse reg
-        m_reg_operand = parseRegOperand(context, reg_type);
-        // Parse r/m
+        
+        // Parse reg operand
+        m_reg_operand = parseRegOperand(reg_type);
+        
+        // Parse r/m operand
         if (m_mod == 3) {
+            // The operand is a register operand. See Table A-35, Volume 3, AMD64 Manual (page 463).
             m_rm_operand = parseRmOperandForRegisterType(rm_type);
         } else {
             RegisterType base;
             RegisterType index = null;
-            int scale = 0;
-            int offset = 0;
+            int scaleFactor = 1;
+            long offset = 0;
             if (m_mod == 0 && m_rm == 5) {
-                // Parse [rip]+disp32
+                // Parse [rip]+disp32 if rm is 101b.
                 base = RegisterType.RIP;
                 IDispParser parser = ParserFactory.getDispParser();
                 parser.parse(input, IDispParser.Type.DISP32);
-                offset = (int) parser.getNumber();
+                offset = parser.getNumber();
             } else {
                 if (m_rm == 4) {
-                    // Parse SIB
+                    // Parse SIB if rm is 100b
                     ISibParser sib_parser = ParserFactory.getSibParser();
                     sib_parser.parse(context, input, m_mod);
                     base = sib_parser.getBaseRegister();
                     index = sib_parser.getIndexRegister();
-                    scale = sib_parser.getScaleFactor();
+                    scaleFactor = sib_parser.getScaleFactor();
                 } else {
+                    // Use register type.
                     base = REG64_ARRAY[m_extended_rm];
                 }
-                // Parse disp bytes.
+                // Parse disp8 or disp32 bytes.
                 if (m_mod == 1) {
                     IDispParser parser = ParserFactory.getDispParser();
                     parser.parse(input, IDispParser.Type.DISP8);
-                    offset = (int) parser.getNumber();
+                    offset = parser.getNumber();
                 } else if (m_mod == 2) {
                     IDispParser parser = ParserFactory.getDispParser();
                     parser.parse(input, IDispParser.Type.DISP32);
-                    offset = (int) parser.getNumber();
+                    offset = parser.getNumber();
                 }
             }
+            
+            // Add segment register if any.
             if (context.getSegmentRegister() == null) {
-                m_rm_operand = new OperandMemoryEffectiveAddress(base, index, scale, offset);
+                m_rm_operand = new OperandMemoryEffectiveAddress(base, index, scaleFactor, offset);
             } else {
-                m_rm_operand = new OperandMemoryLogicalAddress(context.getSegmentRegister(), base, index, scale, offset);
+                m_rm_operand = new OperandMemoryLogicalAddress(context.getSegmentRegister(), base, index, scaleFactor, offset);
             }
         }
     }
@@ -129,7 +136,7 @@ public class ModRmParserImpl implements IModRmParser {
         RegisterType.R8, RegisterType.R9, RegisterType.R10, RegisterType.R11,
         RegisterType.R12, RegisterType.R13, RegisterType.R14, RegisterType.R15};
 
-    private OperandRegister parseRegOperand(IInstructionContext context, ModRmParserImpl.RegType type) {
+    private OperandRegister parseRegOperand(RegType type) {
         switch (type) {
             case REG32:
                 return new OperandRegister(REG32_ARRAY[m_extended_reg]);
@@ -138,19 +145,20 @@ public class ModRmParserImpl implements IModRmParser {
             case NONE:
                 return null;
             default:
-                throw new UnsupportedOperationException("TODO");
+                throw new UnsupportedOperationException("Unsupport");
         }
     }
 
-    private OperandRegister parseRmOperandForRegisterType(ModRmParserImpl.RmType type) {
+    private OperandRegister parseRmOperandForRegisterType(RmType type) {
         switch (type) {
             case REG_MEM32:
+                return new OperandRegister(REG32_ARRAY[m_extended_rm]);
             case REG_MEM64:
                 return new OperandRegister(REG64_ARRAY[m_extended_rm]);
             case NONE:
                 return null;
             default:
-                throw new UnsupportedOperationException("TODO");
+                throw new UnsupportedOperationException("Unsupport");
         }
     }
 }

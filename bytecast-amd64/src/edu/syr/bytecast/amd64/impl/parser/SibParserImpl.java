@@ -26,15 +26,18 @@ public class SibParserImpl implements ISibParser {
     @Override
     public void parse(IInstructionContext context, IInstructionByteInputStream input, int mod) throws EOFException {
         byte b = input.read();
+        // Parse bits.
         scare = b >> 6 & 3;
         index = b >> 3 & 7;
         extended_index = index + (context.isRexX() ? 0x8 : 0);
         base = b & 7;
         extended_base = base + (context.isRexB() ? 0x8 : 0);
+        
         // Parse index register
         if (index != 4) {
             indexRegister = REGISTER_ARRAY[extended_index];
         }
+        
         // Parse base register
         if (base == 5 && mod == 0) {
             // No base register.

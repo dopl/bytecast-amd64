@@ -21,12 +21,19 @@ public class NumberParserImpl implements IImmParser, IMoffsetParser, IDispParser
      * @throws EOFException if the end of the stream is reached.
      */
     public void parse(IInstructionByteInputStream input, int size) throws EOFException {
+        // Convert to a signed number.
         number = 0;
-        for (int i = 0; i < size; i++) {
-            number = number << 8;
-            byte b = input.read();
-            number += b & 0xFF;
+        int i;
+        byte b = 0;
+        for (i = 0; i < size; i++) {
+            b = input.read();
+            number += ((long) (b & 0xFF)) << (i * 8);
         }
+        if ((b & 0xFF) >= 0x80) {
+            // It is a negative.
+            number += (-1L << (size * 8));
+        }
+
     }
 
     @Override

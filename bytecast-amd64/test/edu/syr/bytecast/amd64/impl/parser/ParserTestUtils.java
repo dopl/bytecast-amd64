@@ -1,12 +1,24 @@
 package edu.syr.bytecast.amd64.impl.parser;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author sheng
  */
 public class ParserTestUtils {
+
+    /**
+     * Convert a byte string like "48 89 e5" to a byte list.
+     *
+     * @param str
+     * @return
+     */
+    public static List<Byte> stringToByteList(String str) {
+        return byteArrayToWrapperList(stringToByteArray(str));
+    }
 
     /**
      * Convert a byte string like "48 89 e5" to a byte array.
@@ -71,5 +83,21 @@ public class ParserTestUtils {
             }
         }
         return out.toByteArray();
+    }
+
+    public static List<Byte> byteArrayToWrapperList(byte[] byteArray) {
+        List<Byte> list = new ArrayList<Byte>();
+        for (byte b : byteArray) {
+            list.add(new Byte(b));
+        }
+        return list;
+    }
+
+    public static byte[] wrapperListToByteArray(List<Byte> list) {
+        byte[] byteArray = new byte[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            byteArray[i] = list.get(i);
+        }
+        return byteArray;
     }
 }
