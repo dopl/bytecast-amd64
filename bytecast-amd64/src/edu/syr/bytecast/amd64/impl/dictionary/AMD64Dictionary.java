@@ -20,23 +20,37 @@ package edu.syr.bytecast.amd64.impl.dictionary;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyOpCodeTable;
+import edu.syr.bytecast.amd64.impl.dictionary.tables.primaryopcode.PrimaryOpCodeTable;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodeTable;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
+import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
 
 public class AMD64Dictionary implements IAMD64Dictionary{
 
     private static AMD64Dictionary m_instance = new AMD64Dictionary();
     private static LegacyOpCodeTable m_legacyOpCodeTable;
     private static SecOpCodeTable m_secondaryOpCodeTable;
+    private static PrimaryOpCodeTable m_primaryOpCodeTable;
     private Hashtable<Long, String> m_fnSymbolTable;
+   
     
+    private void loadData(){
+        
+       
+        
+    }
     private AMD64Dictionary() {
+        loadData();
         m_legacyOpCodeTable = new LegacyOpCodeTable();
         m_secondaryOpCodeTable = new SecOpCodeTable();
+        m_primaryOpCodeTable = new PrimaryOpCodeTable();
         
         m_secondaryOpCodeTable.loadData();
         m_legacyOpCodeTable.loadData();
+        m_primaryOpCodeTable.loadData();
     }
     
     public static AMD64Dictionary getInstance()
@@ -60,10 +74,25 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     }
 
     @Override
-    public InstructionType getInstructionFromSecondaryOCTable(Byte opcode) {
-       return  m_secondaryOpCodeTable.getInstructionFromOpCode(opcode);
+    public InstructionType getInstructionFromSecondaryOCTable(Byte opcode) throws BytecastAMD64Exception{
+        InstructionType instructionFromOpCode = m_secondaryOpCodeTable.getInstructionFromOpCode(opcode);
+        if(instructionFromOpCode==null){
+            throw new BytecastAMD64Exception("opcode "+Integer.toHexString(opcode)+" not found in secondary opcode table" );
+        }
+         return instructionFromOpCode;   
     }
-
+    
+    @Override
+    public InstructionType getInstructionFromPrimaryOCTable(Byte opcode) throws BytecastAMD64Exception{
+        InstructionType instructionFromOpCode = m_primaryOpCodeTable.getInstructionFromOpCode(opcode);
+        if(instructionFromOpCode==null) {
+            throw new BytecastAMD64Exception("opcode "+Integer.toHexString(opcode)+" not found in primary opcode table" );
+        }
+        
+        return instructionFromOpCode;
+    }
+    
+    
     @Override
     public String getFunctionNameFromAddress(Long address) {
         String fnName;
@@ -81,8 +110,10 @@ public class AMD64Dictionary implements IAMD64Dictionary{
         this.m_fnSymbolTable = fnSymbolTable;
     }
 
+   
+
     @Override
-    public InstructionType getInstructionFromPrimaryOCTable(Byte opcode) {
+    public boolean isOpcodeExtensionIndicator(Byte opcode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

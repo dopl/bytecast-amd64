@@ -19,14 +19,16 @@
 package edu.syr.bytecast.amd64.internal.api.dictionary;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
 
 public interface IAMD64Dictionary {
     
     public boolean isLegacyOpcode(Byte opcode);
     public boolean isRexPrefix(Byte opcode);
     public boolean isEscapeToSecondaryOpCode(Byte opcode);
-    public InstructionType getInstructionFromSecondaryOCTable(Byte opcode);
-    public InstructionType getInstructionFromPrimaryOCTable(Byte opcode);
+    public boolean isOpcodeExtensionIndicator(Byte opcode);
+    public InstructionType getInstructionFromSecondaryOCTable(Byte opcode) throws BytecastAMD64Exception;
+    public InstructionType getInstructionFromPrimaryOCTable(Byte opcode) throws BytecastAMD64Exception;
     public String getFunctionNameFromAddress(Long address);
     
 }
