@@ -21,7 +21,7 @@ public class OperandMemoryLogicalAddress implements IOperand {
   /**
    *
    */
-  public OperandMemoryLogicalAddress(RegisterType segment, RegisterType base, RegisterType index, int scale, int offset) {
+  public OperandMemoryLogicalAddress(RegisterType segment, RegisterType base, RegisterType index, int scale, long offset) {
     this.logical_address = new OperandTypeMemoryLogicalAddress(segment, base, index, scale, offset);
   }
 
