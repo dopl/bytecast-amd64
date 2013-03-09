@@ -15,24 +15,44 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
-import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
+import edu.syr.bytecast.amd64.impl.parser.IModRmParser;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
-import java.util.List;
+import java.io.EOFException;
 
 public class JMPInstructionDecoder implements IInstructionDecoder {
 
   @Override
-  public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
-    
-      IInstruction ret = new AMD64Instruction(InstructionType.JMP);
+  public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {
+
+    IInstruction ret = new AMD64Instruction(InstructionType.JMP);
+
+    byte b = input.read();
+    if (b == (byte) 0xEB) {
+      // JMP rel8off
+      // TODO
+    } else if (b == (byte) 0xE9) {
+      // JMP rel16off or rel32off
+      // TODO
+    } else if (b == (byte) 0xFF) {
+      b = input.read();
+      if((b & (byte)0x38) == 4) {
+        // JMP
+        //TODO
+      }
+
+    }
+
+    return ret;
+
+
+
 //    byte tmp = instructionbytes.get(0).byteValue();
 //    
 //    if((tmp & 0xF0) == 0xE0) {
@@ -63,7 +83,6 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
 //      throw new IllegalArgumentException("For JMP, the assembly code is incorrect"); 
 //    }
 //    
-    return ret;
+
   }
-  
 }
