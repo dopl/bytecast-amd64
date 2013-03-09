@@ -80,4 +80,9 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     {
         this.m_fnSymbolTable = fnSymbolTable;
     }
+
+    @Override
+    public InstructionType getInstructionFromPrimaryOCTable(Byte opcode) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

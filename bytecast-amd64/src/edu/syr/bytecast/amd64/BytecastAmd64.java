@@ -129,7 +129,7 @@ public class BytecastAmd64 {
     
 
     private void doJimple(IExecutableFile exec) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        m_jimple.createJimple(exec);
     }
  
     
