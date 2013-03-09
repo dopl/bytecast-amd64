@@ -39,6 +39,10 @@ public class ParserFactory {
         return new OperandSizeOverridePrefixParserImpl();
     }
 
+    public static IRegisterInOpcodeParser getRegisterInOpcodeParser() {
+        return new RegisterInOpcodeParserImpl();
+    }
+
     public static IRepeatPrefixParser getRepeatPrefixParser() {
         throw new UnsupportedOperationException("Unsupported");
     }
@@ -62,9 +66,9 @@ public class ParserFactory {
     public static IRegImmParser getRegImmParser() {
         throw new UnsupportedOperationException("TODO");
     }
-    
-    public static IAddressFunctionParser getAddressFunctionParser(){
+
+    public static IAddressFunctionParser getAddressFunctionParser() {
         throw new UnsupportedOperationException("TODo");
-                
+
     }
 }

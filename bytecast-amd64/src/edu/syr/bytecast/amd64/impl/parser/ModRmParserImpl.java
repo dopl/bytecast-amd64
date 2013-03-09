@@ -151,6 +151,12 @@ public class ModRmParserImpl implements IModRmParser {
         RegisterType.SPL, RegisterType.BPL, RegisterType.SIL, RegisterType.DIL,
         RegisterType.R8B, RegisterType.R9B, RegisterType.R10B, RegisterType.R11B,
         RegisterType.R12B, RegisterType.R13B, RegisterType.R14B, RegisterType.R15B};
+    /**
+     * See Table A-34, Volume 3, AMD64 Manual.
+     */
+    private static final RegisterType[] SEG_ARRAY = new RegisterType[]{
+        RegisterType.ES, RegisterType.CS, RegisterType.SS, RegisterType.DS,
+        RegisterType.FS, RegisterType.GS};
 
     private OperandRegister parseRegOperand(RegType type) {
         switch (type) {
@@ -162,6 +168,12 @@ public class ModRmParserImpl implements IModRmParser {
                 return new OperandRegister(REG32_ARRAY[m_extended_reg]);
             case REG64:
                 return new OperandRegister(REG64_ARRAY[m_extended_reg]);
+            case SEG_REG:
+                if (m_reg == 6 || m_reg == 7) {
+                    // PENDING return null or throw an exception?
+                    throw new RuntimeException("Invalid segment registers. See Row \"sReg\", Table A-34, Volume 3, AMD64 Manual.");
+                }
+                return new OperandRegister(SEG_ARRAY[m_reg]);
             case NONE:
                 return null;
             default:

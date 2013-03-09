@@ -15,7 +15,7 @@ public interface IModRmParser {
 
     public static enum RegType {
 
-        NONE, REG8, REG16, REG32, REG64
+        NONE, REG8, REG16, REG32, REG64, SEG_REG
     }
 
     public static enum RmType {
@@ -53,8 +53,8 @@ public interface IModRmParser {
     int getExtendedReg();
 
     /**
-     * Return the extended number of rm bits. It includes REX.B, VEX.B or
-     * XOP.B. It is from 0 to 15.
+     * Return the extended number of rm bits. It includes REX.B, VEX.B or XOP.B.
+     * It is from 0 to 15.
      *
      * @return
      */
