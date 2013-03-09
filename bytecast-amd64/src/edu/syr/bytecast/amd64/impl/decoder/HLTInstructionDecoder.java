@@ -15,7 +15,6 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.util.DecoderUtil;
@@ -27,26 +26,21 @@ import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
+import java.io.EOFException;
 import java.util.List;
 
-public class HLTInstructionDecoder implements IInstructionDecoder{
+public class HLTInstructionDecoder implements IInstructionDecoder {
 
-    
     @Override
-    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
-        IInstruction instruction = new AMD64Instruction(InstructionType.HLT);      
-        
-        //decodeOperands(instruction, instructionbytes);
-        
-        return instruction;
-    }
-    
-    private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
-        if(instructionbytes.size()!=1) {
-            return;
-        }      
-        if(instructionbytes.get(0) == 0xf4){
-            //instruction.setOpCode("f4"); 
+    public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {
+        byte b = input.read();
+
+        // Create the ret
+        AMD64Instruction ret = new AMD64Instruction(InstructionType.HLT);
+        if (b == (byte) 0xF4) {
+            ret.setOpCode("F4");
+            return ret;
         }
+        throw new RuntimeException("This is not HLT insturction");
     }
 }
