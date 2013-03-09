@@ -17,14 +17,24 @@
  */
 
 package edu.syr.bytecast.amd64.impl.lexer;
-
+import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionLexer;
 import java.util.List;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
+import edu.syr.bytecast.amd64.impl.parser.ILegacyPrefixParser;
+import edu.syr.bytecast.amd64.impl.parser.IRexPrefixParser;
+import edu.syr.bytecast.amd64.impl.parser.InstructionByteListInputStream;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
+import java.io.EOFException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AMD64InstructionLexer implements IInstructionLexer {
 
@@ -36,35 +46,53 @@ public class AMD64InstructionLexer implements IInstructionLexer {
     @Override
     public Map<Long,IInstruction> convertInstructionBytesToObjects(Long sectionStartMemeAddress,List<Byte> bytes ) {
         Long memoryAddress = sectionStartMemeAddress;
-        List<Byte> oneinstruction = new ArrayList<Byte>();
-        boolean end=false;
-        Byte previousByte=null;
+        Map<Long,IInstruction> memToInstrMap = new LinkedHashMap<Long, IInstruction>();
+        InstructionByteListInputStream istream = new InstructionByteListInputStream(bytes, sectionStartMemeAddress);
+        IInstructionContext ctx=null ;
         
-        for(Byte b : bytes)
-        {
-            ++memoryAddress;
-            
-            if(end)
-                oneinstruction = new ArrayList<Byte>();
-            
-            if(dictionary.isLegacyOpcode(b))
+        boolean createNewCtx=false;
+        try {
+            while(istream.available()>=0)
             {
-                //Legacy opcode repeats are equivalent to one instance
-                if(b==previousByte)
-                    continue;
+                if(createNewCtx)
+                   ctx = new InstructionContextImpl();
+                
+               boolean foundInstructionOpCOde = processInstructionByte(ctx,istream);
+               if(foundInstructionOpCOde)
+               {
+                   InstructionType insType = getInstructionType(istream.peek());
+               }
+                    
+
             }
-            
-            //REX prefixes
-            if(b>= 0x40 && b<= 0x4f)
-            {
-                String bin = Integer.toBinaryString(b);
-                oneinstruction.add(b);
-            }
-            previousByte=b;
+        } catch (EOFException ex) {
+                Logger.getLogger(AMD64InstructionLexer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
         
         
+    }
+    
+    private boolean processInstructionByte(IInstructionContext ctx,InstructionByteListInputStream istream) throws EOFException
+    {
+        AMD64Dictionary dictionary = AMD64Dictionary.getInstance();
+        byte b = istream.peek();
+        
+        if(dictionary.isLegacyOpcode(b)) {
+            ILegacyPrefixParser legacyPrefixParser = ParserFactory.getLegacyPrefixParser();
+            legacyPrefixParser.parse(ctx, istream);
+            return false;
+        }
+        else if(dictionary.isRexPrefix(b)) {
+            IRexPrefixParser rexPrefixParser = ParserFactory.getRexPrefixParser();
+            rexPrefixParser.parse(ctx, istream);
+            return false;
+        }
+        return false;
+    }
+
+    private InstructionType getInstructionType(byte b) {
+        return null;
     }
 
 }

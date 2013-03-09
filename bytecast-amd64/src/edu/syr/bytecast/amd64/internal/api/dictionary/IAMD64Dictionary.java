@@ -26,6 +26,7 @@ public interface IAMD64Dictionary {
     public boolean isRexPrefix(Byte opcode);
     public boolean isEscapeToSecondaryOpCode(Byte opcode);
     public InstructionType getInstructionFromSecondaryOCTable(Byte opcode);
+    public InstructionType getInstructionFromPrimaryOCTable(Byte opcode);
     public String getFunctionNameFromAddress(Long address);
     
 }
