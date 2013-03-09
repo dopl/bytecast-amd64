@@ -82,27 +82,34 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
             throw new UnsupportedOperationException("TODO");
         } else if (b == (byte) 0x83) {
             ret.setOpCode("83");
-            IRegImmParser ri_parser = ParserFactory.getRegImmParser();
-            if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
 
-                ri_parser.parse(context, input, IRegImmParser.RegType.REG16, IRegImmParser.Type.IMM16);
-                ret.addOperand(ri_parser.getRegOperand());
-                ret.addOperand(ri_parser.getImmOperand());
-                return ret;
+            IModRmParser imr_parser = ParserFactory.getModRmParser();
+            if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
+                
+                imr_parser.parse(context, input, IModRmParser.RegType.REG16, IModRmParser.RmType.REG_MEM16);
+                
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
 
-                ri_parser.parse(context, input, IRegImmParser.RegType.REG32, IRegImmParser.Type.IMM32);
-                ret.addOperand(ri_parser.getRegOperand());
-                ret.addOperand(ri_parser.getImmOperand());
-                return ret;
+                imr_parser.parse(context, input, IModRmParser.RegType.REG32, IModRmParser.RmType.REG_MEM32);
+
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
 
-                ri_parser.parse(context, input, IRegImmParser.RegType.REG64, IRegImmParser.Type.IMM64);
-                ret.addOperand(ri_parser.getRegOperand());
-                ret.addOperand(ri_parser.getImmOperand());
-                return ret;
+                imr_parser.parse(context, input, IModRmParser.RegType.REG64, IModRmParser.RmType.REG_MEM64);
+
+            } else {
+                throw new RuntimeException("Unknown operand size.");
             }
-            throw new RuntimeException("Unknown operand size.");
+            if (imr_parser.getReg() != 0) {
+                throw new RuntimeException("This is not an ADD instruction");
+            }
+            
+            IImmParser imm_parser = ParserFactory.getImmParser();
+            imm_parser.parse(input, IImmParser.Type.IMM8);
+            // add imm first and reg second
+            ret.addOperand(imm_parser.getOperand());
+            ret.addOperand(imr_parser.getRmOperand());
+            return ret;
+
         } else if (b == (byte) 0x00) {
             ret.setOpCode("00");
             IModRmParser rm_parser = ParserFactory.getModRmParser();
@@ -161,5 +168,3 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
         throw new RuntimeException("Invalid Add Instruction Opcode");
     }
 }
-  
-

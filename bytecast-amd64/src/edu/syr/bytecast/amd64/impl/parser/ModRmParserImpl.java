@@ -33,10 +33,10 @@ public class ModRmParserImpl implements IModRmParser {
         m_extended_reg = m_reg + (context.isRexR() ? 0x8 : 0);
         m_rm = b & 7;
         m_extended_rm = m_rm + (context.isRexB() ? 0x8 : 0);
-        
+
         // Parse reg operand
         m_reg_operand = parseRegOperand(reg_type);
-        
+
         // Parse r/m operand
         if (m_mod == 3) {
             // The operand is a register operand. See Table A-35, Volume 3, AMD64 Manual (page 463).
@@ -75,7 +75,7 @@ public class ModRmParserImpl implements IModRmParser {
                     offset = parser.getNumber();
                 }
             }
-            
+
             // Add segment register if any.
             if (context.getSegmentRegister() == null) {
                 m_rm_operand = new OperandMemoryEffectiveAddress(base, index, scaleFactor, offset);
@@ -135,9 +135,29 @@ public class ModRmParserImpl implements IModRmParser {
         RegisterType.RSP, RegisterType.RBP, RegisterType.RSI, RegisterType.RDI,
         RegisterType.R8, RegisterType.R9, RegisterType.R10, RegisterType.R11,
         RegisterType.R12, RegisterType.R13, RegisterType.R14, RegisterType.R15};
+    /**
+     * See Table A-34, Volume 3, AMD64 Manual.
+     */
+    private static final RegisterType[] REG16_ARRAY = new RegisterType[]{
+        RegisterType.AX, RegisterType.CX, RegisterType.DX, RegisterType.BX,
+        RegisterType.SP, RegisterType.BP, RegisterType.SI, RegisterType.DI,
+        RegisterType.R8W, RegisterType.R9W, RegisterType.R10W, RegisterType.R11W,
+        RegisterType.R12W, RegisterType.R13W, RegisterType.R14W, RegisterType.R15W};
+    /**
+     * See Table A-34, Volume 3, AMD64 Manual.
+     */
+    private static final RegisterType[] REG8_ARRAY = new RegisterType[]{
+        RegisterType.AL, RegisterType.CL, RegisterType.DL, RegisterType.BL,
+        RegisterType.SPL, RegisterType.BPL, RegisterType.SIL, RegisterType.DIL,
+        RegisterType.R8B, RegisterType.R9B, RegisterType.R10B, RegisterType.R11B,
+        RegisterType.R12B, RegisterType.R13B, RegisterType.R14B, RegisterType.R15B};
 
     private OperandRegister parseRegOperand(RegType type) {
         switch (type) {
+            case REG8:
+                return new OperandRegister(REG8_ARRAY[m_extended_reg]);
+            case REG16:
+                return new OperandRegister(REG16_ARRAY[m_extended_reg]);
             case REG32:
                 return new OperandRegister(REG32_ARRAY[m_extended_reg]);
             case REG64:
@@ -151,6 +171,10 @@ public class ModRmParserImpl implements IModRmParser {
 
     private OperandRegister parseRmOperandForRegisterType(RmType type) {
         switch (type) {
+            case REG_MEM8:
+                return new OperandRegister(REG8_ARRAY[m_extended_reg]);
+            case REG_MEM16:
+                return new OperandRegister(REG16_ARRAY[m_extended_reg]);
             case REG_MEM32:
                 return new OperandRegister(REG32_ARRAY[m_extended_rm]);
             case REG_MEM64:
