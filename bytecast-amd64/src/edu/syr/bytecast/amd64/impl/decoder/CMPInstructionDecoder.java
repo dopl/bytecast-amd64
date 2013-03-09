@@ -96,7 +96,7 @@ public class CMPInstructionDecoder implements IInstructionDecoder{
                 throw new RuntimeException("Unknown operand size.");
             }
             if (imr_parser.getReg() != 7) {
-                throw new RuntimeException("This is not an ADD instruction");
+                throw new RuntimeException("This is not an CMP instruction");
             }
             
             IImmParser imm_parser = ParserFactory.getImmParser();
