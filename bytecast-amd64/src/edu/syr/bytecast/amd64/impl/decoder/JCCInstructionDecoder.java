@@ -15,7 +15,6 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
@@ -23,21 +22,53 @@ import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
+import edu.syr.bytecast.amd64.impl.parser.IImmParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
+import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
-import edu.syr.bytecast.amd64.util.DecoderUtil;
-import java.util.List;
+import java.io.EOFException;
 
 public class JCCInstructionDecoder implements IInstructionDecoder {
-    
+
   @Override
-  public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) {
-      IInstruction ret = null;
+  public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {
+    AMD64Instruction ret = null;
+
+    // may need to set the instruction memory address
+    byte b = input.read();
+    IImmParser imm_parser = ParserFactory.getImmParser();
+    long curr_addr = input.getInstructionAddress();
+    long addr;
+
+    if ((b & (byte)0xF0) == (byte) 0x70) {
+      // 8 offset
+      ret = getInstruction((byte) (b & (byte) 0x0F));
+      ret.setOpCode(String.format("%x", b));
+      imm_parser.parse(input, IImmParser.Type.IMM8);
+      addr = imm_parser.getNumber() + curr_addr + 2;
+    } else if (b == (byte) 0x0F) {
+      // 16 offset
+      b = input.read();
+      if ((b & (byte)0xF0) != (byte) 0x80) {
+        throw new IllegalArgumentException("Incorrect form for JCC instruction");
+      }
+      ret = getInstruction((byte) (b & (byte) 0x0F));
+      ret.setOpCode("OF " + String.format("%x", b));
+      imm_parser.parse(input, IImmParser.Type.IMM16);
+      addr = imm_parser.getNumber() + curr_addr + 4;
+    } else {
+      throw new IllegalArgumentException("Incorrect form for JCC instruction");
+    }
+
+    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 0, addr);
+    ret.addOperand(operandMemAddr);
+    return ret;
+
 //    int pos = 0;
 //    byte key_byte = instructionbytes.get(pos).byteValue();
 //    
 //    // 0x67: address-size override prefix
-//    if(key_byte == (byte)0x67) {
+//    if(key_byte == (byte)S0x67) {
 //      key_byte = instructionbytes.get(++pos).byteValue();
 //    }
 //    
@@ -58,49 +89,45 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
 //        
 //    // need add the method to parse the operands
 //    decodeOperands(ret, instructionMemAddress, instructionbytes);
+  }
+//  private void decodeOperands(IInstruction instruction, Long instructionMemAddress, List<Byte> instructionbytes) {
+//    int pos = 0;
+//    byte tmp = instructionbytes.get(pos).byteValue();
+//    Long ltargetMemAddr = null;
+//
+//    // 0x67: address-size override prefix
+//    if (tmp == (byte) 0x67) {
+//      tmp = instructionbytes.get(++pos).byteValue();
+//    }
+//
+//    if (tmp != (byte) 0x0F) {
+//      // 8 offset JCC
+//      if (instructionbytes.size() - pos != 2) {
+//        throw new IllegalArgumentException("For 8 offset JCC, the length of instruction should be 2 bytes");
+//      }
+//      long targetMemAddr = instructionMemAddress.longValue() + instructionbytes.size() + instructionbytes.get(pos + 1).byteValue();
+//      ltargetMemAddr = (long) targetMemAddr;
+//    } else {
+//      // 16 offset JCC or 32 offset JCC
+//      //throw new UnsupportedOperationException("Not support JCC that larger than 8 offset yet.");
+//      if (instructionbytes.size() - pos == 4) {
+//        Long offset = DecoderUtil.ByteConcatenator(instructionbytes, 2);
+//        long targetMemAddr = instructionMemAddress.longValue() + instructionbytes.size() + offset.shortValue();
+//        ltargetMemAddr = (long) targetMemAddr;
+//      } else if (instructionbytes.size() - pos == 6) {
+//        Long offset = DecoderUtil.ByteConcatenator(instructionbytes, 4);
+//        long targetMemAddr = instructionMemAddress.longValue() + instructionbytes.size() + offset.intValue();
+//        ltargetMemAddr = (long) targetMemAddr;
+//      } else {
+//        throw new IllegalArgumentException("For 16 or 32 offset JCC, the length of instruction should be either 4 or 6 bytes");
+//      }
+//    }
+//    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 0, 0);
+//    //instruction.addOperand(operandMemAddr);
+//  }
 
-    return ret;
-  }
-  
-    
-  private void decodeOperands(IInstruction instruction, Long instructionMemAddress, List<Byte> instructionbytes) {
-    int pos = 0;
-    byte tmp = instructionbytes.get(pos).byteValue();
-    Long ltargetMemAddr = null;
-    
-    // 0x67: address-size override prefix
-    if(tmp == (byte)0x67) {
-      tmp = instructionbytes.get(++pos).byteValue();
-    }
-    
-    if(tmp != (byte)0x0F) {
-      // 8 offset JCC
-      if(instructionbytes.size()-pos != 2) {
-       throw new IllegalArgumentException("For 8 offset JCC, the length of instruction should be 2 bytes"); 
-      }
-      long targetMemAddr = instructionMemAddress.longValue() + instructionbytes.size() + instructionbytes.get(pos+1).byteValue();
-      ltargetMemAddr = (long)targetMemAddr;
-    } else {
-      // 16 offset JCC or 32 offset JCC
-      //throw new UnsupportedOperationException("Not support JCC that larger than 8 offset yet.");
-      if(instructionbytes.size()-pos == 4) {
-        Long offset = DecoderUtil.ByteConcatenator(instructionbytes, 2);
-        long targetMemAddr = instructionMemAddress.longValue() + instructionbytes.size() + offset.shortValue();
-        ltargetMemAddr = (long)targetMemAddr;
-      } else if(instructionbytes.size()-pos == 6) {
-        Long offset = DecoderUtil.ByteConcatenator(instructionbytes, 4);
-        long targetMemAddr = instructionMemAddress.longValue() + instructionbytes.size() + offset.intValue();
-        ltargetMemAddr = (long)targetMemAddr;
-      } else {
-        throw new IllegalArgumentException("For 16 or 32 offset JCC, the length of instruction should be either 4 or 6 bytes"); 
-      }
-    }
-    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 0, 0); 
-    //instruction.addOperand(operandMemAddr);
-  }
-  
-  private IInstruction getInstruction(byte tmp) {
-    switch(tmp) {
+  private AMD64Instruction getInstruction(byte tmp) {
+    switch (tmp) {
       case 0x00:
         return new AMD64Instruction(InstructionType.JO);
       case 0x01:
@@ -137,5 +164,4 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
         return null;
     }
   }
-    
 }
