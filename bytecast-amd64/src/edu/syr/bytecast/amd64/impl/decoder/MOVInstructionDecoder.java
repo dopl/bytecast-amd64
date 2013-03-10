@@ -125,16 +125,42 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
             }
             throw new RuntimeException("Unkonwn operand size.");
         } else if (b == (byte) 0x8C) {
-
             // Description: Move the contents of a segment register to a 16-bit,
             //     32-bit, or 64-bit destination register or to a 16-bit memory
             //     operand.
-            // Mnemonic:    MOV AL, moffsetMOV reg16/32/64/mem16, segReg
+            // Mnemonic:    MOV reg16/32/64/mem16, segReg
             // Opcode:      8C /r
             ret.setOpCode("8C");
-            // TODO
+            IModRmParser.RmType rm_type;
+            switch (context.getOperandSize()) {
+                case SIZE_16:
+                    rm_type = IModRmParser.RmType.REG_MEM16;
+                    break;
+                case SIZE_32:
+                    rm_type = IModRmParser.RmType.REG_MEM32;
+                    break;
+                case SIZE_64:
+                    rm_type = IModRmParser.RmType.REG_MEM64;
+                    break;
+                default:
+                    throw new RuntimeException("Unknown operand size!");
+            }
+            IModRmParser rm_parser = ParserFactory.getModRmParser();
+            rm_parser.parse(context, input, IModRmParser.RegType.SEG_REG, rm_type);
+            ret.addOperand(rm_parser.getRegOperand());
+            ret.addOperand(rm_parser.getRmOperand());
+            return ret;
         } else if (b == (byte) 0x8E) {
-            // TODO
+            // Description: Move the contents of a 16-bit register or memory 
+            //     operand to a segment register.
+            // Mnemonic:    MOV segReg, reg/mem16
+            // Opcode:      8E /r
+            ret.setOpCode("8E");
+            IModRmParser rm_parser = ParserFactory.getModRmParser();
+            rm_parser.parse(context, input, IModRmParser.RegType.SEG_REG, IModRmParser.RmType.REG_MEM16);
+            ret.addOperand(rm_parser.getRmOperand());
+            ret.addOperand(rm_parser.getRegOperand());
+            return ret;
         } else if (b == (byte) 0xA0) {
             // Description: Move 8-bit data at a specified memory offset to the AL register.
             // Mnemonic:    MOV AL, moffset8
@@ -286,6 +312,7 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
             imm_parser.parse(input, IImmParser.Type.IMM8);
             ret.addOperand(imm_parser.getOperand());
             ret.addOperand(rm_parser.getRmOperand());
+            return ret;
         } else if (b == (byte) 0xC7) {
             if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
                 // Description: Move an 16-bit immediate value to an 16-bit register or memory operand.
@@ -334,7 +361,8 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
                 return ret;
             }
             throw new RuntimeException("Unkonwn operand size.");
+        } else {
+            throw new RuntimeException("Unknown opcode!");
         }
-        throw new UnsupportedOperationException("TODO");
     }
 }
