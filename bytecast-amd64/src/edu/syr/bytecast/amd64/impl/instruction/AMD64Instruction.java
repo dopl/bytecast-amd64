@@ -35,6 +35,11 @@ public class AMD64Instruction implements IInstruction {
     operands = new ArrayList<IOperand>();
   }
 
+  public AMD64Instruction(InstructionType instructionType,List<IOperand> operands) {
+    this.instructionType = instructionType;
+    this.operands = operands;
+  }
+  
   @Override
   public List<IOperand> getOperands() {
     return this.operands;

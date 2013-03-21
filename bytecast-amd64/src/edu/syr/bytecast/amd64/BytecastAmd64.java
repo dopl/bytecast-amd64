@@ -19,6 +19,7 @@
 package edu.syr.bytecast.amd64;
 
 import edu.syr.bytecast.amd64.api.constants.FileFormats;
+import edu.syr.bytecast.amd64.api.constants.IBytecastAMD64;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.api.output.ISection;
@@ -32,69 +33,40 @@ import edu.syr.bytecast.interfaces.fsys.ExeObj;
 import edu.syr.bytecast.interfaces.fsys.ExeObjFunction;
 import edu.syr.bytecast.interfaces.fsys.ExeObjSegment;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
-import edu.syr.bytecast.jimple.api.IJimple;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class BytecastAmd64 {
+public class BytecastAmd64 implements IBytecastAMD64{
 
     private IBytecastFsys m_fsys;
-    private IJimple m_jimple;
     private String m_filepath;
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String[] args) {
-    if(args.length==0)
-    {
-        System.out.println("Error:No arguments specified");
-        displayUsage();
-    }
-  }
+    
+  
 
-  /**
-   * Prints out the usage information of the system
-   */
-  public static void displayUsage()
-  {
-      System.out.println("");
-  }
   
-  
-  /**
-   * BytecastAMD64 constructor which is initialized with service interfaces from Fsys and Jimple
-   * @param fsys
-   * @param jimple 
-   */
-  public BytecastAmd64(IBytecastFsys fsys, IJimple jimple, String filePath)
-  {
+  @Override
+    public IExecutableFile buildInstructionObjects(String execFilePath, IBytecastFsys fsys) {
       this.m_fsys = fsys;
-      this.m_jimple = jimple;
-      this.m_filepath = filePath;
-  }
-    /**
-     * This function runs the Bytecast system
-     */
-   public void run()
-   {
-       
-       try{
+      this.m_filepath = execFilePath;
+      IExecutableFile exec;
+      try{
            
             ExeObj fsysExec = doFsys();
             List<ISection> sections = parseAllSegments(fsysExec.getSegments(),fsysExec.getEntryPointIndex());
-            IExecutableFile exec = new AMD64ExecutableFile(sections, m_filepath, FileFormats.FF_ELF, null);
-            doJimple(exec);
+            exec = new AMD64ExecutableFile(sections, m_filepath, FileFormats.FF_ELF, null);
             
        }catch(Exception ex)
        {
            System.out.println(ex.getMessage());
-           return;
+           return null;
        }
-       
-   }
-   public ExeObj doFsys() throws Exception
+      return exec;
+    }
+
+
+  public ExeObj doFsys() throws Exception
    {
         m_fsys.setFilepath(m_filepath);
         ExeObj exeObj = m_fsys.parse();
@@ -126,11 +98,5 @@ public class BytecastAmd64 {
            }
         return sections;
     }
-    
-
-    private void doJimple(IExecutableFile exec) {
-        m_jimple.createJimple(exec);
-    }
- 
-    
+  
 }
