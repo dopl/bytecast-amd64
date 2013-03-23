@@ -20,10 +20,11 @@ package edu.syr.bytecast.amd64.internal.api.parser;
 
 import java.util.List;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
+import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
 import java.util.Map;
 
 public interface IInstructionLexer {
     
-    public Map<Long,IInstruction> convertInstructionBytesToObjects(Long sectionStartMemeAddress, List<Byte> bytes );
+    public List<MemoryInstructionPair> convertInstructionBytesToObjects(Long sectionStartMemeAddress, List<Byte> bytes );
 
 }
