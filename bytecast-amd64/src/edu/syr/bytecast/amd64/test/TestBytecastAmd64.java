@@ -19,11 +19,15 @@ import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandSectionName;
 import edu.syr.bytecast.amd64.impl.output.AMD64ExecutableFile;
 import edu.syr.bytecast.amd64.impl.output.AMD64Section;
+import edu.syr.bytecast.interfaces.fsys.ExeObj;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
+import edu.syr.bytecast.test.mockups.MockBytecastFsys;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -134,7 +138,13 @@ public class TestBytecastAmd64 implements IBytecastAMD64{
          
         ISection section  = new AMD64Section(memtoins,(long)0x400542 , true);
         sections.add(section);
-        IExecutableFile exeFile = new AMD64ExecutableFile(sections, "TEST_EXE_FILE", "ELF", null);
+        ExeObj fsysObj=null;
+        try {
+            fsysObj = new MockBytecastFsys().parse();
+        } catch (Exception ex) {
+            Logger.getLogger(TestBytecastAmd64.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        IExecutableFile exeFile = new AMD64ExecutableFile(fsysObj.getSegments(), sections, "TEST_EXE_FILE", "ELF", null);
         return exeFile;
     }
     
