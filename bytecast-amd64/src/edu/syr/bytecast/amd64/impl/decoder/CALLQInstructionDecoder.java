@@ -41,17 +41,17 @@ public class CALLQInstructionDecoder implements IInstructionDecoder{
         AMD64Instruction ret = new AMD64Instruction(InstructionType.CALLQ);
         byte b = input.read();
         
-        if(b == (byte) 0xe8){            
-            ret.setOpCode("e8");
+        if(b == (byte) 0xE8){            
+            ret.setOpCode("E8");
             IAddressFunctionParser iaf_parser = ParserFactory.getAddressFunctionParser();
             iaf_parser.parse(context, input);
             ret.addOperand(iaf_parser.getAddressOperand());
             ret.addOperand(iaf_parser.getSectionNameOperand());
             return ret;
         } else if (b == (byte) 0xff) {
-            
+            throw new RuntimeException("Not supported CALLQ instruction");
         } else if(b == (byte) 0x41){
-            
+            throw new RuntimeException("Not supported CALLQ instruction");
         } 
         
         

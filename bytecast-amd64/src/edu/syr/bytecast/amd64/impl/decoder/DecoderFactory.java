@@ -29,6 +29,8 @@ public class DecoderFactory {
     static {
         decoders.put(InstructionType.RET, new RETInstructionDecoder());
         decoders.put(InstructionType.MOV, new MOVInstructionDecoder());
+        decoders.put(InstructionType.MOVSX, new MOVSXInstructionDecoder());
+        decoders.put(InstructionType.MOVZX, new MOVZXInstructionDecoder());
         decoders.put(InstructionType.NOP, new NOPInstructionDecoder());
         decoders.put(InstructionType.POP, new POPInstructionDecoder());
         decoders.put(InstructionType.PUSH, new PUSHInstructionDecoder());
@@ -53,6 +55,8 @@ public class DecoderFactory {
         decoders.put(InstructionType.JMP, new JMPInstructionDecoder());
         decoders.put(InstructionType.LEA, new LEAInstructionDecoder());
         decoders.put(InstructionType.LEAVE, new LEAVEInstructionDecoder());
+        decoders.put(InstructionType.TEST, new TESTInstructionDecoder());
+        decoders.put(InstructionType.SHR, new SHRInstructionDecoder());
     }
     
 

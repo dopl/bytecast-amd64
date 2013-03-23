@@ -22,6 +22,7 @@ import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionLexer;
 import java.util.List;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
+import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
@@ -44,9 +45,9 @@ public class AMD64InstructionLexer implements IInstructionLexer {
     }
 
     @Override
-    public Map<Long,IInstruction> convertInstructionBytesToObjects(Long sectionStartMemeAddress,List<Byte> bytes ) {
+    public List<MemoryInstructionPair> convertInstructionBytesToObjects(Long sectionStartMemeAddress,List<Byte> bytes ) {
         Long memoryAddress = sectionStartMemeAddress;
-        Map<Long,IInstruction> memToInstrMap = new LinkedHashMap<Long, IInstruction>();
+        List<MemoryInstructionPair> memToInstrMap = new ArrayList<MemoryInstructionPair>();
         InstructionByteListInputStream istream = new InstructionByteListInputStream(bytes, sectionStartMemeAddress);
         IInstructionContext ctx=null ;
         

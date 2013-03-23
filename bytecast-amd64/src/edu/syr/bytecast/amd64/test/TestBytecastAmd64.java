@@ -20,6 +20,7 @@ import edu.syr.bytecast.amd64.impl.output.AMD64ExecutableFile;
 import edu.syr.bytecast.amd64.impl.output.AMD64Section;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.Map;
 public class TestBytecastAmd64 implements IBytecastAMD64{
 
     @Override
-    public IExecutableFile buildInstructionObjects(String execFilePath, IBytecastFsys fsys) {
+    public IExecutableFile buildInstructionObjects() {
        
          List<ISection> sections = new ArrayList<ISection>();
          Map<Long,IInstruction> memtoins = new LinkedHashMap<Long, IInstruction>();
@@ -103,7 +104,7 @@ public class TestBytecastAmd64 implements IBytecastAMD64{
             memtoins.put((long)0x400534, instruction(InstructionType.JMP    ,new OperandMemoryEffectiveAddress(null, null, 1, 0x400540)           ,null));
             memtoins.put((long)0x400536, instruction(InstructionType.MOV    ,new OperandMemoryEffectiveAddress(RegisterType.RBP, null, 1, -0x4)   ,new OperandRegister(RegisterType.EAX)));
             memtoins.put((long)0x400539, instruction(InstructionType.MOV    ,new OperandRegister(RegisterType.EAX)                                ,new OperandRegister(RegisterType.EDI)));
-            memtoins.put((long)0x40053b, instruction(InstructionType.CALLQ  ,new OperandMemoryEffectiveAddress(null, null, 1, 0x4004f9)            ,new OperandSectionName("halve")));
+            memtoins.put((long)0x40053b, instruction(InstructionType.CALLQ  ,new OperandMemoryEffectiveAddress(null, null, 1, 0x4004f9)           ,new OperandSectionName("halve")));
             memtoins.put((long)0x400540, instruction(InstructionType.LEAVEQ ,null                                                                 ,null));
             memtoins.put((long)0x400541, instruction(InstructionType.RETQ   ,null                                                                 ,null));
         //<dostuff> ENDS
@@ -133,7 +134,7 @@ public class TestBytecastAmd64 implements IBytecastAMD64{
          
         ISection section  = new AMD64Section(memtoins,(long)0x400542 , true);
         sections.add(section);
-        IExecutableFile exeFile = new AMD64ExecutableFile(sections, execFilePath, "ELF", null);
+        IExecutableFile exeFile = new AMD64ExecutableFile(sections, "TEST_EXE_FILE", "ELF", null);
         return exeFile;
     }
     

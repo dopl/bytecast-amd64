@@ -42,14 +42,18 @@ public class BytecastAmd64 implements IBytecastAMD64{
 
     private IBytecastFsys m_fsys;
     private String m_filepath;
+
+    public BytecastAmd64(IBytecastFsys m_fsys, String m_filepath) {
+        this.m_fsys = m_fsys;
+        this.m_filepath = m_filepath;
+    }
     
   
 
   
   @Override
-    public IExecutableFile buildInstructionObjects(String execFilePath, IBytecastFsys fsys) {
-      this.m_fsys = fsys;
-      this.m_filepath = execFilePath;
+    public IExecutableFile buildInstructionObjects() {
+      
       IExecutableFile exec;
       try{
            
