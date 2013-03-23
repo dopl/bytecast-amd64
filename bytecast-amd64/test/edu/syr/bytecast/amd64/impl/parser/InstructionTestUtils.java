@@ -71,6 +71,8 @@ public class InstructionTestUtils {
                 OperandTypeMemoryLogicalAddress logicalAddress = (OperandTypeMemoryLogicalAddress) operand.getOperandValue();
                 sb.append("%").append(logicalAddress.getSegment().toString().toLowerCase()).append(":");
                 sb.append(effectiveAddressToObjdumpString(logicalAddress.getEffectiveAddress(), true));
+            } else if(operand.getOperandType()== OperandType.SECTION_NAME) {
+                sb.append("<").append(operand.getOperandValue()).append(">");
             } else {
                 sb.append("UNKNOWN");
             }
