@@ -49,8 +49,8 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
                 ret.setOpCode("89");
                 IModRmParser rm_parser = ParserFactory.getModRmParser();
                 rm_parser.parse(context, input, IModRmParser.RegType.REG16, IModRmParser.RmType.REG_MEM16);
-                ret.addOperand(rm_parser.getRegOperand());
                 ret.addOperand(rm_parser.getRmOperand());
+                ret.addOperand(rm_parser.getRegOperand());
                 return ret;
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
                 // Description: Move the contents of a 32-bit register to a 32-bit

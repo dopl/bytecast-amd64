@@ -21,8 +21,11 @@ import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
+import edu.syr.bytecast.amd64.impl.parser.IImmParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.impl.parser.IModRmParser;
+import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.io.EOFException;
 
@@ -31,22 +34,78 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
   @Override
   public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {
 
-    IInstruction ret = new AMD64Instruction(InstructionType.JMP);
+    AMD64Instruction ret = new AMD64Instruction(InstructionType.JMP);
+    IImmParser imm_parser = ParserFactory.getImmParser();
+    long curr_addr = input.getInstructionAddress();
+    long addr;
 
     byte b = input.read();
     if (b == (byte) 0xEB) {
-      // JMP rel8off
-      // TODO
+      // Description: Short jump with the target specified by an 8-bit signed displacement.
+      // Mnemonic:    JMP rel8off
+      // Opcode:      EB
+      ret.setOpCode("EB");
+      imm_parser.parse(input, IImmParser.Type.IMM8);
+      addr = imm_parser.getNumber() + curr_addr + 2;
+      OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 1, addr);
+      ret.addOperand(operandMemAddr);
+      return ret;
     } else if (b == (byte) 0xE9) {
-      // JMP rel16off or rel32off
-      // TODO
-    } else if (b == (byte) 0xFF) {
-      b = input.read();
-      if((b & (byte)0x38) == 4) {
-        // JMP
-        //TODO
+      if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
+        // Description: Near jump with the target specified by a 16-bit signed displacement.
+        // Mnemonic:    JMP rel16off
+        // Opcode:      E9
+        ret.setOpCode("E9");
+        imm_parser.parse(input, IImmParser.Type.IMM16);
+        addr = imm_parser.getNumber() + curr_addr + 3;
+        OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 1, addr);
+        ret.addOperand(operandMemAddr);
+        return ret;
+      } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
+        // Description: Near jump with the target specified by a 32-bit signed displacement.
+        // Mnemonic:    JMP rel32off
+        // Opcode:      E9
+        ret.setOpCode("E9");
+        imm_parser.parse(input, IImmParser.Type.IMM32);
+        addr = imm_parser.getNumber() + curr_addr + 5;
+        OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 1, addr);
+        ret.addOperand(operandMemAddr);
+        return ret;
       }
 
+    } else if (b == (byte) 0xFF) {
+      
+      b = input.peek(); // the R/M field of this opcode byte is needed, so use peek
+      if ((byte)(b & (byte) 0x38) != (byte)0x20) {
+        throw new RuntimeException("Incorrect form for JMP instruction");
+      }
+      ret.setOpCode("FF /4");
+      IModRmParser rm_parser = ParserFactory.getModRmParser();
+      if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
+        // Description: Near jump with the target specified reg/mem16.
+        // Mnemonic:    JMP reg/mem16
+        // Opcode:      FF /4
+        rm_parser.parse(context, input, IModRmParser.RegType.NONE, IModRmParser.RmType.REG_MEM16);
+        ret.addOperand(rm_parser.getRmOperand());
+        return ret;
+      } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
+        // Description: Near jump with the target specified reg/mem32.
+        // Mnemonic:    JMP reg/mem32
+        // Opcode:      FF /4
+        rm_parser.parse(context, input, IModRmParser.RegType.NONE, IModRmParser.RmType.REG_MEM32);
+        ret.addOperand(rm_parser.getRmOperand());
+        return ret;
+      } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
+        // Description: Near jump with the target specified reg/mem64.
+        // Mnemonic:    JMP reg/mem64
+        // Opcode:      FF /4
+        rm_parser.parse(context, input, IModRmParser.RegType.NONE, IModRmParser.RmType.REG_MEM64);
+        ret.addOperand(rm_parser.getRmOperand());
+        return ret;
+      }
+
+    } else {
+      throw new RuntimeException("Incorrect form for JMP instruction");
     }
 
     return ret;

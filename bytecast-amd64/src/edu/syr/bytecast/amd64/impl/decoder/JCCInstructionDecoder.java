@@ -35,11 +35,11 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
     AMD64Instruction ret = null;
 
     // may need to set the instruction memory address
-    byte b = input.read();
     IImmParser imm_parser = ParserFactory.getImmParser();
     long curr_addr = input.getInstructionAddress();
-    long addr;
+    long addr;  // store the calculated address
 
+    byte b = input.read();
     if ((b & (byte)0xF0) == (byte) 0x70) {
       // 8 offset
       ret = getInstruction((byte) (b & (byte) 0x0F));
@@ -50,17 +50,17 @@ public class JCCInstructionDecoder implements IInstructionDecoder {
       // 16 offset
       b = input.read();
       if ((b & (byte)0xF0) != (byte) 0x80) {
-        throw new IllegalArgumentException("Incorrect form for JCC instruction");
+        throw new RuntimeException("Incorrect form for JCC instruction");
       }
       ret = getInstruction((byte) (b & (byte) 0x0F));
-      ret.setOpCode("OF " + String.format("%x", b));
+      ret.setOpCode("0F " + String.format("%x", b));
       imm_parser.parse(input, IImmParser.Type.IMM16);
       addr = imm_parser.getNumber() + curr_addr + 4;
     } else {
-      throw new IllegalArgumentException("Incorrect form for JCC instruction");
+      throw new RuntimeException("Incorrect form for JCC instruction");
     }
 
-    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 0, addr);
+    OperandMemoryEffectiveAddress operandMemAddr = new OperandMemoryEffectiveAddress(null, null, 1, addr);
     ret.addOperand(operandMemAddr);
     return ret;
 

@@ -32,52 +32,54 @@ public class JCCInstructionDecoderTest {
 
     // Test data.
     List<Byte> list = Arrays.asList(
-            (byte) 0x70, (byte) 0x01, // JO   10003
-            (byte) 0x76, (byte) 0xFF, // JBE  10003
-            (byte) 0x7C, (byte) 0x01, // JL   10007
-            (byte) 0x0F, (byte) 0x81, (byte) 0x01, (byte) 0x00, // JNO  10011
-            (byte) 0x0F, (byte) 0x87, (byte) 0xFF, (byte) 0xFF, // JA   10013
-            (byte) 0x0F, (byte) 0x8D, (byte) 0x01, (byte) 0x00);// JGE  10019
+            (byte) 0x70, (byte) 0x01, // JO   0x2713
+            (byte) 0x76, (byte) 0xFF, // JBE  0x2713
+            (byte) 0x7C, (byte) 0x01, // JL   0x2717
+            (byte) 0x0F, (byte) 0x81, (byte) 0x01, (byte) 0x00, // JNO  0x271B
+            (byte) 0x0F, (byte) 0x87, (byte) 0xFF, (byte) 0xFF, // JA   0x271D
+            (byte) 0x0F, (byte) 0x8D, (byte) 0x01, (byte) 0x00);// JGE  0x2723
     InstructionByteListInputStream stream = new InstructionByteListInputStream(list, 10000L);
 
     JCCInstructionDecoder JCCDcoder = new JCCInstructionDecoder();
     IInstructionContext context = new InstructionContextImpl();
     IInstruction jccInstruction = null;
 
-    // JO 10003
+    // JO 0x2713
     jccInstruction = JCCDcoder.decode(context, stream);
     System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));
-    assertTrue(jccInstruction, 10003);
+    assertTrue(jccInstruction, 0x2713);
     stream.updateInstructionAddress();
     
-    // JBE 1003
+    // JBE 0x2713
     jccInstruction = JCCDcoder.decode(context, stream);
-    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));;
-    assertTrue(jccInstruction, 10003);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));
+    assertTrue(jccInstruction, 0x2713);
     stream.updateInstructionAddress();
     
-    // JL 1007
+    // JL 0x2717
     jccInstruction = JCCDcoder.decode(context, stream);
-    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));;
-    assertTrue(jccInstruction, 10007);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));
+    assertTrue(jccInstruction, 0x2717);
     stream.updateInstructionAddress();
     
-    // JNO 10011
+    // JNO 0x271B
     jccInstruction = JCCDcoder.decode(context, stream);
-    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));;
-    assertTrue(jccInstruction, 10011);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));
+    assertTrue(jccInstruction, 0x271B);
     stream.updateInstructionAddress();
     
-    // JA 10013
+    // JA 0x271D
     jccInstruction = JCCDcoder.decode(context, stream);
-    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));;
-    assertTrue(jccInstruction, 10013);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));
+    assertTrue(jccInstruction, 0x271D);
     stream.updateInstructionAddress();
     
-    // JGE  10019
+    // JGE  0x2723
     jccInstruction = JCCDcoder.decode(context, stream);
-    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));;
-    assertTrue(jccInstruction, 10019);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) jccInstruction));
+    assertTrue(jccInstruction, 0x2723);
     stream.updateInstructionAddress();
+    
+    System.out.println("JCCInstructionDecoder Test Passed");
   }
 }
