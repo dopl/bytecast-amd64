@@ -63,8 +63,8 @@ public class CMPInstructionDecoderTest {
     //400520:	3b 45 f8             	cmp    -0x8(%rbp),%eax
     //400551:	83 7d ec 03          	cmpl   $0x3,-0x14(%rbp)
     List<Byte> list = Arrays.asList(
-            (byte) 0x3b , (byte) 0x45, (byte) 0xf8 );
-            //(byte) 0x83, (byte) 0x7d,(byte) 0xec,(byte) 0x03);
+            (byte) 0x3b , (byte) 0x45, (byte) 0xf8,
+            (byte) 0x83, (byte) 0x7d,(byte) 0xec,(byte) 0x03);
     InstructionByteListInputStream stream = new InstructionByteListInputStream(list, (long)0x400520);
 
     CMPInstructionDecoder CMPDcoder = new CMPInstructionDecoder();
@@ -74,6 +74,12 @@ public class CMPInstructionDecoderTest {
     System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) callqInstruction));
     
     assertTrue(callqInstruction , new OperandMemoryEffectiveAddress(RegisterType.RBP,null,0,(long)-0x8), RegisterType.EAX);
+    stream.updateInstructionAddress();
+    
+    callqInstruction = CMPDcoder.decode(context, stream);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) callqInstruction));
+    
+    assertTrue(callqInstruction , 3L , new OperandMemoryEffectiveAddress(RegisterType.RBP,null,0,(long)-0x14));
     stream.updateInstructionAddress();
     
 
