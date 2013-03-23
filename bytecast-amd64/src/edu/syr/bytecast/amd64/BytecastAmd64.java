@@ -23,6 +23,7 @@ import edu.syr.bytecast.amd64.api.constants.IBytecastAMD64;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.api.output.ISection;
+import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.amd64.impl.lexer.AMD64InstructionLexer;
 import edu.syr.bytecast.amd64.impl.output.AMD64ExecutableFile;
@@ -94,7 +95,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
         int index=0;
            for(ExeObjSegment segment : segments)
            {
-               Map<Long,IInstruction> instructions 
+               List<MemoryInstructionPair> instructions 
                      = lexer.convertInstructionBytesToObjects(segment.getStartAddress(), segment.getBytes());
                ISection section = new AMD64Section(instructions,segment.getStartAddress(),entryPointIndex==index);
                sections.add(section);
