@@ -52,6 +52,8 @@ public class InstructionTestUtils {
                     sb.append(",%").append(effectiveAddress.getIndex().toString().toLowerCase()).append(",").append(effectiveAddress.getScale());
                 }
                 sb.append(")");
+            } else if(operand.getOperandType()== OperandType.SECTION_NAME) {
+                sb.append("<").append(operand.getOperandValue()).append(">");
             } else {
                 sb.append("UNKNOWN");
             }

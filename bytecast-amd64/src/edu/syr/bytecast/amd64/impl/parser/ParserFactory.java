@@ -68,7 +68,7 @@ public class ParserFactory {
     }
 
     public static IAddressFunctionParser getAddressFunctionParser() {
-        throw new UnsupportedOperationException("TODo");
+        return new AddressFunctionParserImpl();
 
     }
 }
