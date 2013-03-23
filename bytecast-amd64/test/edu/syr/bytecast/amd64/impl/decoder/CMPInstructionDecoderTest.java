@@ -21,16 +21,13 @@ import java.util.List;
 /**
  *
  * @author bytecast
- * e8 8d ff ff ff       	callq  40050f <dostuff>
- * can not test yet since dictionary and address are not error when complie.
  */
-public class CALLQInstructionDecoderTest {
+public class CMPInstructionDecoderTest {
      public static void assertTrue(IInstruction instruction, Object operand1, Object operand2) {
     if (instruction.getOperands().get(0).getOperandValue().equals(operand1)
-      || instruction.getOperands().get(1).getOperandValue()!= operand2)
- 
-      // Can not get section name now, do not test yet  
-      throw new RuntimeException("Assert failed!");
+      || instruction.getOperands().get(1).getOperandValue()!= operand2) {
+             throw new RuntimeException("Assert failed!");
+         }
     
   }
       
@@ -63,18 +60,20 @@ public class CALLQInstructionDecoderTest {
     System.out.println("Testing CALLQInstructionDecoder");
 
     // Test data.
-    //e8 8d ff ff ff       	callq  40050f <dostuff>
+    //400520:	3b 45 f8             	cmp    -0x8(%rbp),%eax
+    //400551:	83 7d ec 03          	cmpl   $0x3,-0x14(%rbp)
     List<Byte> list = Arrays.asList(
-            (byte) 0xe8 , (byte) 0x8d, (byte) 0xff, (byte) 0xff, (byte) 0xff);
-    InstructionByteListInputStream stream = new InstructionByteListInputStream(list, (long)0x40057d);
+            (byte) 0x3b , (byte) 0x45, (byte) 0xf8 );
+            //(byte) 0x83, (byte) 0x7d,(byte) 0xec,(byte) 0x03);
+    InstructionByteListInputStream stream = new InstructionByteListInputStream(list, (long)0x400520);
 
-    CALLQInstructionDecoder CALLQDcoder = new CALLQInstructionDecoder();
+    CMPInstructionDecoder CMPDcoder = new CMPInstructionDecoder();
     IInstructionContext context = getContext(stream);
 
-    IInstruction callqInstruction = CALLQDcoder.decode(context, stream);
+    IInstruction callqInstruction = CMPDcoder.decode(context, stream);
     System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) callqInstruction));
     
-    assertTrue(callqInstruction , new OperandMemoryEffectiveAddress(null,null,0,(long)0x40050f), "SectionName");
+    assertTrue(callqInstruction , new OperandMemoryEffectiveAddress(RegisterType.RBP,null,0,(long)-0x8), RegisterType.EAX);
     stream.updateInstructionAddress();
     
 
