@@ -266,7 +266,7 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
                 // Opcode:      B0 +rw iw
                 ret.setOpCode(String.format("%x", b));
                 IRegisterInOpcodeParser reg_parser = ParserFactory.getRegisterInOpcodeParser();
-                reg_parser.parse(IRegisterInOpcodeParser.Type.RW, b - (byte) 0xB0);
+                reg_parser.parse(IRegisterInOpcodeParser.Type.RW, b - (byte) 0xB8);
                 IImmParser imm_parser = ParserFactory.getImmParser();
                 imm_parser.parse(input, IImmParser.Type.IMM16);
                 ret.addOperand(imm_parser.getOperand());
@@ -278,7 +278,7 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
                 // Opcode:      B0 +rd id
                 ret.setOpCode(String.format("%x", b));
                 IRegisterInOpcodeParser reg_parser = ParserFactory.getRegisterInOpcodeParser();
-                reg_parser.parse(IRegisterInOpcodeParser.Type.RD, b - (byte) 0xB0);
+                reg_parser.parse(IRegisterInOpcodeParser.Type.RD, b - (byte) 0xB8);
                 IImmParser imm_parser = ParserFactory.getImmParser();
                 imm_parser.parse(input, IImmParser.Type.IMM32);
                 ret.addOperand(imm_parser.getOperand());
@@ -290,7 +290,7 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
                 // Opcode:      B0 +rq iq
                 ret.setOpCode(String.format("%x", b));
                 IRegisterInOpcodeParser reg_parser = ParserFactory.getRegisterInOpcodeParser();
-                reg_parser.parse(IRegisterInOpcodeParser.Type.RQ, b - (byte) 0xB0);
+                reg_parser.parse(IRegisterInOpcodeParser.Type.RQ, b - (byte) 0xB8);
                 IImmParser imm_parser = ParserFactory.getImmParser();
                 imm_parser.parse(input, IImmParser.Type.IMM64);
                 ret.addOperand(imm_parser.getOperand());

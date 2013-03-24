@@ -76,4 +76,31 @@ public interface IInstructionContext {
      * @param type
      */
     void setSegmentRegister(RegisterType type);
+    
+    
+    
+      /**
+     * An enum which defines which opcode map to lookup
+     */
+    static enum OpcodeMap {
+
+        OCM_PRIMARY,
+        OCM_SECONDARY,
+        OCM_38H,
+        OCM_3AH
+                
+    }
+    /**
+     * Gets the enum describing which opcode map should be looked up for finding
+     * the instruction opcode.
+     * @return 
+     */
+    OpcodeMap getOpcodeMapForInstruction();
+    
+    /**
+     * Sets the enum describing which opcode map should be looked up for finding
+     * the instruction opcode.
+     * @return 
+     */
+    void setOpcodeMapForInstruction(OpcodeMap map);
 }

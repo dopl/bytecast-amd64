@@ -110,26 +110,26 @@ public class CMPInstructionDecoder implements IInstructionDecoder{
             ret.setOpCode("38");
             IModRmParser rm_parser = ParserFactory.getModRmParser();
             rm_parser.parse(context, input, IModRmParser.RegType.REG8, IModRmParser.RmType.REG_MEM8);
-            ret.addOperand(rm_parser.getRmOperand());
             ret.addOperand(rm_parser.getRegOperand());
+            ret.addOperand(rm_parser.getRmOperand());
             return ret;
         } else if (b == (byte) 0x39) {
             ret.setOpCode("39");
             IModRmParser rm_parser = ParserFactory.getModRmParser();
             if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
                 rm_parser.parse(context, input, IModRmParser.RegType.REG16, IModRmParser.RmType.REG_MEM16);
-                ret.addOperand(rm_parser.getRmOperand());
                 ret.addOperand(rm_parser.getRegOperand());
+                ret.addOperand(rm_parser.getRmOperand());
                 return ret;
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
                 rm_parser.parse(context, input, IModRmParser.RegType.REG32, IModRmParser.RmType.REG_MEM32);
-                ret.addOperand(rm_parser.getRmOperand());
                 ret.addOperand(rm_parser.getRegOperand());
+                ret.addOperand(rm_parser.getRmOperand());
                 return ret;
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
                 rm_parser.parse(context, input, IModRmParser.RegType.REG64, IModRmParser.RmType.REG_MEM64);
-                ret.addOperand(rm_parser.getRmOperand());
                 ret.addOperand(rm_parser.getRegOperand());
+                ret.addOperand(rm_parser.getRmOperand());
                 return ret;
             }
             throw new RuntimeException("Unknown operand size.");
