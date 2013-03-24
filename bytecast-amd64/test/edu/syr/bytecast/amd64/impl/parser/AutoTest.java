@@ -179,11 +179,6 @@ public class AutoTest {
 
         return context;
     }
-
-    private String ignorezero(String target,String replace ,String ){
-            target.replace("0x0(", "(");
-            return target;
-    }
     
     static void println(String str) {
         System.out.println(str);
