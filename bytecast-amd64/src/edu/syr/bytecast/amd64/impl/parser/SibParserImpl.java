@@ -34,7 +34,7 @@ public class SibParserImpl implements ISibParser {
         extended_base = base + (context.isRexB() ? 0x8 : 0);
         
         // Parse index register
-        if (index != 4) {
+        if (index != 4 || context.isRexX()) {
             indexRegister = REGISTER_ARRAY[extended_index];
         }
         
