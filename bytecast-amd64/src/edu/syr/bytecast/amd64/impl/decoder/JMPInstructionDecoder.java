@@ -18,6 +18,8 @@
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.amd64.api.constants.OperandType;
+import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
@@ -106,7 +108,12 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
         // Mnemonic:    JMP reg/mem64
         // Opcode:      FF /4
         rm_parser.parse(context, input, IModRmParser.RegType.NONE, IModRmParser.RmType.REG_MEM64);
+        if(rm_parser.getRmOperand().getOperandType() == OperandType.REGISTER) {
+          OperandMemoryEffectiveAddress eaddr = new OperandMemoryEffectiveAddress((RegisterType)rm_parser.getRmOperand().getOperandValue(), null, 1, 0);
+          ret.addOperand(eaddr);
+        } else {
         ret.addOperand(rm_parser.getRmOperand());
+        }
         return ret;
       }
 
