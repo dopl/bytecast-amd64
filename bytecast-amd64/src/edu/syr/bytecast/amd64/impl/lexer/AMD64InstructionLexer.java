@@ -54,7 +54,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
         InstructionByteListInputStream istream = new InstructionByteListInputStream(bytes, sectionStartMemeAddress);
         IInstructionContext ctx=null ;
         
-        boolean createNewCtx=false;
+        boolean createNewCtx=true;
         try {
             while(istream.available()>=0)
             {
@@ -117,6 +117,29 @@ public class AMD64InstructionLexer implements IInstructionLexer {
             case OCM_SECONDARY: return dictionary.getInstructionFromSecondaryOCTable(b);
             default: throw new BytecastAMD64Exception("Opcode map implementation not found");
         }
+    }
+    
+    
+    public static void main(String a[]){
+        Long sectionStartMemeAddress;
+        List<Byte> bytes;
+        List<MemoryInstructionPair> expResult ;
+        bytes = new ArrayList<Byte>();
+        sectionStartMemeAddress = (long) 0x400494;
+        bytes.add((byte)0x55);
+        bytes.add((byte)0x48);
+        bytes.add((byte)0x89);
+        bytes.add((byte)0xe5);
+        bytes.add((byte)0x89);
+        bytes.add((byte)0x7d);
+        bytes.add((byte)0xec);
+        bytes.add((byte)0x48);
+        bytes.add((byte)0x89);
+        bytes.add((byte)0x75);
+        bytes.add((byte)0xe0);
+        
+        AMD64InstructionLexer instance = new AMD64InstructionLexer();
+        List<MemoryInstructionPair> result = instance.convertInstructionBytesToObjects(sectionStartMemeAddress, bytes);
     }
 
 }

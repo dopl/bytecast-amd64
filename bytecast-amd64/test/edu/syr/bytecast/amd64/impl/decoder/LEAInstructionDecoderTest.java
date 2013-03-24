@@ -53,7 +53,9 @@ public class LEAInstructionDecoderTest {
             // lea 0x200174(%rip),%r12
             (byte) 0x4c, (byte) 0x8d, (byte) 0x25, (byte) 0x74, (byte) 0x01, (byte) 0x20, (byte) 0x00,
             // lea (%rdx,%rax,1),%eax
-            (byte) 0x8d, (byte) 0x04, (byte) 0x02);
+            (byte) 0x8d, (byte) 0x04, (byte) 0x02,
+            // lea 0xe0(%rsp),%rax
+            (byte) 0x48, (byte) 0x8d, (byte) 0x84, (byte) 0x24, (byte) 0xe0, (byte) 0x00, (byte) 0x00, (byte) 0x00);
     InstructionByteListInputStream stream = new InstructionByteListInputStream(list, 10000L);
 
     LEAInstructionDecoder LEADcoder = new LEAInstructionDecoder();
@@ -82,6 +84,14 @@ public class LEAInstructionDecoderTest {
     eaddr = new OperandTypeMemoryEffectiveAddress(RegisterType.RDX, RegisterType.RAX, 1, 0);
     System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) leaInstruction));
     assertTrue(leaInstruction, eaddr, RegisterType.EAX);
+    stream.updateInstructionAddress();
+    
+    // lea 0xe0(%rsp),%rax
+    context = getContext(stream);
+    leaInstruction = LEADcoder.decode(context, stream);
+    eaddr = new OperandTypeMemoryEffectiveAddress(RegisterType.RSP, null, 1, 0xE0);
+    System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) leaInstruction));
+    assertTrue(leaInstruction, eaddr, RegisterType.RAX);
     stream.updateInstructionAddress();
     
     System.out.println("LEAInstructionDecoder Test passed");

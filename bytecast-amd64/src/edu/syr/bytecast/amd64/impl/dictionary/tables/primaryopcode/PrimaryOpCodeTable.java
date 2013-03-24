@@ -6,6 +6,7 @@ package edu.syr.bytecast.amd64.impl.dictionary.tables.primaryopcode;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodesTableEntry;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  * @author bytecast
  */
 public class PrimaryOpCodeTable {
-    private static List<PrimaryOpCodeTableEntry> table;
+    private static List<PrimaryOpCodeTableEntry> table = new ArrayList<PrimaryOpCodeTableEntry>();
     public static void loadData(){
         table.add(new PrimaryOpCodeTableEntry((byte)0x00, InstructionType.ADD));
         table.add(new PrimaryOpCodeTableEntry((byte)0x01, InstructionType.ADD));
