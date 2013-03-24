@@ -18,6 +18,8 @@
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
+import edu.syr.bytecast.amd64.api.constants.OperandType;
+import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
@@ -51,6 +53,7 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
       ret.addOperand(operandMemAddr);
       return ret;
     } else if (b == (byte) 0xE9) {
+      // In 64-bit mode, default size in opcode E9 is set to 32 bits
       if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
         // Description: Near jump with the target specified by a 16-bit signed displacement.
         // Mnemonic:    JMP rel16off
@@ -74,6 +77,10 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
       }
 
     } else if (b == (byte) 0xFF) {
+      // In 64-bit mode, default size in opcode FF /4 is set to 64 bits
+      if(context.getOperandSize() != IInstructionContext.OperandOrAddressSize.SIZE_16) {
+        context.setOperandSize(IInstructionContext.OperandOrAddressSize.SIZE_64);
+      }
       
       b = input.peek(); // the R/M field of this opcode byte is needed, so use peek
       if ((byte)(b & (byte) 0x38) != (byte)0x20) {
@@ -89,6 +96,7 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
         ret.addOperand(rm_parser.getRmOperand());
         return ret;
       } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
+        // No prefix is available to encode a 32-bit operand size in 64-bit mode.
         // Description: Near jump with the target specified reg/mem32.
         // Mnemonic:    JMP reg/mem32
         // Opcode:      FF /4
@@ -100,7 +108,12 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
         // Mnemonic:    JMP reg/mem64
         // Opcode:      FF /4
         rm_parser.parse(context, input, IModRmParser.RegType.NONE, IModRmParser.RmType.REG_MEM64);
+        if(rm_parser.getRmOperand().getOperandType() == OperandType.REGISTER) {
+          OperandMemoryEffectiveAddress eaddr = new OperandMemoryEffectiveAddress((RegisterType)rm_parser.getRmOperand().getOperandValue(), null, 1, 0);
+          ret.addOperand(eaddr);
+        } else {
         ret.addOperand(rm_parser.getRmOperand());
+        }
         return ret;
       }
 

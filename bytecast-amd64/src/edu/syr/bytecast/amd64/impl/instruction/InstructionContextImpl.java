@@ -9,7 +9,7 @@ import edu.syr.bytecast.amd64.api.constants.RegisterType;
  * @author sheng
  */
 public class InstructionContextImpl implements IInstructionContext {
-
+    private OpcodeMap m_opcodemap;
     private OperandOrAddressSize m_operand_size;
     private OperandOrAddressSize m_address_size;
     private boolean m_rex_r;
@@ -26,6 +26,7 @@ public class InstructionContextImpl implements IInstructionContext {
         m_operand_size = OperandOrAddressSize.SIZE_32;
         // The default address size in 64-bit mode is 64 bits. See Section 1.2.3, Volume 3, AMD64 Manual.
         m_address_size = OperandOrAddressSize.SIZE_64;
+        m_opcodemap = OpcodeMap.OCM_PRIMARY;
     }
 
     @Override
@@ -86,5 +87,15 @@ public class InstructionContextImpl implements IInstructionContext {
     @Override
     public void setSegmentRegister(RegisterType type) {
         m_segment_register = type;
+    }
+
+    @Override
+    public OpcodeMap getOpcodeMapForInstruction() {
+        return this.m_opcodemap;
+    }
+
+    @Override
+    public void setOpcodeMapForInstruction(OpcodeMap map) {
+        m_opcodemap = map;
     }
 }

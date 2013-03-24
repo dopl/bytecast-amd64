@@ -60,7 +60,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
            
             ExeObj fsysExec = doFsys();
             List<ISection> sections = parseAllSegments(fsysExec.getSegments(),fsysExec.getEntryPointIndex());
-            exec = new AMD64ExecutableFile(sections, m_filepath, FileFormats.FF_ELF, null);
+            exec = new AMD64ExecutableFile(fsysExec.getSegments(),sections, m_filepath, FileFormats.FF_ELF, null);
             
        }catch(Exception ex)
        {
