@@ -81,7 +81,7 @@ public class InstructionTestUtils {
         StringBuilder sb = new StringBuilder();
 
         // Build address:
-        sb.append(String.format("%x:\t", ins.getInstructionMemoryAddress()));
+        //sb.append(String.format("%x:\t", ins.getInstructionMemoryAddress()));
 
         // Build instruction name.
         sb.append(ins.getInstructiontype().toString().toLowerCase()).append("\t");
