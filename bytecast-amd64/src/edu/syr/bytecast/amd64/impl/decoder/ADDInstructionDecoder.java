@@ -150,21 +150,21 @@ public class ADDInstructionDecoder implements IInstructionDecoder {
             IModRmParser rm_parser = ParserFactory.getModRmParser();
             if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
                 rm_parser.parse(context, input, IModRmParser.RegType.REG16, IModRmParser.RmType.REG_MEM16);
-                ret.addOperand(rm_parser.getRegOperand());
-                ret.addOperand(rm_parser.getRmOperand());
                 
+                ret.addOperand(rm_parser.getRmOperand());
+                ret.addOperand(rm_parser.getRegOperand());
                 return ret;
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
                 rm_parser.parse(context, input, IModRmParser.RegType.REG32, IModRmParser.RmType.REG_MEM32);
-                ret.addOperand(rm_parser.getRegOperand());
-                ret.addOperand(rm_parser.getRmOperand());
                 
+                ret.addOperand(rm_parser.getRmOperand());
+                ret.addOperand(rm_parser.getRegOperand());
                 return ret;
             } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
                 rm_parser.parse(context, input, IModRmParser.RegType.REG64, IModRmParser.RmType.REG_MEM64);
-                ret.addOperand(rm_parser.getRegOperand());
-                ret.addOperand(rm_parser.getRmOperand());
                 
+                ret.addOperand(rm_parser.getRmOperand());
+                ret.addOperand(rm_parser.getRegOperand());
                 return ret;
             }
             throw new RuntimeException("Unknown operand size.");
