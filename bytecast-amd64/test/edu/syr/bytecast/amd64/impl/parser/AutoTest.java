@@ -34,13 +34,15 @@ public class AutoTest {
         String fields;
     }
     private static LineData lastData;
+    private static long analyzedCount;
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         String expression = "(?x)^\\s*([\\da-fA-F]+):\\s+((?:[\\da-fA-F]{2}\\b\\s+?)+)(?:(?:\\s*$)|(?:\\s+(?:\\w+\\b\\s+)?(\\w+)\\b\\s*(?:$|(?:\\*?([^<\\s]+)\\s*.*$))))";//$|(?:([^<\\s]+)(?:\\s+<[^>]+>)?\\s*$)
         Pattern pattern = Pattern.compile(expression);
 
         // Read the test file.  ../a.out.onlypgmcode
-        BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));//
+        BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
+        // BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
 
         // Read line by line
         String line = reader.readLine();
@@ -71,6 +73,8 @@ public class AutoTest {
         }
 
         reader.close();
+
+        println("Finished: " + analyzedCount + " analyzed.");
     }
 
     private static void mergeToLastLineData(LineData data) {
@@ -91,13 +95,16 @@ public class AutoTest {
 
         // Now parse
         InstructionByteListInputStream input = new InstructionByteListInputStream(bytes, address);
+        analyzedCount++;
         try {
             IInstruction ins = decoder.decode(getContext(input), input);
             String result = InstructionTestUtils.toObjdumpOperands(ins);
             if (data.fields == null ? !result.isEmpty() : !result.replace(",<SectionName>", "").equalsIgnoreCase(String.valueOf(data.fields))) {
                 println("ERROR: not match (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + result + ")");
             }
-        } catch (RuntimeException ex) {
+        } catch (UnsupportedOperationException ex) {
+            // Ignore
+        } catch (Exception ex) {
             println("ERROR: exceptions when decoding (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + ex.getMessage() + ")");
         }
     }

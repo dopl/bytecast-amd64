@@ -138,6 +138,7 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
                 case SIZE_32:
                 case SIZE_64:
                     imm_parser.parse(input, IImmParser.Type.IMM32);
+                    break;
                 default:
                     throw new RuntimeException("Unknown operand size!");
             }

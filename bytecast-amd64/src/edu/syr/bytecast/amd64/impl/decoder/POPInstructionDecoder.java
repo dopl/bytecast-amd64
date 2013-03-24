@@ -77,7 +77,7 @@ public class POPInstructionDecoder implements IInstructionDecoder {
             }
             ret.addOperand(rm_parser.getRmOperand());
             return ret;
-        } else if (b == (byte) 0x58) {
+        } else if (b >= (byte) 0x58 && b<=(byte)0x5F) {
             // Description: Pop the top of the stack into a 16-bit register.
             // Mnemonic:    POP reg16
             // Opcode:      58 +rw
@@ -98,8 +98,6 @@ public class POPInstructionDecoder implements IInstructionDecoder {
                     reg_parser.parse(IRegisterInOpcodeParser.Type.RW, b - (byte) 0x58);
                     break;
                 case SIZE_32:
-                    reg_parser.parse(IRegisterInOpcodeParser.Type.RD, b - (byte) 0x58);
-                    break;
                 case SIZE_64:
                     reg_parser.parse(IRegisterInOpcodeParser.Type.RQ, b - (byte) 0x58);
                     break;
