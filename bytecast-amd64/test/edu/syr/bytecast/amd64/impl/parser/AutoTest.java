@@ -35,6 +35,7 @@ public class AutoTest {
     }
     private static LineData lastData;
     private static long analyzedCount;
+    private static long errorCount;
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         String expression = "(?x)^\\s*([\\da-fA-F]+):\\s+((?:[\\da-fA-F]{2}\\b\\s+?)+)(?:(?:\\s*$)|(?:\\s+(?:\\w+\\b\\s+)?(\\w+)\\b\\s*(?:$|(?:\\*?([^<\\s]+)\\s*.*$))))";//$|(?:([^<\\s]+)(?:\\s+<[^>]+>)?\\s*$)
@@ -77,7 +78,7 @@ public class AutoTest {
         }
 
         reader.close();
-
+        println("All error:" + errorCount);
         println("Finished: " + analyzedCount + " analyzed.");
     }
 
@@ -103,13 +104,26 @@ public class AutoTest {
         try {
             IInstruction ins = decoder.decode(getContext(input), input);
             String result = InstructionTestUtils.toObjdumpOperands(ins);
+            data.fields = data.fields.replace("0x0(", "(");
+            result = result.replace("0x0(", "(");
+            result = result.replace("%fs:0", "%fs:0x0");
             if (data.fields == null ? !result.isEmpty() : !result.replace(",<SectionName>", "").equalsIgnoreCase(String.valueOf(data.fields))) {
-                println("ERROR: not match (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + result + ")");
+                if(data.instruction.contains("add")||data.instruction.contains("sub")||data.instruction.contains("and")
+                        ||data.instruction.contains("cmp")||data.instruction.contains("callq")
+                        ||data.instruction.contains("cmpl")){
+               errorCount ++;
+                    println("ERROR: not match (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + result + ")");
+            }
             }
         } catch (UnsupportedOperationException ex) {
             // Ignore
         } catch (Exception ex) {
-            println("ERROR: exceptions when decoding (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + ex.getMessage() + ")");
+            if(data.instruction.contains("add")||data.instruction.contains("sub")||data.instruction.contains("and")
+                        ||data.instruction.contains("cmp")||data.instruction.contains("callq")
+                        ||data.instruction.contains("cmpl")){
+            errorCount++;
+                println("ERROR: exceptions when decoding (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + ex.getMessage() + ")");
+        }
         }
     }
 
@@ -166,6 +180,11 @@ public class AutoTest {
         return context;
     }
 
+    private String ignorezero(String target,String replace ,String ){
+            target.replace("0x0(", "(");
+            return target;
+    }
+    
     static void println(String str) {
         System.out.println(str);
         System.out.flush();
