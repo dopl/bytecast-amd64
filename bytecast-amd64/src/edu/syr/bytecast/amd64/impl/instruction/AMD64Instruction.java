@@ -28,7 +28,6 @@ public class AMD64Instruction implements IInstruction {
   private InstructionType instructionType;
   private String opCode;
   private List<IOperand> operands;
-  private long instructionMemoryAddress;
 
   public AMD64Instruction(InstructionType instructionType) {
     this.instructionType = instructionType;
@@ -63,12 +62,5 @@ public class AMD64Instruction implements IInstruction {
     return this.instructionType;
   }
 
-  @Override
-  public long getInstructionMemoryAddress() {
-    return this.instructionMemoryAddress;
-  }
-
-  public void setInstructionMemoryAddress(long instructionMemoryAddress) {
-    this.instructionMemoryAddress = instructionMemoryAddress;
-  }
+ 
 }

@@ -57,6 +57,10 @@ public class DecoderFactory {
         decoders.put(InstructionType.LEAVE, new LEAVEInstructionDecoder());
         decoders.put(InstructionType.TEST, new TESTInstructionDecoder());
         decoders.put(InstructionType.SHR, new SHRInstructionDecoder());
+        decoders.put(InstructionType.SAR, new SARInstructionDecoder());
+        decoders.put(InstructionType.SUB, new SUBInstructionDecoder());
+        decoders.put(InstructionType.CALLQ, new CALLQInstructionDecoder());
+        decoders.put(InstructionType.CMP, new CMPInstructionDecoder());
     }
     
 

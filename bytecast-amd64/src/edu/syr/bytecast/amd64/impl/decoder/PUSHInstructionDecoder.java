@@ -42,7 +42,7 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
         AMD64Instruction ret = new AMD64Instruction(InstructionType.PUSH);
 
         // Parse opcode. See AMD64, volume 3, page 258 (page 292 of pdf).
-        if (b == (byte) 0x8F) {
+        if (b == (byte) 0xFF) {
             // Description: Push the contents of a 16-bit register or memory operand onto the stack.
             // Mnemonic:    PUSH reg/mem16
             // Opcode:      FF /6
@@ -55,7 +55,7 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
             // Mnemonic:    PUSH reg/mem16
             // Opcode:      FF /6
 
-            ret.setOpCode("8F");
+            ret.setOpCode("FF");
             IModRmParser rm_parser = ParserFactory.getModRmParser();
             switch (context.getOperandSize()) {
                 case SIZE_16:
@@ -76,7 +76,7 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
             }
             ret.addOperand(rm_parser.getRmOperand());
             return ret;
-        } else if (b == (byte) 0x50) {
+        } else if (b >= (byte) 0x50 && b<=(byte) 0x57) {
             // Description: Push the contents of a 16-bit register onto the stack.
             // Mnemonic:    PUSH reg16
             // Opcode:      50 +rw
@@ -89,15 +89,13 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
             // Mnemonic:    PUSH reg64
             // Opcode:      50 +rq
             //
-            ret.setOpCode("50");
+            ret.setOpCode(String.format("%x", b));
             IRegisterInOpcodeParser reg_parser = ParserFactory.getRegisterInOpcodeParser();
             switch (context.getOperandSize()) {
                 case SIZE_16:
                     reg_parser.parse(IRegisterInOpcodeParser.Type.RW, b - (byte) 0x50);
                     break;
                 case SIZE_32:
-                    reg_parser.parse(IRegisterInOpcodeParser.Type.RD, b - (byte) 0x50);
-                    break;
                 case SIZE_64:
                     reg_parser.parse(IRegisterInOpcodeParser.Type.RQ, b - (byte) 0x50);
                     break;
@@ -127,7 +125,7 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
 
             // Description: Push a sign-extended 32-bit immediate value onto the stack.
             // Mnemonic:    PUSH imm64
-            // Opcode:      6A id
+            // Opcode:      68 id
 
             // Note that the third one is still 32-bit imm value.
 

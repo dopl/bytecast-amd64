@@ -23,6 +23,7 @@ import edu.syr.bytecast.amd64.internal.api.parser.IInstructionLexer;
 import java.util.List;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
+import edu.syr.bytecast.amd64.impl.decoder.DecoderFactory;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
@@ -30,6 +31,8 @@ import edu.syr.bytecast.amd64.impl.parser.ILegacyPrefixParser;
 import edu.syr.bytecast.amd64.impl.parser.IRexPrefixParser;
 import edu.syr.bytecast.amd64.impl.parser.InstructionByteListInputStream;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
+import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
+import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
 import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -46,7 +49,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
 
     @Override
     public List<MemoryInstructionPair> convertInstructionBytesToObjects(Long sectionStartMemeAddress,List<Byte> bytes ) {
-        Long memoryAddress = sectionStartMemeAddress;
+        
         List<MemoryInstructionPair> memToInstrMap = new ArrayList<MemoryInstructionPair>();
         InstructionByteListInputStream istream = new InstructionByteListInputStream(bytes, sectionStartMemeAddress);
         IInstructionContext ctx=null ;
@@ -55,21 +58,31 @@ public class AMD64InstructionLexer implements IInstructionLexer {
         try {
             while(istream.available()>=0)
             {
-                if(createNewCtx)
+                if(createNewCtx){
                    ctx = new InstructionContextImpl();
-                
+                   createNewCtx = false;
+                   istream.updateInstructionAddress();
+                }
                boolean foundInstructionOpCOde = processInstructionByte(ctx,istream);
                if(foundInstructionOpCOde)
                {
-                   InstructionType insType = getInstructionType(istream.peek());
+                    try {
+                       InstructionType insType = getInstructionType(ctx,istream.peek());
+                       IInstructionDecoder instructionDecoder = DecoderFactory.getInstructionDecoder(insType);
+                       IInstruction instruction = instructionDecoder.decode(ctx, istream);
+                       MemoryInstructionPair pair = new MemoryInstructionPair(istream.getInstructionAddress(), instruction);
+                       memToInstrMap.add(pair);
+                       createNewCtx = true;
+                               
+                    } catch (BytecastAMD64Exception ex) {
+                        Logger.getLogger(AMD64InstructionLexer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                }
-                    
-
             }
         } catch (EOFException ex) {
                 Logger.getLogger(AMD64InstructionLexer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return memToInstrMap;
         
         
     }
@@ -89,13 +102,21 @@ public class AMD64InstructionLexer implements IInstructionLexer {
             rexPrefixParser.parse(ctx, istream);
             return false;
         }else if(dictionary.isEscapeToSecondaryOpCode(b)){
-            
+            ctx.setOpcodeMapForInstruction(IInstructionContext.OpcodeMap.OCM_SECONDARY);
+            return false;
+        }else{
+            //If the control reaches here, the byte must be a an instruction opcode
+            return true;
         }
-        return false;
+      
     }
 
-    private InstructionType getInstructionType(byte b) {
-        return null;
+    private InstructionType getInstructionType(IInstructionContext ctx, byte b) throws BytecastAMD64Exception {
+        switch(ctx.getOpcodeMapForInstruction()){
+            case OCM_PRIMARY: return dictionary.getInstructionFromPrimaryOCTable(b);
+            case OCM_SECONDARY: return dictionary.getInstructionFromSecondaryOCTable(b);
+            default: throw new BytecastAMD64Exception("Opcode map implementation not found");
+        }
     }
 
 }

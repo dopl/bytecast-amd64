@@ -4,12 +4,12 @@
  */
 package edu.syr.bytecast.amd64.impl.decoder;
 
+import edu.syr.bytecast.amd64.api.constants.OperandTypeMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
 import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
-import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
 import edu.syr.bytecast.amd64.impl.parser.InstructionByteListInputStream;
 import edu.syr.bytecast.amd64.impl.parser.InstructionTestUtils;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class CALLQInstructionDecoderTest {
      public static void assertTrue(IInstruction instruction, Object operand1, Object operand2) {
-    if (instruction.getOperands().get(0).getOperandValue().equals(operand1)
+    if (!instruction.getOperands().get(0).getOperandValue().equals(operand1)
       || instruction.getOperands().get(1).getOperandValue()!= operand2)
  
       // Can not get section name now, do not test yet  
@@ -74,7 +74,7 @@ public class CALLQInstructionDecoderTest {
     IInstruction callqInstruction = CALLQDcoder.decode(context, stream);
     System.out.println(InstructionTestUtils.toObjdumpString((AMD64Instruction) callqInstruction));
     
-    assertTrue(callqInstruction , new OperandMemoryEffectiveAddress(null,null,0,(long)0x40050f), "SectionName");
+    assertTrue(callqInstruction , new OperandTypeMemoryEffectiveAddress(null,null,1,(long)0x40050f), "SectionName");
     stream.updateInstructionAddress();
   }
 }

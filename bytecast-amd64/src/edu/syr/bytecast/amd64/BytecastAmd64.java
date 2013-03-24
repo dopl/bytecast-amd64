@@ -96,7 +96,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
            for(ExeObjSegment segment : segments)
            {
                List<MemoryInstructionPair> instructions 
-                     = null; //lexer.convertInstructionBytesToObjects(segment.getStartAddress(), segment.getBytes());
+                     = lexer.convertInstructionBytesToObjects(segment.getStartAddress(), segment.getBytes());
                ISection section = new AMD64Section(instructions,segment.getStartAddress(),entryPointIndex==index);
                sections.add(section);
                ++index;
