@@ -88,6 +88,8 @@ public class AMD64InstructionLexer implements IInstructionLexer {
             IRexPrefixParser rexPrefixParser = ParserFactory.getRexPrefixParser();
             rexPrefixParser.parse(ctx, istream);
             return false;
+        }else if(dictionary.isEscapeToSecondaryOpCode(b)){
+            
         }
         return false;
     }
