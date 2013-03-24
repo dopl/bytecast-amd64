@@ -51,6 +51,7 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
       ret.addOperand(operandMemAddr);
       return ret;
     } else if (b == (byte) 0xE9) {
+      // In 64-bit mode, default size in opcode E9 is set to 32 bits
       if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
         // Description: Near jump with the target specified by a 16-bit signed displacement.
         // Mnemonic:    JMP rel16off
@@ -74,6 +75,10 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
       }
 
     } else if (b == (byte) 0xFF) {
+      // In 64-bit mode, default size in opcode FF /4 is set to 64 bits
+      if(context.getOperandSize() != IInstructionContext.OperandOrAddressSize.SIZE_16) {
+        context.setOperandSize(IInstructionContext.OperandOrAddressSize.SIZE_64);
+      }
       
       b = input.peek(); // the R/M field of this opcode byte is needed, so use peek
       if ((byte)(b & (byte) 0x38) != (byte)0x20) {
@@ -89,6 +94,7 @@ public class JMPInstructionDecoder implements IInstructionDecoder {
         ret.addOperand(rm_parser.getRmOperand());
         return ret;
       } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
+        // No prefix is available to encode a 32-bit operand size in 64-bit mode.
         // Description: Near jump with the target specified reg/mem32.
         // Mnemonic:    JMP reg/mem32
         // Opcode:      FF /4
