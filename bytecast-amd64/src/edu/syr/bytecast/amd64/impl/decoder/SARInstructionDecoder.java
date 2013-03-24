@@ -33,7 +33,7 @@ public class SARInstructionDecoder  implements IInstructionDecoder {
         // Create the ret
         AMD64Instruction ret = new AMD64Instruction(InstructionType.SAR);
 
-        // AND AL,imm8
+        // SAR D1
         if (b == (byte) 0xD1) {
             ret.setOpCode("D1");
 
@@ -63,7 +63,7 @@ public class SARInstructionDecoder  implements IInstructionDecoder {
             //ret.addOperand(new OperandConstant(1L));
             return ret;
         }
-        throw new UnsupportedOperationException("just for one and case, not recongzise this one");
+        throw new UnsupportedOperationException("TODO");
     }
 
 }

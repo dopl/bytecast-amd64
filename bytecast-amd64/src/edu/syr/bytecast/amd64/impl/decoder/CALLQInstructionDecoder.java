@@ -26,6 +26,7 @@ import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import edu.syr.bytecast.amd64.impl.parser.IAddressFunctionParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
+import edu.syr.bytecast.amd64.impl.parser.IModRmParser;
 import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import edu.syr.bytecast.amd64.util.DecoderUtil;
@@ -49,43 +50,32 @@ public class CALLQInstructionDecoder implements IInstructionDecoder{
             ret.addOperand(iaf_parser.getSectionNameOperand());
             return ret;
         } else if (b == (byte) 0xff) {
-            throw new RuntimeException("Not supported CALLQ instruction");
+            ret.setOpCode("FF");
+            IModRmParser imr_parser = ParserFactory.getModRmParser();
+//            if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
+//                
+//                imr_parser.parse(context, input, IModRmParser.RegType.REG16, IModRmParser.RmType.REG_MEM16);
+//                
+//            } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_32) {
+//
+//                imr_parser.parse(context, input, IModRmParser.RegType.REG32, IModRmParser.RmType.REG_MEM32);
+//
+//            } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
+
+                imr_parser.parse(context, input, IModRmParser.RegType.REG64, IModRmParser.RmType.REG_MEM64);
+
+//            } else {
+//                throw new RuntimeException("Unknown operand size.");
+//            }
+            ret.addOperand(imr_parser.getRmOperand());
+            return ret;
         } else if(b == (byte) 0x41){
-            throw new RuntimeException("Not supported CALLQ instruction");
+            throw new UnsupportedOperationException("Not supported CALLQ instruction Opcode 41");
         } 
         
         
         throw new UnsupportedOperationException("TODO");
     }
     
-    private long _instructionMemAddress;
-    
-    // 48 83 c0 08   add $0x8 %rsp
-    // 83 : reg + imm8
-//    private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
-//       
-//        int offset = instructionbytes.size();
-//        if(((instructionbytes.get(0)>>4) & 0x07)==4){ // check is prefix or not
-//              
-//        }
-//        else{
-//              if(instructionbytes.get(0) == 0xe8){
-//                instruction.setOpCode("e8");
-//                long a = DecoderUtil.ByteConcatenator(instructionbytes,offset-1);
-//                offset = offset + (int)a;
-//                long operand = _instructionMemAddress + offset; 
-//                 instruction.addOperand(new OperandConstant(operand));
-//                }
-//              else if(instructionbytes.get(0) == 0xff){
-//                 instruction.setOpCode("ff");
-//              }
-//         }  
-//        //other callq opcode to be implement 
-//    }
-    
-    private long AnalOperand(long oldoperand) {
-       long ret = 0;
-       
-       return ret;
-    }    
+   
 }
