@@ -60,7 +60,7 @@ public class SARInstructionDecoder  implements IInstructionDecoder {
           
             // add imm first and reg second
             ret.addOperand(imr_parser.getRmOperand());
-            ret.addOperand(new OperandConstant(1L));
+            //ret.addOperand(new OperandConstant(1L));
             return ret;
         }
         throw new UnsupportedOperationException("just for one and case, not recongzise this one");

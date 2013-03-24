@@ -34,7 +34,7 @@ public class AddressFunctionParserImpl implements IAddressFunctionParser {
             throw new RuntimeException("Unsupported AddressSize in AddressFunctionParser");
         }
         AddressCalc(input,offset);
-        m_mfa = new OperandMemoryEffectiveAddress(null,null,0,m_address);
+        m_mfa = new OperandMemoryEffectiveAddress(null,null,1,m_address);
         //m_sn = new OperandSectionName(amd64dic.getFunctionNameFromAddress(m_address));
         m_sn = new OperandSectionName("SectionName");
     }
