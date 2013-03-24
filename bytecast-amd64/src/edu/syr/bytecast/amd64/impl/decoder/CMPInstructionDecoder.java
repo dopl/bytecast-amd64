@@ -58,7 +58,7 @@ public class CMPInstructionDecoder implements IInstructionDecoder{
                 ret.addOperand(new OperandRegister(RegisterType.EAX));
                 return ret;
             } else if (context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
-                imm_parser.parse(input, IImmParser.Type.IMM64);
+                imm_parser.parse(input, IImmParser.Type.IMM32);
                 ret.addOperand(imm_parser.getOperand());
                 ret.addOperand(new OperandRegister(RegisterType.RAX));
                 return ret;
