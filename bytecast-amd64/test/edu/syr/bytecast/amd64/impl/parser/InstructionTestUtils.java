@@ -5,6 +5,7 @@ import edu.syr.bytecast.amd64.api.constants.OperandType;
 import edu.syr.bytecast.amd64.api.constants.OperandTypeMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.api.constants.OperandTypeMemoryLogicalAddress;
 import edu.syr.bytecast.amd64.api.constants.RegisterType;
+import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandConstant;
@@ -43,20 +44,8 @@ public class InstructionTestUtils {
         return sb;
     }
 
-    /**
-     * Return the objdump format string of the instruction.
-     *
-     * @param ins
-     * @return
-     */
-    public static String toObjdumpString(AMD64Instruction ins) {
+    public static String toObjdumpOperands(IInstruction ins) {
         StringBuilder sb = new StringBuilder();
-
-        // Build address:
-        sb.append(String.format("%x:\t", ins.getInstructionMemoryAddress()));
-
-        // Build instruction name.
-        sb.append(ins.getInstructiontype().toString().toLowerCase()).append("\t");
 
         // Build operands.
         for (IOperand operand : ins.getOperands()) {
@@ -71,7 +60,7 @@ public class InstructionTestUtils {
                 OperandTypeMemoryLogicalAddress logicalAddress = (OperandTypeMemoryLogicalAddress) operand.getOperandValue();
                 sb.append("%").append(logicalAddress.getSegment().toString().toLowerCase()).append(":");
                 sb.append(effectiveAddressToObjdumpString(logicalAddress.getEffectiveAddress(), true));
-            } else if(operand.getOperandType()== OperandType.SECTION_NAME) {
+            } else if (operand.getOperandType() == OperandType.SECTION_NAME) {
                 sb.append("<").append(operand.getOperandValue()).append(">");
             } else {
                 sb.append("UNKNOWN");
@@ -79,7 +68,27 @@ public class InstructionTestUtils {
             sb.append(",");
         }
 
-        return sb.substring(0, sb.length() - 1);
+        return sb.length() == 0 ? "" : sb.substring(0, sb.length() - 1);
+    }
+
+    /**
+     * Return the objdump format string of the instruction.
+     *
+     * @param ins
+     * @return
+     */
+    public static String toObjdumpString(IInstruction ins) {
+        StringBuilder sb = new StringBuilder();
+
+        // Build address:
+        sb.append(String.format("%x:\t", ins.getInstructionMemoryAddress()));
+
+        // Build instruction name.
+        sb.append(ins.getInstructiontype().toString().toLowerCase()).append("\t");
+
+        // Build operands
+        sb.append(toObjdumpOperands(ins));
+        return sb.toString();
     }
 
     public static void main(String[] args) {

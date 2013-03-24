@@ -184,9 +184,9 @@ public class ModRmParserImpl implements IModRmParser {
     private OperandRegister parseRmOperandForRegisterType(RmType type) {
         switch (type) {
             case REG_MEM8:
-                return new OperandRegister(REG8_ARRAY[m_extended_reg]);
+                return new OperandRegister(REG8_ARRAY[m_extended_rm]);
             case REG_MEM16:
-                return new OperandRegister(REG16_ARRAY[m_extended_reg]);
+                return new OperandRegister(REG16_ARRAY[m_extended_rm]);
             case REG_MEM32:
                 return new OperandRegister(REG32_ARRAY[m_extended_rm]);
             case REG_MEM64:
