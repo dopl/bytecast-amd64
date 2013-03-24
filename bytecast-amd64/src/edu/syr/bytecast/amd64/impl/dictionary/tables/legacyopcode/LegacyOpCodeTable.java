@@ -21,10 +21,11 @@ package edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode;
 
 import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyOpCodeTableEntry;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyPrefixGroup;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LegacyOpCodeTable {
-    private static List<LegacyOpCodeTableEntry> legacyOpCodes;
+    private static List<LegacyOpCodeTableEntry> legacyOpCodes = new ArrayList<LegacyOpCodeTableEntry>();
     
     public static void loadData()
     {
