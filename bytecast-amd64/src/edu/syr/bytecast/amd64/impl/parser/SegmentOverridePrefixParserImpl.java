@@ -15,11 +15,14 @@ public class SegmentOverridePrefixParserImpl implements ISegmentOverridePrefixPa
         // See Section 1.2.4, Volumn 3, AMD64 Manual.
         byte b = input.peek();
         if (b == (byte) 0x2e) {
-            // CS segment is ignored in 64-bit mode.
+            // CS segment
+            context.setSegmentRegister(RegisterType.CS);
         } else if (b == (byte) 0x3e) {
-            // DS segment is ignored in 64-bit mode.
+            // DS segment
+            context.setSegmentRegister(RegisterType.DS);
         } else if (b == (byte) 0x26) {
-            // ES segment is ignored in 64-bit mode.
+            // ES segment
+            context.setSegmentRegister(RegisterType.ES);
         } else if (b == (byte) 0x64) {
             // FS segment
             context.setSegmentRegister(RegisterType.FS);
@@ -27,7 +30,8 @@ public class SegmentOverridePrefixParserImpl implements ISegmentOverridePrefixPa
             // GS segment
             context.setSegmentRegister(RegisterType.GS);
         } else if (b == (byte) 0x36) {
-            // SS segment is ignored in 64-bit mode.
+            // SS segment
+            context.setSegmentRegister(RegisterType.SS);
         } else {
             throw new UnexceptedByteException();
         }

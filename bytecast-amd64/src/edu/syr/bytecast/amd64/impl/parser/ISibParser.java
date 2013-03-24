@@ -15,6 +15,10 @@ public interface ISibParser {
     RegisterType getBaseRegister();
 
     RegisterType getIndexRegister();
+    
+    int getBase();
+    
+    int getIndex();
 
     int getScale();
 

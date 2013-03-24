@@ -41,7 +41,7 @@ public class AutoTest {
         Pattern pattern = Pattern.compile(expression);
 
         // Read the test file.  ../a.out.onlypgmcode
-        BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
+       BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
         // BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
 
         // Read line by line
@@ -70,6 +70,10 @@ public class AutoTest {
             }
 
             line = reader.readLine();
+        }
+        
+        if (lastData != null) {
+            analyzeData(lastData);
         }
 
         reader.close();
@@ -164,6 +168,6 @@ public class AutoTest {
 
     static void println(String str) {
         System.out.println(str);
-        System.out.flush();;
+        System.out.flush();
     }
 }

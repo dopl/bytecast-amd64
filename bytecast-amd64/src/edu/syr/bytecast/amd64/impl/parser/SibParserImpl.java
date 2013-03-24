@@ -32,18 +32,19 @@ public class SibParserImpl implements ISibParser {
         extended_index = index + (context.isRexX() ? 0x8 : 0);
         base = b & 7;
         extended_base = base + (context.isRexB() ? 0x8 : 0);
-        
+
         // Parse index register
         if (index != 4 || context.isRexX()) {
             indexRegister = REGISTER_ARRAY[extended_index];
         }
-        
+
         // Parse base register
         if (base == 5 && mod == 0) {
             // No base register.
         } else {
             baseRegister = REGISTER_ARRAY[extended_base];
         }
+        // Parsing base disp8 or disp 32 should be done outside!
     }
 
     @Override
@@ -73,5 +74,15 @@ public class SibParserImpl implements ISibParser {
     @Override
     public int getScale() {
         return scare;
+    }
+
+    @Override
+    public int getBase() {
+        return base;
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
     }
 }

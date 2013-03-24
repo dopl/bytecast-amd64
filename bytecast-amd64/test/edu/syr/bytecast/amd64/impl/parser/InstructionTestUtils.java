@@ -19,13 +19,16 @@ import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
  */
 public class InstructionTestUtils {
 
-    private static StringBuilder effectiveAddressToObjdumpString(OperandTypeMemoryEffectiveAddress effectiveAddress, boolean forcedOffset) {
+    private static StringBuilder effectiveAddressToObjdumpString(OperandTypeMemoryEffectiveAddress effectiveAddress, boolean forcedHexPrefixForOffset, boolean forcedHexPrefixForAbsolute) {
         StringBuilder sb = new StringBuilder();
         if (effectiveAddress.getBase() == null && effectiveAddress.getIndex() == null) {
             // It is an address number.
+            if (forcedHexPrefixForAbsolute) {
+                sb.append("0x");
+            }
             sb.append(String.format("%x", effectiveAddress.getOffset()));
         } else {
-            if (effectiveAddress.getOffset() != 0 || forcedOffset) {
+            if (effectiveAddress.getOffset() != 0 || forcedHexPrefixForOffset) {
                 if (effectiveAddress.getOffset() >= 0) {
                     sb.append("0x").append(String.format("%x", effectiveAddress.getOffset()));
                 } else if (effectiveAddress.getOffset() < 0) {
@@ -55,11 +58,11 @@ public class InstructionTestUtils {
                 sb.append("%").append(operand.getOperandValue().toString().toLowerCase());
             } else if (operand.getOperandType() == OperandType.MEMORY_EFFECITVE_ADDRESS) {
                 OperandTypeMemoryEffectiveAddress effectiveAddress = (OperandTypeMemoryEffectiveAddress) operand.getOperandValue();
-                sb.append(effectiveAddressToObjdumpString(effectiveAddress, false));
+                sb.append(effectiveAddressToObjdumpString(effectiveAddress, false, false));
             } else if (operand.getOperandType() == OperandType.MEMORY_LOGICAL_ADDRESS) {
                 OperandTypeMemoryLogicalAddress logicalAddress = (OperandTypeMemoryLogicalAddress) operand.getOperandValue();
                 sb.append("%").append(logicalAddress.getSegment().toString().toLowerCase()).append(":");
-                sb.append(effectiveAddressToObjdumpString(logicalAddress.getEffectiveAddress(), true));
+                sb.append(effectiveAddressToObjdumpString(logicalAddress.getEffectiveAddress(), true, true));
             } else if (operand.getOperandType() == OperandType.SECTION_NAME) {
                 sb.append("<").append(operand.getOperandValue()).append(">");
             } else {
@@ -136,7 +139,7 @@ public class InstructionTestUtils {
 
         // Test 4004d8:	bf f0 07 60 00       	mov    $0x6007f0,%edi
         ins = new AMD64Instruction(InstructionType.MOV);
-       // ins.setInstructionMemoryAddress(0x4004d8);
+        // ins.setInstructionMemoryAddress(0x4004d8);
         ins.addOperand(new OperandConstant(0x6007f0L));
         ins.addOperand(new OperandRegister(RegisterType.EDI));
         System.out.println(toObjdumpString(ins));

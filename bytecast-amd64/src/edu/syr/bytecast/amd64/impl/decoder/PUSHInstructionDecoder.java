@@ -93,11 +93,11 @@ public class PUSHInstructionDecoder implements IInstructionDecoder {
             IRegisterInOpcodeParser reg_parser = ParserFactory.getRegisterInOpcodeParser();
             switch (context.getOperandSize()) {
                 case SIZE_16:
-                    reg_parser.parse(IRegisterInOpcodeParser.Type.RW, b - (byte) 0x50);
+                    reg_parser.parse(context, IRegisterInOpcodeParser.Type.RW, b - (byte) 0x50);
                     break;
                 case SIZE_32:
                 case SIZE_64:
-                    reg_parser.parse(IRegisterInOpcodeParser.Type.RQ, b - (byte) 0x50);
+                    reg_parser.parse(context, IRegisterInOpcodeParser.Type.RQ, b - (byte) 0x50);
                     break;
                 default:
                     throw new RuntimeException("Unknown operand size!");

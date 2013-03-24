@@ -60,6 +60,12 @@ public class ModRmParserImpl implements IModRmParser {
                     base = sib_parser.getBaseRegister();
                     index = sib_parser.getIndexRegister();
                     scaleFactor = sib_parser.getScaleFactor();
+                    // Parse base disp8 or disp32 when base is 5 and mod is 0.
+                    if (sib_parser.getBase() == 5 && m_mod == 0) {
+                        IImmParser imm_parser = ParserFactory.getImmParser();
+                        imm_parser.parse(input, IImmParser.Type.IMM32);
+                        offset = imm_parser.getNumber();
+                    }
                 } else {
                     // Use register type.
                     base = REG64_ARRAY[m_extended_rm];
