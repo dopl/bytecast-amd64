@@ -101,7 +101,7 @@ public class MOVSXInstructionDecoder implements IInstructionDecoder {
             } else {
                 throw new RuntimeException("Unknown opcode!");
             }
-        } else if (b == (byte) 0x63) {
+        } else if (b == (byte) 0x63 || b == (byte) 0xA4 || b == (byte) 0xA5) {
             // TODO
             throw new UnsupportedOperationException("TODO");
         } else {

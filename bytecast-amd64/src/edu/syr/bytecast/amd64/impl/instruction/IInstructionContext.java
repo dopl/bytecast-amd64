@@ -31,9 +31,34 @@ public interface IInstructionContext {
      */
     OperandOrAddressSize getOperandSize();
 
+    /**
+     * See {@link #getAddressSize()}.
+     *
+     * @param address_size
+     */
     void setAddressSize(OperandOrAddressSize address_size);
 
+    /**
+     * See {@link #getOperandSize()}.
+     *
+     * @param operand_size
+     */
     void setOperandSize(OperandOrAddressSize operand_size);
+
+    /**
+     * Return true if REX prefix is in the instruction bytes. It is for using
+     * low 8 bits registers. They are SIL, DIL, BPL, and SPL.
+     *
+     * @return
+     */
+    boolean hasRex();
+
+    /**
+     * See {@link #hasRex()}.
+     *
+     * @param value
+     */
+    void setHavingRex(boolean value);
 
     /**
      * Return true if the REX.B bit is 1.
@@ -56,10 +81,25 @@ public interface IInstructionContext {
      */
     boolean isRexX();
 
+    /**
+     * See {@link #isRexB()}.
+     *
+     * @param rex_b
+     */
     void setRexB(boolean rex_b);
 
+    /**
+     * See {@link #isRexR()}.
+     *
+     * @param rex_r
+     */
     void setRexR(boolean rex_r);
 
+    /**
+     * See {@link #isRexX()}.
+     *
+     * @param rex_x
+     */
     void setRexX(boolean rex_x);
 
     /**
@@ -76,31 +116,31 @@ public interface IInstructionContext {
      * @param type
      */
     void setSegmentRegister(RegisterType type);
-    
-    
-    
-      /**
+
+    /**
      * An enum which defines which opcode map to lookup
      */
-    static enum OpcodeMap {
+    enum OpcodeMap {
 
         OCM_PRIMARY,
         OCM_SECONDARY,
         OCM_38H,
         OCM_3AH
-                
     }
+
     /**
      * Gets the enum describing which opcode map should be looked up for finding
      * the instruction opcode.
-     * @return 
+     *
+     * @return
      */
     OpcodeMap getOpcodeMapForInstruction();
-    
+
     /**
      * Sets the enum describing which opcode map should be looked up for finding
      * the instruction opcode.
-     * @return 
+     *
+     * @return
      */
     void setOpcodeMapForInstruction(OpcodeMap map);
 }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.syr.bytecast.amd64.impl.parser;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
@@ -35,18 +31,30 @@ public class AutoTest {
         String instruction;
         String fields;
     }
+
+    private static class DecoderData {
+
+        InstructionType type;
+        IInstructionDecoder decoder;
+    }
     private static LineData lastData;
     private static long analyzedCount;
     private static long errorCount;
     private static Map<String, Integer> errorRecords = new HashMap<String, Integer>();
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
+        testFile("../a.out.onlypgmcode");
+        testFile("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump");
+    }
+
+    private static void testFile(String fileName) throws IOException {
+        println("Testing file: " + fileName);
+
         String expression = "(?x)^\\s*([\\da-fA-F]+):\\s+((?:[\\da-fA-F]{2}\\b\\s+?)+)(?:(?:\\s*$)|(?:\\s+(?:\\w+\\b\\s+)?(\\w+)\\b\\s*(?:$|(?:\\*?([^<\\s]+)\\s*.*$))))";//$|(?:([^<\\s]+)(?:\\s+<[^>]+>)?\\s*$)
         Pattern pattern = Pattern.compile(expression);
 
-        // Read the test file.  ../a.out.onlypgmcode
-        // BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
-        BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
+        // Read the test file.
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
         // Read line by line
         String line = reader.readLine();
@@ -81,8 +89,8 @@ public class AutoTest {
         }
 
         reader.close();
-        println("All error:" + errorCount);
-        println("Finished: " + analyzedCount + " analyzed.");
+        println("Error count:" + errorCount);
+        println("Finished testing file: " + analyzedCount + " lines analyzed.");
     }
 
     private static void mergeToLastLineData(LineData data) {
@@ -95,8 +103,8 @@ public class AutoTest {
         }
         long address = Long.decode("0x" + data.address);
         List<Byte> bytes = ParserTestUtils.stringToByteList(data.bytes);
-        IInstructionDecoder decoder = getDecoder(data.instruction);
-        if (decoder == null) {
+        DecoderData decoderData = getDecoder(data.instruction);
+        if (decoderData == null) {
             //println("WARN:  fail to find decoder of " + data.instruction);
             return;
         }
@@ -105,7 +113,22 @@ public class AutoTest {
         InstructionByteListInputStream input = new InstructionByteListInputStream(bytes, address);
         analyzedCount++;
         try {
-            IInstruction ins = decoder.decode(getContext(input), input);
+            // Run decoder
+            IInstruction ins = decoderData.decoder.decode(getContext(input), input);
+            // All bytes in input should be consumed.
+            if (input.available() != 0) {
+                if (recordError(data)) {
+                    println("ERROR: Some bytes were not consumed. (" + data.address + ", " + data.instruction + ")");
+                }
+                return;
+            }
+            // Check instruction type
+            if (decoderData.type != ins.getInstructiontype()) {
+                if (recordError(data)) {
+                    println("ERROR: Wrong instruction type. Expect " + decoderData.type + ", but got " + ins.getInstructiontype());
+                }
+                return;
+            }
             List<String> resultList = InstructionTestUtils.toPossibleObjdumpOperandsStrings(ins);
             String except = data.fields == null ? "" : data.fields;
             // Check one by one.
@@ -118,29 +141,35 @@ public class AutoTest {
                 // ignore jmp with "()"
                 return;
             }
-            errorCount++;
-            if (!errorRecords.containsKey(data.instruction)) {
-                errorRecords.put(data.instruction, 0);
-            }
-            errorRecords.put(data.instruction, errorRecords.get(data.instruction) + 1);
-            if (errorRecords.get(data.instruction) <= 5) {
+            if (recordError(data)) {
                 println("ERROR: not match (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + resultList.get(0) + ")");
             }
         } catch (UnsupportedOperationException ex) {
             // Ignore
         } catch (Exception ex) {
-            errorCount++;
-            if (!errorRecords.containsKey(data.instruction)) {
-                errorRecords.put(data.instruction, 0);
-            }
-            errorRecords.put(data.instruction, errorRecords.get(data.instruction) + 1);
-            if (errorRecords.get(data.instruction) <= 5) {
+            if (recordError(data)) {
                 println("ERROR: exceptions when decoding (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + ex.getMessage() + ")");
             }
+            ex.printStackTrace();
         }
     }
 
-    private static IInstructionDecoder getDecoder(String instruction) {
+    /**
+     * Records the error. Returns true if the error should be printed.
+     *
+     * @param data
+     * @return
+     */
+    private static boolean recordError(LineData data) {
+        errorCount++;
+        if (!errorRecords.containsKey(data.instruction)) {
+            errorRecords.put(data.instruction, 0);
+        }
+        errorRecords.put(data.instruction, errorRecords.get(data.instruction) + 1);
+        return errorRecords.get(data.instruction) <= 5;
+    }
+
+    private static DecoderData getDecoder(String instruction) {
         instruction = instruction.toUpperCase();
         Class<InstructionType> clazz = InstructionType.class;
         InstructionType type;
@@ -156,8 +185,11 @@ public class AutoTest {
             } catch (IllegalArgumentException ex) {
             }
             if (type != null) {
-                IInstructionDecoder ret = DecoderFactory.getInstructionDecoder(type);
-                if (ret != null) {
+                IInstructionDecoder decoder = DecoderFactory.getInstructionDecoder(type);
+                if (decoder != null) {
+                    DecoderData ret = new DecoderData();
+                    ret.type = type;
+                    ret.decoder = decoder;
                     return ret;
                 }
             }

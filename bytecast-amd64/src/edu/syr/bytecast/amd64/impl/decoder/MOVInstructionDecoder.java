@@ -361,6 +361,9 @@ public class MOVInstructionDecoder implements IInstructionDecoder {
                 return ret;
             }
             throw new RuntimeException("Unkonwn operand size.");
+        }else if(b==(byte)0x0F){
+            // See MOVD
+            throw new UnsupportedOperationException("TODO");
         } else {
             throw new RuntimeException("Unknown opcode!");
         }

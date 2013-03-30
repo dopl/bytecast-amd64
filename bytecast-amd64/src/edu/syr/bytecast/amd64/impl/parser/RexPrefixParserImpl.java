@@ -15,6 +15,7 @@ public class RexPrefixParserImpl implements IRexPrefixParser {
         if (b < (byte) 0x40 || b > (byte) 0x4f) {
             throw new UnexceptedByteException();
         }
+        context.setHavingRex(true);
         // Check REX.W
         if ((b >> 3 & 1) == 1) {
             // For 64-bit mode, change the operand size to 64. See AMD64,

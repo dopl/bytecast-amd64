@@ -13,11 +13,20 @@ public class RegisterInOpcodeParserImpl implements IRegisterInOpcodeParser {
     /**
      * See Table 2-2, Volume 3, AMD64 Manual.
      */
-    private static final RegisterType[] RB_ARRAY = {RegisterType.AL,
-        RegisterType.CL, RegisterType.DL, RegisterType.BL, RegisterType.AH,
+    private static final RegisterType[] RB_NO_REX_ARRAY = {RegisterType.AL,
+        RegisterType.CL, RegisterType.DL, RegisterType.BL, RegisterType.AH, // This line is different.
         RegisterType.CH, RegisterType.DH, RegisterType.BH, RegisterType.R8B,
         RegisterType.R9B, RegisterType.R10B, RegisterType.R11B, RegisterType.R12B,
         RegisterType.R13B, RegisterType.R14B, RegisterType.R15B};
+    /**
+     * See Table A-34, Volume 3, AMD64 Manual, and Figure 2-3, Volume 3, AMD64
+     * Manual.
+     */
+    private static final RegisterType[] RB_WITH_REX_ARRAY = new RegisterType[]{
+        RegisterType.AL, RegisterType.CL, RegisterType.DL, RegisterType.BL,
+        RegisterType.SPL, RegisterType.BPL, RegisterType.SIL, RegisterType.DIL, // This line is different.
+        RegisterType.R8B, RegisterType.R9B, RegisterType.R10B, RegisterType.R11B,
+        RegisterType.R12B, RegisterType.R13B, RegisterType.R14B, RegisterType.R15B};
     /**
      * See Table 2-2, Volume 3, AMD64 Manual.
      */
@@ -55,7 +64,9 @@ public class RegisterInOpcodeParserImpl implements IRegisterInOpcodeParser {
         value += context.isRexB() ? 8 : 0;
         switch (type) {
             case RB:
-                m_register = new OperandRegister(RB_ARRAY[value]);
+                m_register = new OperandRegister(context.hasRex()
+                        ? RB_WITH_REX_ARRAY[value]
+                        : RB_NO_REX_ARRAY[value]);
                 break;
             case RW:
                 m_register = new OperandRegister(RW_ARRAY[value]);
