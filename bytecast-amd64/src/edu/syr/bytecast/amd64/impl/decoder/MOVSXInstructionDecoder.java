@@ -31,6 +31,7 @@ public class MOVSXInstructionDecoder implements IInstructionDecoder {
         AMD64Instruction ret = new AMD64Instruction(InstructionType.MOVSX);
 
         // Parse opcode. See AMD64, volume 3, page 230 (page 264 of pdf).
+        // And AMD64, volume 3, page 231 (page 265 of pdf).
         if (b == (byte) 0x0F) {
             b = input.read();
             if (b == (byte) 0xBE) {
@@ -100,6 +101,9 @@ public class MOVSXInstructionDecoder implements IInstructionDecoder {
             } else {
                 throw new RuntimeException("Unknown opcode!");
             }
+        } else if (b == (byte) 0x63 || b == (byte) 0xA4 || b == (byte) 0xA5) {
+            // TODO
+            throw new UnsupportedOperationException("TODO");
         } else {
             throw new RuntimeException("Unknown opcode!");
         }

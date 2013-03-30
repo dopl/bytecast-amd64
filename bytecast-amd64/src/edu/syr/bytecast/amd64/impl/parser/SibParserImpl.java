@@ -10,11 +10,16 @@ import java.io.EOFException;
  */
 public class SibParserImpl implements ISibParser {
 
-    private static final RegisterType[] REGISTER_ARRAY = {RegisterType.RAX,
+    private static final RegisterType[] REGISTER64_ARRAY = {RegisterType.RAX,
         RegisterType.RCX, RegisterType.RDX, RegisterType.RBX, RegisterType.RSP,
         RegisterType.RBP, RegisterType.RSI, RegisterType.RDI, RegisterType.R8,
         RegisterType.R9, RegisterType.R10, RegisterType.R11, RegisterType.R12,
         RegisterType.R13, RegisterType.R14, RegisterType.R15};
+    private static final RegisterType[] REGISTER32_ARRAY = {RegisterType.EAX,
+        RegisterType.ECX, RegisterType.EDX, RegisterType.EBX, RegisterType.ESP,
+        RegisterType.EBP, RegisterType.ESI, RegisterType.EDI, RegisterType.R8D,
+        RegisterType.R9D, RegisterType.R10D, RegisterType.R11D, RegisterType.R12D,
+        RegisterType.R13D, RegisterType.R14D, RegisterType.R15D};
     private int scare;
     private int index;
     private int base;
@@ -35,14 +40,20 @@ public class SibParserImpl implements ISibParser {
 
         // Parse index register
         if (index != 4 || context.isRexX()) {
-            indexRegister = REGISTER_ARRAY[extended_index];
+            // Address size override prefix may change register size.
+            indexRegister = context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_32
+                    ? REGISTER32_ARRAY[extended_index]
+                    : REGISTER64_ARRAY[extended_index];
         }
 
         // Parse base register
         if (base == 5 && mod == 0) {
             // No base register.
         } else {
-            baseRegister = REGISTER_ARRAY[extended_base];
+            // Address size override prefix may change register size.
+            baseRegister = context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_32
+                    ? REGISTER32_ARRAY[extended_base]
+                    : REGISTER64_ARRAY[extended_base];
         }
         // Parsing base disp8 or disp 32 should be done outside!
     }

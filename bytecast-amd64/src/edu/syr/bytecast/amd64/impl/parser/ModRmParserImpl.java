@@ -35,12 +35,12 @@ public class ModRmParserImpl implements IModRmParser {
         m_extended_rm = m_rm + (context.isRexB() ? 0x8 : 0);
 
         // Parse reg operand
-        m_reg_operand = parseRegOperand(reg_type);
+        m_reg_operand = parseRegOperand(reg_type, context.hasRex());
 
         // Parse r/m operand
         if (m_mod == 3) {
             // The operand is a register operand. See Table A-35, Volume 3, AMD64 Manual (page 463).
-            m_rm_operand = parseRmOperandForRegisterType(rm_type);
+            m_rm_operand = parseRmOperandForRegisterType(rm_type, context.hasRex());
         } else {
             RegisterType base;
             RegisterType index = null;
@@ -48,7 +48,9 @@ public class ModRmParserImpl implements IModRmParser {
             long offset = 0;
             if (m_mod == 0 && m_rm == 5) {
                 // Parse [rip]+disp32 if rm is 101b.
-                base = RegisterType.RIP;
+                base = context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_32
+                        ? RegisterType.EIP
+                        : RegisterType.RIP;
                 IDispParser parser = ParserFactory.getDispParser();
                 parser.parse(input, IDispParser.Type.DISP32);
                 offset = parser.getNumber();
@@ -68,7 +70,9 @@ public class ModRmParserImpl implements IModRmParser {
                     }
                 } else {
                     // Use register type.
-                    base = REG64_ARRAY[m_extended_rm];
+                    base = context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_32
+                            ? REG32_ARRAY[m_extended_rm]
+                            : REG64_ARRAY[m_extended_rm];
                 }
                 // Parse disp8 or disp32 bytes.
                 if (m_mod == 1) {
@@ -152,9 +156,18 @@ public class ModRmParserImpl implements IModRmParser {
     /**
      * See Table A-34, Volume 3, AMD64 Manual.
      */
-    private static final RegisterType[] REG8_ARRAY = new RegisterType[]{
+    private static final RegisterType[] REG8_NO_REX_ARRAY = new RegisterType[]{
         RegisterType.AL, RegisterType.CL, RegisterType.DL, RegisterType.BL,
-        RegisterType.SPL, RegisterType.BPL, RegisterType.SIL, RegisterType.DIL,
+        RegisterType.AH, RegisterType.CH, RegisterType.DH, RegisterType.BH, // This line is different.
+        RegisterType.R8B, RegisterType.R9B, RegisterType.R10B, RegisterType.R11B,
+        RegisterType.R12B, RegisterType.R13B, RegisterType.R14B, RegisterType.R15B};
+    /**
+     * See Table A-34, Volume 3, AMD64 Manual, and Figure 2-3, Volume 3, AMD64
+     * Manual.
+     */
+    private static final RegisterType[] REG8_WITH_REX_ARRAY = new RegisterType[]{
+        RegisterType.AL, RegisterType.CL, RegisterType.DL, RegisterType.BL,
+        RegisterType.SPL, RegisterType.BPL, RegisterType.SIL, RegisterType.DIL, // This line is different.
         RegisterType.R8B, RegisterType.R9B, RegisterType.R10B, RegisterType.R11B,
         RegisterType.R12B, RegisterType.R13B, RegisterType.R14B, RegisterType.R15B};
     /**
@@ -164,10 +177,12 @@ public class ModRmParserImpl implements IModRmParser {
         RegisterType.ES, RegisterType.CS, RegisterType.SS, RegisterType.DS,
         RegisterType.FS, RegisterType.GS};
 
-    private OperandRegister parseRegOperand(RegType type) {
+    private OperandRegister parseRegOperand(RegType type, boolean hasRex) {
         switch (type) {
             case REG8:
-                return new OperandRegister(REG8_ARRAY[m_extended_reg]);
+                return new OperandRegister(hasRex
+                        ? REG8_WITH_REX_ARRAY[m_extended_reg]
+                        : REG8_NO_REX_ARRAY[m_extended_reg]);
             case REG16:
                 return new OperandRegister(REG16_ARRAY[m_extended_reg]);
             case REG32:
@@ -187,10 +202,12 @@ public class ModRmParserImpl implements IModRmParser {
         }
     }
 
-    private OperandRegister parseRmOperandForRegisterType(RmType type) {
+    private OperandRegister parseRmOperandForRegisterType(RmType type, boolean hasRex) {
         switch (type) {
             case REG_MEM8:
-                return new OperandRegister(REG8_ARRAY[m_extended_rm]);
+                return new OperandRegister(hasRex
+                        ? REG8_WITH_REX_ARRAY[m_extended_rm]
+                        : REG8_NO_REX_ARRAY[m_extended_rm]);
             case REG_MEM16:
                 return new OperandRegister(REG16_ARRAY[m_extended_rm]);
             case REG_MEM32:

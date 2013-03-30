@@ -15,7 +15,6 @@
  * along with Bytecast.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
@@ -23,25 +22,32 @@ import edu.syr.bytecast.amd64.impl.instruction.AMD64Instruction;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.parser.IImmParser;
 import edu.syr.bytecast.amd64.impl.parser.IInstructionByteInputStream;
-import java.util.List;
+import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
+import java.io.EOFException;
 
 public class RETInstructionDecoder implements IInstructionDecoder {
 
-   
-    private void decodeOperands(IInstruction instruction, List<Byte> instructionbytes) {
-        
-    }
-
     @Override
-    public IInstruction decode(IInstructionContext sectionStartMemAddr, IInstructionByteInputStream input) {
-        IInstruction instruction = new AMD64Instruction(InstructionType.RET);
-        
-        
-        //decodeOperands(instruction, instructionbytes);
-        
-        return instruction;
-    }
-    
-}
+    public IInstruction decode(IInstructionContext sectionStartMemAddr, IInstructionByteInputStream input) throws EOFException {
+        byte b = input.read();
 
+        // Create the ret
+        AMD64Instruction ret = new AMD64Instruction(InstructionType.RET);
+
+        // Parse opcode. See AMD64, volume 3, page 268 (page 302 of pdf).
+        // And AMD64, volume 3, page 269 (page 303 of pdf).
+        if (b == (byte) 0xC3 || b == (byte) 0xCB) {
+            ret.setOpCode(String.format("%x", b));
+            return ret;
+        } else if (b == (byte) 0xC2 || b == (byte) 0xCA) {
+            ret.setOpCode(String.format("%x", b));
+            IImmParser parser = ParserFactory.getImmParser();
+            parser.parse(input, IImmParser.Type.IMM16);
+            ret.addOperand(parser.getOperand());
+            return ret;
+        }
+        throw new RuntimeException("Unknown opcode!");
+    }
+}
