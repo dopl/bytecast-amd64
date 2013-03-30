@@ -57,12 +57,12 @@ public class CMPInstructionDecoder implements IInstructionDecoder{
                 ret.addOperand(imm_parser.getOperand());
                 ret.addOperand(new OperandRegister(RegisterType.EAX));
                 return ret;
-            } else if (context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
-                imm_parser.parse(input, IImmParser.Type.IMM32);
+            } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_64) {
+                imm_parser.parse(input, IImmParser.Type.IMM64);
                 ret.addOperand(imm_parser.getOperand());
                 ret.addOperand(new OperandRegister(RegisterType.RAX));
                 return ret;
-            } else if (context.getAddressSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
+            } else if (context.getOperandSize() == IInstructionContext.OperandOrAddressSize.SIZE_16) {
                 imm_parser.parse(input, IImmParser.Type.IMM16);
                 ret.addOperand(imm_parser.getOperand());
                 ret.addOperand(new OperandRegister(RegisterType.AX));

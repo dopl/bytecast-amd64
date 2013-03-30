@@ -42,8 +42,8 @@ public class AutoTest {
         Pattern pattern = Pattern.compile(expression);
 
         // Read the test file.  ../a.out.onlypgmcode
-       BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
-        // BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
+       //BufferedReader reader = new BufferedReader(new FileReader("../a.out.onlypgmcode"));
+        BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
 
         // Read line by line
         String line = reader.readLine();
@@ -104,9 +104,9 @@ public class AutoTest {
         try {
             IInstruction ins = decoder.decode(getContext(input), input);
             String result = InstructionTestUtils.toObjdumpOperands(ins);
-            data.fields = data.fields.replace("0x0(", "(");
-            result = result.replace("0x0(", "(");
-            result = result.replace("%fs:0", "%fs:0x0");
+//            data.fields = data.fields.replace("0x0(", "(");
+//            result = result.replace("0x0(", "(");
+//            result = result.replace("%fs:0", "%fs:0x0");
             if (data.fields == null ? !result.isEmpty() : !result.replace(",<SectionName>", "").equalsIgnoreCase(String.valueOf(data.fields))) {
                 if(data.instruction.contains("add")||data.instruction.contains("sub")||data.instruction.contains("and")
                         ||data.instruction.contains("cmp")||data.instruction.contains("callq")
