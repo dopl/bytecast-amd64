@@ -29,8 +29,8 @@ public class NumberParserImpl implements IImmParser, IMoffsetParser, IDispParser
             b = input.read();
             number += ((long) (b & 0xFF)) << (i * 8);
         }
-        if ((b & 0xFF) >= 0x80) {
-            // It is a negative.
+        if ((b & 0xFF) >= 0x80 && size < 8) {
+            // It is a negative. Don't handle quadword
             number += (-1L << (size * 8));
         }
 

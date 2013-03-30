@@ -16,7 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,14 +38,15 @@ public class AutoTest {
     private static LineData lastData;
     private static long analyzedCount;
     private static long errorCount;
+    private static Map<String, Integer> errorRecords = new HashMap<String, Integer>();
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         String expression = "(?x)^\\s*([\\da-fA-F]+):\\s+((?:[\\da-fA-F]{2}\\b\\s+?)+)(?:(?:\\s*$)|(?:\\s+(?:\\w+\\b\\s+)?(\\w+)\\b\\s*(?:$|(?:\\*?([^<\\s]+)\\s*.*$))))";//$|(?:([^<\\s]+)(?:\\s+<[^>]+>)?\\s*$)
         Pattern pattern = Pattern.compile(expression);
 
         // Read the test file.  ../a.out.onlypgmcode
-       BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
-        // BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
+        // BufferedReader reader = new BufferedReader(new FileReader("../../../temp.objdump"));
+        BufferedReader reader = new BufferedReader(new FileReader("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump"));
 
         // Read line by line
         String line = reader.readLine();
@@ -72,7 +75,7 @@ public class AutoTest {
 
             line = reader.readLine();
         }
-        
+
         if (lastData != null) {
             analyzeData(lastData);
         }
@@ -103,27 +106,37 @@ public class AutoTest {
         analyzedCount++;
         try {
             IInstruction ins = decoder.decode(getContext(input), input);
-            String result = InstructionTestUtils.toObjdumpOperands(ins);
-            data.fields = data.fields.replace("0x0(", "(");
-            result = result.replace("0x0(", "(");
-            result = result.replace("%fs:0", "%fs:0x0");
-            if (data.fields == null ? !result.isEmpty() : !result.replace(",<SectionName>", "").equalsIgnoreCase(String.valueOf(data.fields))) {
-                if(data.instruction.contains("add")||data.instruction.contains("sub")||data.instruction.contains("and")
-                        ||data.instruction.contains("cmp")||data.instruction.contains("callq")
-                        ||data.instruction.contains("cmpl")){
-               errorCount ++;
-                    println("ERROR: not match (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + result + ")");
+            List<String> resultList = InstructionTestUtils.toPossibleObjdumpOperandsStrings(ins);
+            String except = data.fields == null ? "" : data.fields;
+            // Check one by one.
+            for (String result : resultList) {
+                if (result.equals(except)) {
+                    return;
+                }
             }
+            if (ins.getInstructiontype() == InstructionType.JMP && resultList.get(0).equals("(" + except + ")")) {
+                // ignore jmp with "()"
+                return;
+            }
+            errorCount++;
+            if (!errorRecords.containsKey(data.instruction)) {
+                errorRecords.put(data.instruction, 0);
+            }
+            errorRecords.put(data.instruction, errorRecords.get(data.instruction) + 1);
+            if (errorRecords.get(data.instruction) <= 5) {
+                println("ERROR: not match (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + resultList.get(0) + ")");
             }
         } catch (UnsupportedOperationException ex) {
             // Ignore
         } catch (Exception ex) {
-            if(data.instruction.contains("add")||data.instruction.contains("sub")||data.instruction.contains("and")
-                        ||data.instruction.contains("cmp")||data.instruction.contains("callq")
-                        ||data.instruction.contains("cmpl")){
             errorCount++;
+            if (!errorRecords.containsKey(data.instruction)) {
+                errorRecords.put(data.instruction, 0);
+            }
+            errorRecords.put(data.instruction, errorRecords.get(data.instruction) + 1);
+            if (errorRecords.get(data.instruction) <= 5) {
                 println("ERROR: exceptions when decoding (" + data.address + ", " + data.instruction + ", " + data.fields + ", " + ex.getMessage() + ")");
-        }
+            }
         }
     }
 
@@ -179,7 +192,7 @@ public class AutoTest {
 
         return context;
     }
-    
+
     static void println(String str) {
         System.out.println(str);
         System.out.flush();
