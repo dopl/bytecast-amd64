@@ -21,10 +21,21 @@ package edu.syr.bytecast.amd64.internal.api.parser;
 import java.util.List;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
-import java.util.Map;
+import java.util.Set;
+
 
 public interface IInstructionLexer {
     
     public List<MemoryInstructionPair> convertInstructionBytesToObjects(Long sectionStartMemeAddress, List<Byte> bytes );
-
+    /**
+     * This method is used to set a list of functions that the lexer can ignore going into.
+     * @param excludedFunctions 
+     */
+    public void setFunctionsToBeExcluded(Set<String> excludedFunctions);
+    
+    /**
+     * The listener can be used to trigger notifications when the lexer encounters a function call
+     * @param fnCallListener 
+     */
+    public void registerFnCallListener(IFunctionCallListener fnCallListener);
 }

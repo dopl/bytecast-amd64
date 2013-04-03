@@ -24,6 +24,7 @@ import edu.syr.bytecast.amd64.impl.dictionary.tables.primaryopcode.PrimaryOpCode
 import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodeTable;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
 import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
+import edu.syr.bytecast.interfaces.fsys.ExeObjFunction;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     private static LegacyOpCodeTable m_legacyOpCodeTable;
     private static SecOpCodeTable m_secondaryOpCodeTable;
     private static PrimaryOpCodeTable m_primaryOpCodeTable;
-    private Hashtable<Long, String> m_fnSymbolTable;
+    private Hashtable<Long, ExeObjFunction> m_fnSymbolTable;
    
     
     private void loadData(){
@@ -100,12 +101,12 @@ public class AMD64Dictionary implements IAMD64Dictionary{
             fnName = "FUNCTION_NAME_NOT_FOUND";
         }
         else {
-            fnName = m_fnSymbolTable.get(address);
+            fnName = m_fnSymbolTable.get(address).getName();
         }
         return fnName;
     }
     
-    public void setFunctionSymbolTable(Hashtable<Long,String> fnSymbolTable)
+    public void setFunctionSymbolTable(Hashtable<Long,ExeObjFunction> fnSymbolTable)
     {
         this.m_fnSymbolTable = fnSymbolTable;
     }
@@ -115,5 +116,26 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     @Override
     public boolean isOpcodeExtensionIndicator(Byte opcode) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Long getFunctionAddressFromName(String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ExeObjFunction getFunctionByName(String name) {
+        for (Long key :m_fnSymbolTable.keySet()){
+            ExeObjFunction fn = m_fnSymbolTable.get(key);
+            if(fn.getName()==name)
+                return fn;
+            
+        }
+        return null;
+    }
+
+    @Override
+    public ExeObjFunction getFunctionByAddress(Long address) {
+        return m_fnSymbolTable.get(address);
     }
 }

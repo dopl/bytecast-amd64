@@ -28,6 +28,7 @@ import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.amd64.impl.lexer.AMD64InstructionLexer;
 import edu.syr.bytecast.amd64.impl.output.AMD64ExecutableFile;
 import edu.syr.bytecast.amd64.impl.output.AMD64Section;
+import edu.syr.bytecast.amd64.internal.api.parser.IFunctionCallListener;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionLexer;
 import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
 import edu.syr.bytecast.interfaces.fsys.ExeObj;
@@ -35,26 +36,26 @@ import edu.syr.bytecast.interfaces.fsys.ExeObjFunction;
 import edu.syr.bytecast.interfaces.fsys.ExeObjSegment;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class BytecastAmd64 implements IBytecastAMD64{
 
     private IBytecastFsys m_fsys;
     private String m_filepath;
-
+    private Set<String> m_functionExclusionList;
     public BytecastAmd64(IBytecastFsys m_fsys, String m_filepath) {
         this.m_fsys = m_fsys;
         this.m_filepath = m_filepath;
     }
     
   
-
-  
   @Override
     public IExecutableFile buildInstructionObjects() {
-      
+      setFunctionsExclusionList();
       IExecutableFile exec;
       try{
            
@@ -80,28 +81,107 @@ public class BytecastAmd64 implements IBytecastAMD64{
         return exeObj;
    }
 
-    private void createFnSymbolTableInDict(List<ExeObjFunction> functions) {
-       Hashtable<Long,String> fnSymbolTable = new Hashtable<Long, String>();
+  
+  private void createFnSymbolTableInDict(List<ExeObjFunction> functions) {
+       Hashtable<Long,ExeObjFunction> fnSymbolTable = new Hashtable<Long, ExeObjFunction>();
        for(ExeObjFunction fn : functions)
        {
-           fnSymbolTable.put(fn.getStartAddress(), fn.getName());
+           fnSymbolTable.put(fn.getStartAddress(), fn);
        }
        AMD64Dictionary.getInstance().setFunctionSymbolTable(fnSymbolTable);
     }
 
+    /**
+     * This method searches for the starting of main function in the entry point segment and uses a callgraph search (DFS) 
+     * to find and process all user defined functions found in main's callgraph. Finally for all the userdefined functions
+     * in the callgraph the instruction objects are constructed.
+     * @param segments
+     * @param entryPointIndex
+     * @return
+     * @throws BytecastAMD64Exception 
+     */
     private List<ISection> parseAllSegments(List<ExeObjSegment> segments, Long entryPointIndex) throws BytecastAMD64Exception {
+        
+        List<MemoryInstructionPair> instructions = new ArrayList<MemoryInstructionPair>();
+        //Getting the entrypoint segment ".text"
+        int index= entryPointIndex.intValue();
+        ExeObjSegment segment = segments.get(index);
         List<ISection> sections = new ArrayList<ISection>();  
         IInstructionLexer lexer = new AMD64InstructionLexer();
-        int index=0;
-           for(ExeObjSegment segment : segments)
-           {
-               List<MemoryInstructionPair> instructions 
-                     = lexer.convertInstructionBytesToObjects(segment.getStartAddress(), segment.getBytes());
-               ISection section = new AMD64Section(instructions,segment.getStartAddress(),entryPointIndex==index);
-               sections.add(section);
-               ++index;
-           }
+        ExeObjFunction mainFunction = AMD64Dictionary.getInstance().getFunctionByName("main");
+        List<ExeObjFunction> dfsStack = new ArrayList<ExeObjFunction>();
+        
+        //START DFS on Main function callstack
+        dfsStack.add(mainFunction);
+        
+        while(!dfsStack.isEmpty()){
+            
+            ExeObjFunction fn = dfsStack.get(dfsStack.size()-1);dfsStack.remove(dfsStack.size()-1);
+            List<Byte> bytes = getInsBytesOfFunction(fn, segment);
+            
+            FunctionCallListener fnl = new FunctionCallListener(m_functionExclusionList);
+            lexer.registerFnCallListener(fnl);
+            
+            instructions.addAll(
+              lexer.convertInstructionBytesToObjects(fn.getStartAddress(), bytes)
+            );
+            List<ExeObjFunction> children = fnl.getFunctions();
+            for(int i =children.size()-1; i>=0;--i ){
+                dfsStack.add(children.get(i));
+            }
+            
+        }
+        //END DFS on Main function callstack
+        
+        ISection section = new AMD64Section(instructions,mainFunction.getStartAddress(),true);
+        sections.add(section);
         return sections;
     }
-  
+
+    
+    private List<Byte> getInsBytesOfFunction(ExeObjFunction fn, ExeObjSegment segment){
+         
+        Long fnAddress = fn.getStartAddress();
+        int fnsize = fn.getSize();
+        
+        Long secStartAddr = segment.getStartAddress();
+        int offset = (secStartAddr.intValue() - fnAddress.intValue()) + 1;
+        List<Byte> bytes = segment.getBytes(offset, fnsize);
+        
+        return bytes;
+    }
+
+    private void setFunctionsExclusionList() {
+        m_functionExclusionList = new HashSet<String>();
+        m_functionExclusionList.add("printf");
+    }
+    
+    
+   class FunctionCallListener implements IFunctionCallListener{
+        private final List<ExeObjFunction> m_functions;
+        private final Set<String> m_functionsToExclude;
+
+        public FunctionCallListener(Set<String> functionsToExclude) {
+            this.m_functions = new ArrayList<ExeObjFunction>();
+            this.m_functionsToExclude = functionsToExclude;
+            
+        }
+
+        @Override
+        public void collectFunctionCall(String fnName, Long fnAddress) {
+            if(m_functionsToExclude!=null && m_functionsToExclude.contains(fnName))
+                return;
+            
+            ExeObjFunction fn = AMD64Dictionary.getInstance().getFunctionByAddress(fnAddress);
+            m_functions.add(fn);
+        }
+
+        /**
+         * @return the list of functions
+         */
+        public List<ExeObjFunction> getFunctions() {
+            return m_functions;
+        }
+        
+    }
 }

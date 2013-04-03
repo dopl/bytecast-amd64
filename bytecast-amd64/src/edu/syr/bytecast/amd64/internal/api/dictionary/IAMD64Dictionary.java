@@ -20,6 +20,7 @@ package edu.syr.bytecast.amd64.internal.api.dictionary;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
+import edu.syr.bytecast.interfaces.fsys.ExeObjFunction;
 
 public interface IAMD64Dictionary {
     
@@ -30,5 +31,7 @@ public interface IAMD64Dictionary {
     public InstructionType getInstructionFromSecondaryOCTable(Byte opcode) throws BytecastAMD64Exception;
     public InstructionType getInstructionFromPrimaryOCTable(Byte opcode) throws BytecastAMD64Exception;
     public String getFunctionNameFromAddress(Long address);
-    
+    public Long getFunctionAddressFromName(String name);
+    public ExeObjFunction getFunctionByName(String name);
+    public ExeObjFunction getFunctionByAddress(Long address);
 }
