@@ -185,10 +185,7 @@ public class InstructionTestUtils {
      *
      * @param ins
      * @return
-     * @deprecated Use {@link #toPossibleObjdumpOperandsStrings(edu.syr.bytecast.amd64.api.instruction.IInstruction)
-     * } to get all situations.
      */
-    @Deprecated
     public static String toObjdumpOperands(IInstruction ins) {
         return toPossibleObjdumpOperandsStrings(ins).get(0);
     }
@@ -199,10 +196,7 @@ public class InstructionTestUtils {
      *
      * @param ins
      * @return
-     * @deprecated Use {@link #toPossibleObjdumpStrings(edu.syr.bytecast.amd64.api.instruction.IInstruction)
-     * } to get all situations.
      */
-    @Deprecated
     public static String toObjdumpString(IInstruction ins) {
         StringBuilder sb = new StringBuilder();
 
