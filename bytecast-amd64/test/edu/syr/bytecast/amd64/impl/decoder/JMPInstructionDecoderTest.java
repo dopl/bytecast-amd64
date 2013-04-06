@@ -17,6 +17,7 @@ import edu.syr.bytecast.amd64.impl.parser.ParserFactory;
 import java.io.EOFException;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Test;
 
 /**
  *
@@ -41,7 +42,8 @@ public class JMPInstructionDecoderTest {
         return context;
     }
   
-  public static void main(String[] args) throws EOFException {
+  @Test
+  public void JMPTest() throws EOFException {
     System.out.println("Testing JMPInstructionDecoder");
 
     // Test data.
