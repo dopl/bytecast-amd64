@@ -195,10 +195,8 @@ public class ModRmParserImpl implements IModRmParser {
                     throw new RuntimeException("Invalid segment registers. See Row \"sReg\", Table A-34, Volume 3, AMD64 Manual.");
                 }
                 return new OperandRegister(SEG_ARRAY[m_reg]);
-            case NONE:
-                return null;
             default:
-                throw new UnsupportedOperationException("Unsupport");
+                return null;
         }
     }
 
@@ -214,10 +212,8 @@ public class ModRmParserImpl implements IModRmParser {
                 return new OperandRegister(REG32_ARRAY[m_extended_rm]);
             case REG_MEM64:
                 return new OperandRegister(REG64_ARRAY[m_extended_rm]);
-            case NONE:
-                return null;
             default:
-                throw new UnsupportedOperationException("Unsupport");
+                return null;
         }
     }
 }
