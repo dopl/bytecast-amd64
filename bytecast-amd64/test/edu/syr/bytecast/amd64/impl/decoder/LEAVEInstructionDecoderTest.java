@@ -15,6 +15,7 @@ import edu.syr.bytecast.amd64.impl.parser.InstructionTestUtils;
 import java.io.EOFException;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Test;
 
 /**
  *
@@ -22,7 +23,8 @@ import java.util.List;
  */
 public class LEAVEInstructionDecoderTest {
   
-  public static void main(String[] args) throws EOFException {
+  @Test
+  public void LEAVETest() throws EOFException {
     System.out.println("Testing LEAVEInstructionDecoder");
 
     // Test data.
