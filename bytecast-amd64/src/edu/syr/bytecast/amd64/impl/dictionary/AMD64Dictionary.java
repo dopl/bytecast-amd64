@@ -20,12 +20,15 @@ package edu.syr.bytecast.amd64.impl.dictionary;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.legacyopcode.LegacyOpCodeTable;
+import edu.syr.bytecast.amd64.impl.dictionary.tables.ocextensions.OpCodeExtensionTable;
+import edu.syr.bytecast.amd64.impl.dictionary.tables.primaryopcode.OpCodeExtensionGroup;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.primaryopcode.PrimaryOpCodeTable;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.secondaryopcode.SecOpCodeTable;
 import edu.syr.bytecast.amd64.internal.api.dictionary.IAMD64Dictionary;
 import edu.syr.bytecast.common.impl.exception.BytecastAMD64Exception;
 import edu.syr.bytecast.interfaces.fsys.ExeObjFunction;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,7 +39,8 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     private static SecOpCodeTable m_secondaryOpCodeTable;
     private static PrimaryOpCodeTable m_primaryOpCodeTable;
     private Hashtable<Long, ExeObjFunction> m_fnSymbolTable;
-   
+    private Hashtable<Byte,OpCodeExtensionGroup > m_opcodeextension_map;
+    private OpCodeExtensionTable m_ocexttable;
     
     private void loadData(){
         
@@ -48,10 +52,37 @@ public class AMD64Dictionary implements IAMD64Dictionary{
         m_legacyOpCodeTable = new LegacyOpCodeTable();
         m_secondaryOpCodeTable = new SecOpCodeTable();
         m_primaryOpCodeTable = new PrimaryOpCodeTable();
+        m_ocexttable = new OpCodeExtensionTable();
         
+        m_ocexttable.loadData();
         m_secondaryOpCodeTable.loadData();
         m_legacyOpCodeTable.loadData();
         m_primaryOpCodeTable.loadData();
+        loadOpCodeExtensionMap();
+    }
+    
+    private void loadOpCodeExtensionMap() {
+       m_opcodeextension_map = new Hashtable<Byte, OpCodeExtensionGroup>();
+       m_opcodeextension_map.put((byte)0x80, OpCodeExtensionGroup.GROUP_1);
+       m_opcodeextension_map.put((byte)0x81, OpCodeExtensionGroup.GROUP_1);
+       m_opcodeextension_map.put((byte)0x82, OpCodeExtensionGroup.GROUP_1);
+       m_opcodeextension_map.put((byte)0x83, OpCodeExtensionGroup.GROUP_1);
+       
+       m_opcodeextension_map.put((byte)0x8f, OpCodeExtensionGroup.GROUP_1a);
+       
+       m_opcodeextension_map.put((byte)0xc0, OpCodeExtensionGroup.GROUP_2);
+       m_opcodeextension_map.put((byte)0xc1, OpCodeExtensionGroup.GROUP_2);
+       m_opcodeextension_map.put((byte)0xd0, OpCodeExtensionGroup.GROUP_2);
+       m_opcodeextension_map.put((byte)0xd1, OpCodeExtensionGroup.GROUP_2);
+       m_opcodeextension_map.put((byte)0xd2, OpCodeExtensionGroup.GROUP_2);
+       m_opcodeextension_map.put((byte)0xd3, OpCodeExtensionGroup.GROUP_2);
+       
+       m_opcodeextension_map.put((byte)0xf6, OpCodeExtensionGroup.GROUP_3);
+       m_opcodeextension_map.put((byte)0xf7, OpCodeExtensionGroup.GROUP_3);
+       
+       m_opcodeextension_map.put((byte)0xfe, OpCodeExtensionGroup.GROUP_4);
+       
+       m_opcodeextension_map.put((byte)0xff, OpCodeExtensionGroup.GROUP_5);
     }
     
     public static AMD64Dictionary getInstance()
@@ -115,7 +146,7 @@ public class AMD64Dictionary implements IAMD64Dictionary{
 
     @Override
     public boolean isOpcodeExtensionIndicator(Byte opcode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return m_opcodeextension_map.containsKey(opcode);
     }
 
     @Override
@@ -127,7 +158,7 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     public ExeObjFunction getFunctionByName(String name) {
         for (Long key :m_fnSymbolTable.keySet()){
             ExeObjFunction fn = m_fnSymbolTable.get(key);
-            if(fn.getName()==name)
+            if(fn.getName().equals(name))
                 return fn;
             
         }
@@ -138,4 +169,16 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     public ExeObjFunction getFunctionByAddress(Long address) {
         return m_fnSymbolTable.get(address);
     }
+
+    @Override
+    public OpCodeExtensionGroup getOCExtGroup(Byte opcode) {
+        return m_opcodeextension_map.get(opcode);
+    }
+
+    @Override
+    public InstructionType getInstructionTypeFromOCExt(OpCodeExtensionGroup grp, int modrmreg) {
+        return m_ocexttable.getInstruction(grp, modrmreg);
+    }
+
+    
 }
