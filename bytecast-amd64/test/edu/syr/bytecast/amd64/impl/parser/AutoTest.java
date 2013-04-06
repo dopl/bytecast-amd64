@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -42,7 +44,8 @@ public class AutoTest {
     private static long errorCount;
     private static Map<String, Integer> errorRecords = new HashMap<String, Integer>();
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    @Test
+    public void main() throws FileNotFoundException, IOException {
         testFile("../a.out.onlypgmcode");
         testFile("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump");
     }
@@ -92,6 +95,9 @@ public class AutoTest {
         reader.close();
         println("Error count:" + errorCount);
         println("Finished testing file: " + analyzedCount + " lines analyzed.");
+        if (errorCount != 0) {
+            fail("Error count:" + errorCount);
+        }
     }
 
     private static void mergeToLastLineData(LineData data) {

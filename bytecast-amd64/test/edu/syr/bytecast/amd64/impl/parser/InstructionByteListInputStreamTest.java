@@ -3,6 +3,8 @@ package edu.syr.bytecast.amd64.impl.parser;
 import java.io.EOFException;
 import java.util.Arrays;
 import java.util.List;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
@@ -10,15 +12,10 @@ import java.util.List;
  */
 public class InstructionByteListInputStreamTest {
 
-    public static void assertTrue(boolean b) {
-        if (!b) {
-            throw new RuntimeException("Assert failed!");
-        }
-    }
-
-    public static void main(String[] args) throws EOFException {
+    @Test
+    public void comprehensiveTest() throws EOFException {
         System.out.println("Testing InstructionByteListInputStream");
-        
+
         // Sample data.
         List<Byte> list = Arrays.asList((byte) 0x01, (byte) 0x02, (byte) 0x03,
                 (byte) 0x04, (byte) 0x05, (byte) 0x06, (byte) 0x07, (byte) 0x08,
@@ -88,7 +85,7 @@ public class InstructionByteListInputStreamTest {
 
         // Test close.
         instance.close();
-        
+
         // Test gettings after close().
         assertTrue(instance.available() == 0);
         assertTrue(instance.getInstructionAddress() == 10002L);

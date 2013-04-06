@@ -7,6 +7,8 @@ import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
 import java.io.EOFException;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -14,11 +16,6 @@ import java.util.List;
  */
 public class ModRmParserImplTest {
 
-    public static void assertTrue(boolean b) {
-        if (!b) {
-            throw new RuntimeException("Assert failed!");
-        }
-    }
     private static final List<Byte> LEGACY_PREFIX_LIST = Arrays.asList(
             (byte) 0x66, (byte) 0x67, (byte) 0xf0, (byte) 0xf3, (byte) 0xf2,
             (byte) 0x2e, (byte) 0x3Ee, (byte) 0x26, (byte) 0x64, (byte) 0x65,
@@ -42,7 +39,8 @@ public class ModRmParserImplTest {
         return context;
     }
 
-    public static void main(String[] args) throws EOFException {
+    @Test
+    public void comprehensiveTest() throws EOFException {
         System.out.println("Testing ModRmParserImpl");
 
         IModRmParser instance = ParserFactory.getModRmParser();
