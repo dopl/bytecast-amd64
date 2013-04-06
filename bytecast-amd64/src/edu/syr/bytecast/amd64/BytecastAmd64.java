@@ -60,7 +60,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
       try{
            
             ExeObj fsysExec = doFsys();
-            List<ISection> sections = parseAllSegments(fsysExec.getSegments(),fsysExec.getEntryPointIndex());
+            List<ISection> sections = parseAllSegments(fsysExec.getSegments(),getEntryPointIndex(fsysExec));
             exec = new AMD64ExecutableFile(fsysExec.getSegments(),sections, m_filepath, FileFormats.FF_ELF, null);
             
        }catch(Exception ex)
@@ -100,12 +100,12 @@ public class BytecastAmd64 implements IBytecastAMD64{
      * @return
      * @throws BytecastAMD64Exception 
      */
-    private List<ISection> parseAllSegments(List<ExeObjSegment> segments, Long entryPointIndex) throws BytecastAMD64Exception {
+    private List<ISection> parseAllSegments(List<ExeObjSegment> segments, int entryPointIndex) throws BytecastAMD64Exception {
         
         List<MemoryInstructionPair> instructions = new ArrayList<MemoryInstructionPair>();
         //Getting the entrypoint segment ".text"
-        int index= entryPointIndex.intValue();
-        ExeObjSegment segment = segments.get(index);
+        
+        ExeObjSegment segment = segments.get(entryPointIndex);
         List<ISection> sections = new ArrayList<ISection>();  
         IInstructionLexer lexer = new AMD64InstructionLexer();
         ExeObjFunction mainFunction = AMD64Dictionary.getInstance().getFunctionByName("main");
@@ -145,7 +145,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
         int fnsize = fn.getSize();
         
         Long secStartAddr = segment.getStartAddress();
-        int offset = (secStartAddr.intValue() - fnAddress.intValue()) + 1;
+        int offset = Math.abs((secStartAddr.intValue() - fnAddress.intValue())) ;
         List<Byte> bytes = segment.getBytes(offset, fnsize);
         
         return bytes;
@@ -154,6 +154,17 @@ public class BytecastAmd64 implements IBytecastAMD64{
     private void setFunctionsExclusionList() {
         m_functionExclusionList = new HashSet<String>();
         m_functionExclusionList.add("printf");
+    }
+
+    private int getEntryPointIndex(ExeObj fsysExec) {
+        List<ExeObjSegment> segments = fsysExec.getSegments();
+        int i=0;
+        for(ExeObjSegment s : segments){
+            if(s.getStartAddress()==fsysExec.getEntryPointIndex())
+                break;
+            ++i;
+        }
+        return i;
     }
     
     
