@@ -27,8 +27,7 @@ public class MOVZXInstructionDecoder implements IInstructionDecoder {
     public IInstruction decode(IInstructionContext context, IInstructionByteInputStream input) throws EOFException {
         byte b = input.read();
 
-        // Create the ret
-        AMD64Instruction ret = new AMD64Instruction(InstructionType.MOVZX);
+        
 
         // Parse opcode. See AMD64, volume 3, page 232 (page 266 of pdf).
         if (b == (byte) 0x0F) {
@@ -48,7 +47,8 @@ public class MOVZXInstructionDecoder implements IInstructionDecoder {
                 //     operand to a 64-bit register with zero-extension.
                 // Mnemonic:    MOVZX reg64, reg/mem8
                 // Opcode:      0F B6 /r
-
+                   // Create the ret
+                 AMD64Instruction ret = new AMD64Instruction(InstructionType.MOVZBL);
                 ret.setOpCode("0F B6");
                 IModRmParser rm_parser = ParserFactory.getModRmParser();
                 IModRmParser.RegType reg_type;
@@ -79,7 +79,8 @@ public class MOVZXInstructionDecoder implements IInstructionDecoder {
                 //     operand to a 64-bit register with zero-extension.
                 // Mnemonic:    MOVZX reg64, reg/mem16
                 // Opcode:      0F B7 /r
-
+                   // Create the ret
+                AMD64Instruction ret = new AMD64Instruction(InstructionType.MOVZX); 
                 ret.setOpCode("0F B7");
                 IModRmParser rm_parser = ParserFactory.getModRmParser();
                 IModRmParser.RegType reg_type;

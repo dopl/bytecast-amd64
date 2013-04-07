@@ -20,11 +20,11 @@ package edu.syr.bytecast.amd64.impl.decoder;
 
 import edu.syr.bytecast.amd64.api.constants.InstructionType;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
+
 
 public class DecoderFactory {
-    private static Map<InstructionType, IInstructionDecoder> decoders = new HashMap<InstructionType, IInstructionDecoder>();
+    private static final Hashtable<InstructionType, IInstructionDecoder> decoders = new Hashtable<InstructionType, IInstructionDecoder>();
 
     static {
         decoders.put(InstructionType.RET, new RETInstructionDecoder());
