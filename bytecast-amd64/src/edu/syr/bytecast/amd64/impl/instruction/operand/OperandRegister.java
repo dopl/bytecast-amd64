@@ -39,5 +39,27 @@ public class OperandRegister implements IOperand{
     public Object getOperandValue() {
        return this.register;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 59 * hash + (this.register != null ? this.register.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OperandRegister other = (OperandRegister) obj;
+        if (this.register != other.register) {
+            return false;
+        }
+        return true;
+    }
     
 }

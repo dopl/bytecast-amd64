@@ -47,4 +47,27 @@ public class OperandMemoryEffectiveAddress implements IOperand {
   public Object getOperandValue() {
     return this.effective_address;
   }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + (this.effective_address != null ? this.effective_address.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OperandMemoryEffectiveAddress other = (OperandMemoryEffectiveAddress) obj;
+        if (this.effective_address != other.effective_address && (this.effective_address == null || !this.effective_address.equals(other.effective_address))) {
+            return false;
+        }
+        return true;
+    }
+  
 }
