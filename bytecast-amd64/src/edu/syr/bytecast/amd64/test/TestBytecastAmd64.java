@@ -153,12 +153,14 @@ public class TestBytecastAmd64 implements IBytecastAMD64{
     private AMD64Instruction instruction(InstructionType ins, IOperand op1, IOperand op2){
         List<IOperand> operands = new ArrayList<IOperand>();
         
-        if(op2!=null) {
-            operands.add(op2);
-        }
         if(op1!=null) {
             operands.add(op1);
         }
+        
+        if(op2!=null) {
+            operands.add(op2);
+        }
+        
         return new AMD64Instruction(ins, operands);
 
     }
