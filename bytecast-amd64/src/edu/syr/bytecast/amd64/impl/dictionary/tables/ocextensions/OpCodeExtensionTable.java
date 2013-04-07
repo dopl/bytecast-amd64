@@ -35,11 +35,21 @@ public class OpCodeExtensionTable {
       m_ocExtTable.put(OpCodeExtensionGroup.GROUP_1, grp1table);
       
       List<OpCodeExtensionTableEntry> grp1atable = new ArrayList<OpCodeExtensionTableEntry>();
-      grp1table.add(new OpCodeExtensionTableEntry((int)0, InstructionType.POP));
+      grp1atable.add(new OpCodeExtensionTableEntry((int)0, InstructionType.POP));
       m_ocExtTable.put(OpCodeExtensionGroup.GROUP_1a, grp1atable);
       
+      List<OpCodeExtensionTableEntry> grp2table = new ArrayList<OpCodeExtensionTableEntry>();
+      grp2table.add(new OpCodeExtensionTableEntry((int)0, InstructionType.ROL));
+      grp2table.add(new OpCodeExtensionTableEntry((int)1, InstructionType.ROR));
+      grp2table.add(new OpCodeExtensionTableEntry((int)2, InstructionType.RCL));
+      grp2table.add(new OpCodeExtensionTableEntry((int)3, InstructionType.RCR));
+      grp2table.add(new OpCodeExtensionTableEntry((int)4, InstructionType.SAL));
+      grp2table.add(new OpCodeExtensionTableEntry((int)5, InstructionType.SHR));
+      grp2table.add(new OpCodeExtensionTableEntry((int)6, InstructionType.SAL));
+      grp2table.add(new OpCodeExtensionTableEntry((int)7, InstructionType.SAR));
+      m_ocExtTable.put(OpCodeExtensionGroup.GROUP_2, grp2table);
      /*
-      * Groups 2 to 11 not implemented
+      * Groups 3 to 11 not implemented
       */
       
     }

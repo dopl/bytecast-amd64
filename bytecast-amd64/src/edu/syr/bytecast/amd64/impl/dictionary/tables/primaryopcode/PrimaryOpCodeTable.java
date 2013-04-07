@@ -124,7 +124,7 @@ public class PrimaryOpCodeTable {
         table.add(new PrimaryOpCodeTableEntry((byte)0x72, InstructionType.JB));
         table.add(new PrimaryOpCodeTableEntry((byte)0x73, InstructionType.JNB));
         table.add(new PrimaryOpCodeTableEntry((byte)0x74, InstructionType.JZ));
-        table.add(new PrimaryOpCodeTableEntry((byte)0x75, InstructionType.JNZ));
+        table.add(new PrimaryOpCodeTableEntry((byte)0x75, InstructionType.JNE));
         table.add(new PrimaryOpCodeTableEntry((byte)0x76, InstructionType.JBE));
         table.add(new PrimaryOpCodeTableEntry((byte)0x77, InstructionType.JNBE));
         table.add(new PrimaryOpCodeTableEntry((byte)0x78, InstructionType.JS));
@@ -132,7 +132,7 @@ public class PrimaryOpCodeTable {
         table.add(new PrimaryOpCodeTableEntry((byte)0x7a, InstructionType.JP));
         table.add(new PrimaryOpCodeTableEntry((byte)0x7b, InstructionType.JNP));
         table.add(new PrimaryOpCodeTableEntry((byte)0x7c, InstructionType.JL));
-        table.add(new PrimaryOpCodeTableEntry((byte)0x7d, InstructionType.JNL));
+        table.add(new PrimaryOpCodeTableEntry((byte)0x7d, InstructionType.JGE));//Changed from JNL to be consistent with objdump output
         table.add(new PrimaryOpCodeTableEntry((byte)0x7e, InstructionType.JLE));
         table.add(new PrimaryOpCodeTableEntry((byte)0x7f, InstructionType.JNLE));
         //0x80-0x83 = Group 1 opcode extension
@@ -234,7 +234,7 @@ public class PrimaryOpCodeTable {
         table.add(new PrimaryOpCodeTableEntry((byte)0xe5, InstructionType.IN));
         table.add(new PrimaryOpCodeTableEntry((byte)0xe6, InstructionType.OUT));
         table.add(new PrimaryOpCodeTableEntry((byte)0xe7, InstructionType.OUT));
-        table.add(new PrimaryOpCodeTableEntry((byte)0xe8, InstructionType.CALL));
+        table.add(new PrimaryOpCodeTableEntry((byte)0xe8, InstructionType.CALLQ));
         table.add(new PrimaryOpCodeTableEntry((byte)0xe9, InstructionType.JMP));
         table.add(new PrimaryOpCodeTableEntry((byte)0xea, InstructionType.JMP));
         table.add(new PrimaryOpCodeTableEntry((byte)0xeb, InstructionType.JMP));

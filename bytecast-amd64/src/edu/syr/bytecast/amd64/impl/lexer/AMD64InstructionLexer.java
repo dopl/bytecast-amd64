@@ -46,7 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.security.util.BitArray;
+
 
 public class AMD64InstructionLexer implements IInstructionLexer {
 
@@ -69,28 +69,19 @@ public class AMD64InstructionLexer implements IInstructionLexer {
         try {
             while(istream.available()>0)
             {
-                  System.out.println("Byte:"+istream.peek()+" "+(createNewCtx ? "New":""));
+                Byte byt = istream.peek();
+                //System.out.println("Byte:"+Long.toHexString((long)byt)+" "+(createNewCtx ? "New":""));
                 if(createNewCtx){
                    ctx = new InstructionContextImpl();
                    createNewCtx = false;
                    istream.updateInstructionAddress();
                 }
-              
-               boolean foundInstructionOpCOde = processInstructionByte(ctx,istream);
-               if(foundInstructionOpCOde)
-               {
-                    try {
-                        InstructionType insType=null;
-                        if(m_dictionary.isOpcodeExtensionIndicator(istream.peek())){
-                            OpCodeExtensionGroup ocExtGroup = m_dictionary.getOCExtGroup(istream.peek());
-                            byte[] tmodrm = new byte[2];
-                            istream.peek(tmodrm);
-                            insType= m_dictionary.getInstructionTypeFromOCExt(ocExtGroup, getModRmReg(tmodrm[1]));
-                        }
-                        else{
-                             insType = getInstructionType(ctx,istream.peek());
-                        }
-                       IInstructionDecoder instructionDecoder = DecoderFactory.getInstructionDecoder(insType);
+              try {
+               InstructionType itype = getInstructionIfAvailable(ctx,istream);
+                if(itype!=null)
+                {
+                       System.out.println(itype);
+                       IInstructionDecoder instructionDecoder = DecoderFactory.getInstructionDecoder(itype);
                        IInstruction instruction = instructionDecoder.decode(ctx, istream);
                        MemoryInstructionPair pair = new MemoryInstructionPair(istream.getInstructionAddress(), instruction);
                        memToInstrMap.add(pair);
@@ -99,10 +90,11 @@ public class AMD64InstructionLexer implements IInstructionLexer {
                             notifyFunctionCall( instruction);
                        }
                                
-                    } catch (BytecastAMD64Exception ex) {
+                   
+                  }
+                } catch (BytecastAMD64Exception ex) {
                         Logger.getLogger(AMD64InstructionLexer.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-               }
+                }
             }
         } catch (EOFException ex) {
                 Logger.getLogger(AMD64InstructionLexer.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,29 +104,35 @@ public class AMD64InstructionLexer implements IInstructionLexer {
         
     }
     
-    private boolean processInstructionByte(IInstructionContext ctx,InstructionByteListInputStream istream) throws EOFException
+    private InstructionType getInstructionIfAvailable(IInstructionContext ctx,InstructionByteListInputStream istream) throws EOFException, BytecastAMD64Exception
     {
         AMD64Dictionary dictionary = AMD64Dictionary.getInstance();
         byte b = istream.peek();
-        
+                             
         if(dictionary.isLegacyOpcode(b)) {
             ILegacyPrefixParser legacyPrefixParser = ParserFactory.getLegacyPrefixParser();
             legacyPrefixParser.parse(ctx, istream);
-            return false;
+            return null;
         }
         else if(dictionary.isRexPrefix(b)) {
             IRexPrefixParser rexPrefixParser = ParserFactory.getRexPrefixParser();
             rexPrefixParser.parse(ctx, istream);
-            return false;
+            return null;
         }else if(dictionary.isEscapeToSecondaryOpCode(b)){
-            ctx.setOpcodeMapForInstruction(IInstructionContext.OpcodeMap.OCM_SECONDARY);
-            istream.read();
-            return false;
+            byte[] temp = new byte[2];
+            istream.peek(temp);
+            return m_dictionary.getInstructionFromSecondaryOCTable(temp[1]);
+            //ctx.setOpcodeMapForInstruction(IInstructionContext.OpcodeMap.OCM_SECONDARY);
+            
         }else if(dictionary.isOpcodeExtensionIndicator(b)){
-            return true;
+            OpCodeExtensionGroup ocExtGroup = m_dictionary.getOCExtGroup(istream.peek());
+            byte[] tmodrm = new byte[2];
+            istream.peek(tmodrm);
+            return m_dictionary.getInstructionTypeFromOCExt(ocExtGroup, getModRmReg(tmodrm[1]));
+            
         }else{
             //If the control reaches here, the byte must be a an instruction opcode
-            return true;
+            return getInstructionType(ctx,b);
         }
       
     }
@@ -195,9 +193,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
     }
 
     private int getModRmReg(byte b) {
-        
-      
-        return ( b >> 3 & 7);
+       return ( b >> 3 & 7);
     }
 
 }

@@ -17,6 +17,8 @@ public class SecOpCodeTable {
     
     public static void loadData(){
         table.add(new SecOpCodesTableEntry((byte)0x66, (byte)0x1f, InstructionType.NOP));
+        table.add(new SecOpCodesTableEntry(null, (byte)0xbe, InstructionType.MOVSX));
+        table.add(new SecOpCodesTableEntry(null, (byte)0xb6, InstructionType.MOVZX));
     }
     
     public InstructionType getInstructionFromOpCode(Byte opcode)
