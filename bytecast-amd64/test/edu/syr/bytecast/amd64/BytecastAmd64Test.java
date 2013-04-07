@@ -5,6 +5,9 @@
 package edu.syr.bytecast.amd64;
 
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
+import edu.syr.bytecast.amd64.test.IExecutableFileUtils;
+import edu.syr.bytecast.amd64.test.IExecutableFileUtils.CompareResult;
+import edu.syr.bytecast.amd64.test.TestBytecastAmd64;
 import edu.syr.bytecast.interfaces.fsys.ExeObj;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
 import edu.syr.bytecast.test.mockups.MockBytecastFsys;
@@ -56,8 +59,13 @@ public class BytecastAmd64Test {
         }
         
         BytecastAmd64 instance = new BytecastAmd64(fsys, "a.out");
-        IExecutableFile expResult = null;
+        IExecutableFile expResult = new TestBytecastAmd64().buildInstructionObjects();
         IExecutableFile result = instance.buildInstructionObjects();
+        CompareResult compareSections = IExecutableFileUtils.compareSections(result, expResult);
+        System.out.println("TOTAL:" + compareSections.getTotalInstructionCount());
+        System.out.println("PASSED:" + compareSections.getPassedInstructionCount());
+        System.out.println("FAILED:" + compareSections.getErrorInstructionCount());
+        
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

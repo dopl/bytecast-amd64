@@ -14,7 +14,7 @@ public class IExecutableFileUtils {
     public static class CompareResult {
 
         private String message;
-        private boolean passed;
+        private boolean passed=true;
         private int totalSectionCount;
         private int errorSectionCount;
         private int passedSectionCount;
@@ -126,12 +126,14 @@ public class IExecutableFileUtils {
             // Check each pair
             boolean sectionError = false;
             for (int j = 0; j < psSize; j++) {
-                if (ps1.get(j).equals(ps2.get(j))) {
+                MemoryInstructionPair ps1obj = ps1.get(j);
+                MemoryInstructionPair ps2obj = ps2.get(j);
+                if (!ps1obj.equals(ps2obj)) {
                     ret.passed = false;
                     sectionError = true;
-                    ret.passedInstructionCount++;
-                } else {
                     ret.errorInstructionCount++;
+                } else {
+                    ret.passedInstructionCount++;
                 }
             }
             if (sectionError) {

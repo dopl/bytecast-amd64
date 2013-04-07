@@ -153,7 +153,7 @@ public class PrimaryOpCodeTable {
         //0x8f = Group 1a opcode extension prefix
         
         
-        table.add(new PrimaryOpCodeTableEntry((byte)0x90, InstructionType.XCHG));
+        table.add(new PrimaryOpCodeTableEntry((byte)0x90, InstructionType.NOP));
         table.add(new PrimaryOpCodeTableEntry((byte)0x91, InstructionType.XCHG));
         table.add(new PrimaryOpCodeTableEntry((byte)0x92, InstructionType.XCHG));
         table.add(new PrimaryOpCodeTableEntry((byte)0x93, InstructionType.XCHG));

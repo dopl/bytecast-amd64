@@ -70,7 +70,6 @@ public class AMD64InstructionLexer implements IInstructionLexer {
             while(istream.available()>0)
             {
                 Byte byt = istream.peek();
-                //System.out.println("Byte:"+Long.toHexString((long)byt)+" "+(createNewCtx ? "New":""));
                 if(createNewCtx){
                    ctx = new InstructionContextImpl();
                    createNewCtx = false;
@@ -80,7 +79,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
                InstructionType itype = getInstructionIfAvailable(ctx,istream);
                 if(itype!=null)
                 {
-                       System.out.println(itype);
+                      
                        IInstructionDecoder instructionDecoder = DecoderFactory.getInstructionDecoder(itype);
                        IInstruction instruction = instructionDecoder.decode(ctx, istream);
                        MemoryInstructionPair pair = new MemoryInstructionPair(istream.getInstructionAddress(), instruction);
@@ -89,8 +88,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
                        if(instruction.getInstructiontype()==InstructionType.CALLQ && m_FunctionCallListener!=null){
                             notifyFunctionCall( instruction);
                        }
-                               
-                   
+                       
                   }
                 } catch (BytecastAMD64Exception ex) {
                         Logger.getLogger(AMD64InstructionLexer.class.getName()).log(Level.SEVERE, null, ex);

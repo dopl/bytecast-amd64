@@ -35,8 +35,8 @@ public class AddressFunctionParserImpl implements IAddressFunctionParser {
         }
         AddressCalc(input,offset);
         m_mfa = new OperandMemoryEffectiveAddress(null,null,1,m_address);
-        //m_sn = new OperandSectionName(amd64dic.getFunctionNameFromAddress(m_address));
-        m_sn = new OperandSectionName("SectionName");
+        m_sn = new OperandSectionName(AMD64Dictionary.getInstance().getFunctionNameFromAddress(m_address));
+        //m_sn = new OperandSectionName("SectionName");
     }
 
     private void AddressCalc(IInstructionByteInputStream input, int offset) throws EOFException {
