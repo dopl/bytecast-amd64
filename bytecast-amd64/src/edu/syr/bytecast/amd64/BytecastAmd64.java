@@ -88,7 +88,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
        for(ExeObjFunction fn : functions)
        {
            fnSymbolTable.put(fn.getStartAddress(), fn);
-           System.out.println(fn.getName());
+           System.out.println(fn.getStartAddress()+":"+fn.getName());
        }
        AMD64Dictionary.getInstance().setFunctionSymbolTable(fnSymbolTable);
     }
@@ -119,7 +119,6 @@ public class BytecastAmd64 implements IBytecastAMD64{
         while(!dfsStack.isEmpty()){
             
             ExeObjFunction fn = dfsStack.get(dfsStack.size()-1);dfsStack.remove(dfsStack.size()-1);
-            System.out.println("******"+fn.getName()+"******");
             List<Byte> bytes = getInsBytesOfFunction(fn, segment);
             
             FunctionCallListener fnl = new FunctionCallListener(m_functionExclusionList);

@@ -127,14 +127,11 @@ public class AMD64Dictionary implements IAMD64Dictionary{
     
     @Override
     public String getFunctionNameFromAddress(Long address) {
-        String fnName;
-        if(m_fnSymbolTable==null ) {
-            fnName = "FUNCTION_NAME_NOT_FOUND";
-        }
-        else {
-            fnName = m_fnSymbolTable.get(address).getName();
-        }
-        return fnName;
+        ExeObjFunction fn = m_fnSymbolTable.get(address);
+        if(fn==null ) {
+            return  "FUNCTION_NAME_NOT_FOUND";
+        }else
+            return fn.getName();
     }
     
     public void setFunctionSymbolTable(Hashtable<Long,ExeObjFunction> fnSymbolTable)
