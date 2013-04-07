@@ -38,4 +38,27 @@ public class OperandMemoryLogicalAddress implements IOperand {
   public Object getOperandValue() {
     return this.logical_address;
   }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.logical_address != null ? this.logical_address.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OperandMemoryLogicalAddress other = (OperandMemoryLogicalAddress) obj;
+        if (this.logical_address != other.logical_address && (this.logical_address == null || !this.logical_address.equals(other.logical_address))) {
+            return false;
+        }
+        return true;
+    }
+  
 }

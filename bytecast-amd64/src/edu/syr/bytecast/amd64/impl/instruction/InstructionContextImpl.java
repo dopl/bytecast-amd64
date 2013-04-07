@@ -110,4 +110,54 @@ public class InstructionContextImpl implements IInstructionContext {
     public void setOpcodeMapForInstruction(OpcodeMap map) {
         m_opcodemap = map;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + (this.m_opcodemap != null ? this.m_opcodemap.hashCode() : 0);
+        hash = 73 * hash + (this.m_operand_size != null ? this.m_operand_size.hashCode() : 0);
+        hash = 73 * hash + (this.m_address_size != null ? this.m_address_size.hashCode() : 0);
+        hash = 73 * hash + (this.m_rex_r ? 1 : 0);
+        hash = 73 * hash + (this.m_rex_x ? 1 : 0);
+        hash = 73 * hash + (this.m_rex_b ? 1 : 0);
+        hash = 73 * hash + (this.m_segment_register != null ? this.m_segment_register.hashCode() : 0);
+        hash = 73 * hash + (this.hasRex ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final InstructionContextImpl other = (InstructionContextImpl) obj;
+        if (this.m_opcodemap != other.m_opcodemap) {
+            return false;
+        }
+        if (this.m_operand_size != other.m_operand_size) {
+            return false;
+        }
+        if (this.m_address_size != other.m_address_size) {
+            return false;
+        }
+        if (this.m_rex_r != other.m_rex_r) {
+            return false;
+        }
+        if (this.m_rex_x != other.m_rex_x) {
+            return false;
+        }
+        if (this.m_rex_b != other.m_rex_b) {
+            return false;
+        }
+        if (this.m_segment_register != other.m_segment_register) {
+            return false;
+        }
+        if (this.hasRex != other.hasRex) {
+            return false;
+        }
+        return true;
+    }
 }

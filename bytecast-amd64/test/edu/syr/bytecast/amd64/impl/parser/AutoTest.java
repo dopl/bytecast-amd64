@@ -8,9 +8,13 @@ import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
 import edu.syr.bytecast.amd64.internal.api.parser.IInstructionDecoder;
 import java.io.BufferedReader;
 import java.io.EOFException;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -50,15 +54,17 @@ public class AutoTest {
         testFile("../../bytecast-documents/AsciiManip01Prototype/a.out.static.objdump");
     }
 
-    private static void testFile(String fileName) throws IOException {
+    public static void testFile(String fileName) throws IOException {
         println("Testing file: " + fileName);
+        testInputStream(new FileInputStream(fileName));
+    }
 
-        String expression = "(?x)^\\s*([\\da-fA-F]+):\\s+((?:[\\da-fA-F]{2}\\b\\s+?)+)(?:(?:\\s*$)|(?:\\s+(?:\\w+\\b\\s+)?(\\w+)\\b\\s*(?:$|(?:\\*?([^<\\s]+)\\s*.*$))))";//$|(?:([^<\\s]+)(?:\\s+<[^>]+>)?\\s*$)
+    public static void testInputStream(InputStream inputStream) throws UnsupportedEncodingException, IOException {
+        String expression = "(?x)^\\s*([\\da-fA-F]+):\\s+((?:[\\da-fA-F]{2}\\b\\s+?)+)(?:(?:\\s*$)|(?:\\s+(?:\\w+\\b\\s+)?(\\w+)\\b\\s*?(?:$|(?:\\s+\\*?([^<\\s]+)\\s*.*$))))";//$|(?:([^<\\s]+)(?:\\s+<[^>]+>)?\\s*$)
         Pattern pattern = Pattern.compile(expression);
 
-
         // Read the test file.
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
 
         // Read line by line
         String line = reader.readLine();
@@ -93,10 +99,10 @@ public class AutoTest {
         }
 
         reader.close();
-        println("Error count:" + errorCount);
+        println("Auto Test Error count:" + errorCount);
         println("Finished testing file: " + analyzedCount + " lines analyzed.");
         if (errorCount != 0) {
-            fail("Error count:" + errorCount);
+            fail("Auto Test Error count:" + errorCount);
         }
     }
 
