@@ -62,5 +62,39 @@ public class AMD64Section implements ISection {
             m_memindexmap.put(m_instructions.get(i).getmInstructionAddress(), i);
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + (this.m_instructions != null ? this.m_instructions.hashCode() : 0);
+        hash = 59 * hash + (this.m_memindexmap != null ? this.m_memindexmap.hashCode() : 0);
+        hash = 59 * hash + (this.m_startMemoryAddress != null ? this.m_startMemoryAddress.hashCode() : 0);
+        hash = 59 * hash + (this.m_isEntryPoint ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AMD64Section other = (AMD64Section) obj;
+        if (this.m_instructions != other.m_instructions && (this.m_instructions == null || !this.m_instructions.equals(other.m_instructions))) {
+            return false;
+        }
+        if (this.m_memindexmap != other.m_memindexmap && (this.m_memindexmap == null || !this.m_memindexmap.equals(other.m_memindexmap))) {
+            return false;
+        }
+        if (this.m_startMemoryAddress != other.m_startMemoryAddress && (this.m_startMemoryAddress == null || !this.m_startMemoryAddress.equals(other.m_startMemoryAddress))) {
+            return false;
+        }
+        if (this.m_isEntryPoint != other.m_isEntryPoint) {
+            return false;
+        }
+        return true;
+    }
     
 }

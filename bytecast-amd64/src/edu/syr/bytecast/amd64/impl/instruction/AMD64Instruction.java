@@ -62,5 +62,35 @@ public class AMD64Instruction implements IInstruction {
     return this.instructionType;
   }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + (this.instructionType != null ? this.instructionType.hashCode() : 0);
+        hash = 29 * hash + (this.opCode != null ? this.opCode.hashCode() : 0);
+        hash = 29 * hash + (this.operands != null ? this.operands.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AMD64Instruction other = (AMD64Instruction) obj;
+        if (this.instructionType != other.instructionType) {
+            return false;
+        }
+        if ((this.opCode == null) ? (other.opCode != null) : !this.opCode.equals(other.opCode)) {
+            return false;
+        }
+        if (this.operands != other.operands && (this.operands == null || !this.operands.equals(other.operands))) {
+            return false;
+        }
+        return true;
+    }
+
  
 }
