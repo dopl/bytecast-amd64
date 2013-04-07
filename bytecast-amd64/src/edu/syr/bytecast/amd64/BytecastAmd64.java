@@ -88,7 +88,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
        for(ExeObjFunction fn : functions)
        {
            fnSymbolTable.put(fn.getStartAddress(), fn);
-           System.out.println(fn.getStartAddress()+":"+fn.getName());
+          // System.out.println(fn.getStartAddress()+":"+fn.getName());
        }
        AMD64Dictionary.getInstance().setFunctionSymbolTable(fnSymbolTable);
     }
@@ -155,7 +155,7 @@ public class BytecastAmd64 implements IBytecastAMD64{
 
     private void setFunctionsExclusionList() {
         m_functionExclusionList = new HashSet<String>();
-        m_functionExclusionList.add("printf");
+        m_functionExclusionList.add("_IO_printf");
     }
 
     private int getEntryPointIndex(ExeObj fsysExec) {
