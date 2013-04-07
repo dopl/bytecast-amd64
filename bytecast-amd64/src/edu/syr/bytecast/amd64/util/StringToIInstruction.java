@@ -14,50 +14,73 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author bytecast
  */
 public class StringToIInstruction {
-    
-    
+
     private String m_s;   // MOV %eax,%ebx
     private String m_instructiontype; // MOV
     private String m_field; //%eax,%ebx 
-    
-    public IInstruction convert(String s)
-    {
+
+    public IInstruction convert(String s) {
         this.m_s = s;
         parse();
         AMD64Instruction ret = new AMD64Instruction(InstructionMap.get(m_instructiontype));
-        for(IOperand o : parseField())
-        {
+        for (IOperand o : parseField()) {
             ret.addOperand(o);
         }
         return ret;
     }
-    
-    private List<IOperand> parseField()
-    {
+
+    private List<IOperand> parseField() {
         List<IOperand> ret = new ArrayList<IOperand>();
         //TO DO parser
         ret.add(new OperandRegister(RegisterType.EAX));
         ret.add(new OperandRegister(RegisterType.EBX));
         return ret;
     }
-    
-    
-    private void parse()
-    {
+
+    private void parse() {
         //TO DO
         this.m_instructiontype = m_s;
         this.m_field = m_s;
     }
-   
-    
-    private static final Map<String ,InstructionType > InstructionMap = new HashMap<String, InstructionType>();
-    
+
+    public static void parseLine(String line) {
+        String effExpr = "(?:(?:(\\-?)0x(\\w+))?\\((?:%(\\w+))?(?:,(?:%(\\w+)),(\\d))?\\))";
+        String expr = "^(?:(\\w+)|(?:\\$0x(\\w+))|(?:%(\\w+))|" + effExpr + "|(?:%(\\w+):" + effExpr + "))?$";
+        Pattern regex = Pattern.compile(expr);
+        Matcher mat = regex.matcher(line);
+        if (mat.find()) {
+            for (int i = 1; i <= 14; i++) {
+                String str = mat.group(i);
+                if (str != null && !str.isEmpty()) {
+                    System.out.print(str + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        // 3 5 1 5
+        parseLine("");
+        parseLine("4005a3");
+        parseLine("$0x10");
+        parseLine("%rbp");
+        parseLine("(%rax)");
+        parseLine("-0x20(%rbp)");
+        parseLine("0x6007e0(,%rax,8)");
+        parseLine("-0x0(%rax,%rax,1)");
+        parseLine("%cs:0x0(%rax,%rax,1)");
+    }
+    private static final Map<String, InstructionType> InstructionMap = new HashMap<String, InstructionType>();
+
     static {
         InstructionMap.put("ADD", InstructionType.ADD);
         InstructionMap.put("AND", InstructionType.AND);
@@ -78,7 +101,7 @@ public class StringToIInstruction {
         InstructionMap.put("JGE", InstructionType.JGE);
         InstructionMap.put("JLE", InstructionType.JLE);
         InstructionMap.put("JG", InstructionType.JG);
-         InstructionMap.put("JMP", InstructionType.JMP);
+        InstructionMap.put("JMP", InstructionType.JMP);
         InstructionMap.put("LEA", InstructionType.LEA);
         InstructionMap.put("LEAVE", InstructionType.LEAVE);
         InstructionMap.put("MOV", InstructionType.MOV);
