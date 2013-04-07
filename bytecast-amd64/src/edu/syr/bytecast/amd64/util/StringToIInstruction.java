@@ -51,33 +51,62 @@ public class StringToIInstruction {
         this.m_field = m_s;
     }
 
-    public static void parseLine(String line) {
+    public static void parseOneField(String line) {
         String effExpr = "(?:(?:(\\-?)0x(\\w+))?\\((?:%(\\w+))?(?:,(?:%(\\w+)),(\\d))?\\))";
         String expr = "^(?:(\\w+)|(?:\\$0x(\\w+))|(?:%(\\w+))|" + effExpr + "|(?:%(\\w+):" + effExpr + "))?$";
+        // 3 5 1 5
         Pattern regex = Pattern.compile(expr);
         Matcher mat = regex.matcher(line);
         if (mat.find()) {
             for (int i = 1; i <= 14; i++) {
                 String str = mat.group(i);
                 if (str != null && !str.isEmpty()) {
-                    System.out.print(str + " ");
+                    System.out.print("#" + i + " " + str + "\t");
                 }
             }
             System.out.println();
         }
     }
 
+    public static void parseOneLine(String line) {
+        String expr = "^\\s*(?:\\w+\\b\\s+)?(\\w+)\\b\\s*?(?:\\s+(\\S+)?)\\s*?(?:\\s+<([^>]+)>)";
+        Pattern regex = Pattern.compile(expr);
+        Matcher mat = regex.matcher(line);
+        if (mat.find()) {
+            for (int i = 1; i <= 3; i++) {
+                String str = mat.group(i);
+                if (str != null && !str.isEmpty()) {
+                    System.out.print("#" + i + " " + str + "\t");
+                }
+            }
+            System.out.println();
+            String g2 = mat.group(2);
+            if (g2 != null) {
+                String[] fields = g2.split(",(?=[^\\(\\)]*(\\(|$))");
+                for (String f : fields) {
+                    System.out.print(f + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         // 3 5 1 5
-        parseLine("");
-        parseLine("4005a3");
-        parseLine("$0x10");
-        parseLine("%rbp");
-        parseLine("(%rax)");
-        parseLine("-0x20(%rbp)");
-        parseLine("0x6007e0(,%rax,8)");
-        parseLine("-0x0(%rax,%rax,1)");
-        parseLine("%cs:0x0(%rax,%rax,1)");
+        parseOneField("");
+        parseOneField("4005a3");
+        parseOneField("$0x10");
+        parseOneField("%rbp");
+        parseOneField("(%rax)");
+        parseOneField("-0x20(%rbp)");
+        parseOneField("0x6007e0(,%rax,8)");
+        parseOneField("-0x0(%rax,%rax,1)");
+        parseOneField("%cs:0x0(%rax,%rax,1)");
+        parseOneLine("  mov    %rbp,%rsp  ");
+        parseOneLine("  mov    %rbp,-0x28(%rsp)  ");
+        parseOneLine("	repz retq ");
+        parseOneLine("	repz retq -0x28(%rsp),(%r12,%rbx,8) ");
+        parseOneLine("	repz retq -0x28(%rsp),(%r12,%rbx,8)  <__libc_csu_init+0x66>  ");
     }
     private static final Map<String, InstructionType> InstructionMap = new HashMap<String, InstructionType>();
 
