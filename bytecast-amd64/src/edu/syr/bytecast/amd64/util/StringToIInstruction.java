@@ -101,6 +101,7 @@ public class StringToIInstruction {
         return ret;
     }
 
+    
     private void parseOneField(List<IOperand> ret, String line) {
         String effExpr = "(?:(?:(\\-?)0x(\\w+))?\\((?:%(\\w+))?(?:,(?:%(\\w+)),(\\d))?\\))";
         String expr = "^(?:(\\w+)|(?:\\$0x(\\w+))|(?:%(\\w+))|" + effExpr + "|(?:%(\\w+):" + effExpr + "))?$";
