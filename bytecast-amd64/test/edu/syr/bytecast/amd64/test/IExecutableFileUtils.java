@@ -132,6 +132,7 @@ public class IExecutableFileUtils {
                     ret.passed = false;
                     sectionError = true;
                     ret.errorInstructionCount++;
+                    System.out.println(Long.toHexString(ps1obj.getmInstructionAddress())+" "+ps1obj.getInstruction().getInstructiontype());
                 } else {
                     ret.passedInstructionCount++;
                 }

@@ -69,7 +69,7 @@ public class AMD64MockGenerator {
                 on=true;
                 continue;
             }
-            if(!on)
+            if(!on || line.contains("\tnop"))
                 continue;
             
             if(line.contains("Disassembly of section"))
@@ -96,7 +96,7 @@ public class AMD64MockGenerator {
         
         while(!dfsqueue.isEmpty()){
             String fn = dfsqueue.remove(dfsqueue.size()-1);
-            System.out.println(fn);
+            //System.out.println(fn);
             List<String> children = new ArrayList<String>();
             List<String> instructions = sections.get(fn);
             for(String in : instructions){

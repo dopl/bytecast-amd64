@@ -8,10 +8,15 @@ import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.test.IExecutableFileUtils;
 import edu.syr.bytecast.amd64.test.IExecutableFileUtils.CompareResult;
 import edu.syr.bytecast.amd64.test.TestBytecastAmd64;
+import edu.syr.bytecast.amd64.util.AMD64MockGenerator;
 import edu.syr.bytecast.interfaces.fsys.ExeObj;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
 import edu.syr.bytecast.test.mockups.MockBytecastFsys;
 import edu.syr.bytecast.util.Paths;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -48,7 +53,7 @@ public class BytecastAmd64Test {
      * Test of buildInstructionObjects method, of class BytecastAmd64.
      */
     @Test
-    public void testBuildInstructionObjects() {
+    public void testBuildInstructionObjects() throws FileNotFoundException, IOException, Exception {
         System.out.println("buildInstructionObjects");
         IBytecastFsys fsys = new MockBytecastFsys();
         Paths.v().setRoot("/home/bytecast/code/bytecast");                  
@@ -59,7 +64,10 @@ public class BytecastAmd64Test {
         }
         
         BytecastAmd64 instance = new BytecastAmd64(fsys, "a.out");
-        IExecutableFile expResult = new TestBytecastAmd64().buildInstructionObjects();
+         Set<String> exclusion = new HashSet<String>();
+         exclusion.add("<_IO_printf>");
+        IExecutableFile expResult = new AMD64MockGenerator(new MockBytecastFsys(), 
+                "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip01Prototype/a.out.static.objdump", "<main>", exclusion).run();
         IExecutableFile result = instance.buildInstructionObjects();
         CompareResult compareSections = IExecutableFileUtils.compareSections(result, expResult);
         System.out.println("TOTAL:" + compareSections.getTotalInstructionCount());

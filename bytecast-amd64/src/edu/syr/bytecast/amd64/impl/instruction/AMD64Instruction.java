@@ -83,9 +83,9 @@ public class AMD64Instruction implements IInstruction {
         if (this.instructionType != other.instructionType) {
             return false;
         }
-        if ((this.opCode == null) ? (other.opCode != null) : !this.opCode.equals(other.opCode)) {
+        /*if ((this.opCode == null) ? (other.opCode != null) : !this.opCode.equals(other.opCode)) {
             return false;
-        }
+        }*/
         if (this.operands != other.operands && (this.operands == null || !this.operands.equals(other.operands))) {
             return false;
         }

@@ -65,7 +65,14 @@ public class StringToIInstruction {
             iput = "MOVZX";
         } else if (iput.equals("MOVS")) {
             iput = "MOVSX";
+        }  else if (iput.equals("CMPL")) {
+            iput = "CMP";
+        }else if (iput.equals("LEAVEQ")) {
+            iput = "LEAVE";
+        }else if (iput.equals("RETQ")) {
+            iput = "RET";
         }
+
         try {
             type = Enum.valueOf(clazz, iput);
             return type;
@@ -78,11 +85,7 @@ public class StringToIInstruction {
         String iput = s.toUpperCase();
         Class<RegisterType> clazz = RegisterType.class;
         RegisterType type;
-        if (iput.equals("MOVZ")) {
-            iput = "MOVZX";
-        } else if (iput.equals("MOVS")) {
-            iput = "MOVSX";
-        }
+        
         try {
             type = Enum.valueOf(clazz, iput);
             return type;
@@ -219,6 +222,8 @@ public class StringToIInstruction {
             //#3 section name
             String g3 = mat.group(3);
             if (g3 != null) {
+                String tmp = m_instructiontype.toUpperCase();
+                if(tmp.equals("CALLQ"))
                 m_sectionname = g3;
             }
         }
