@@ -14,6 +14,7 @@ import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAdd
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryLogicalAddress;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandRegister;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandSectionName;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,10 +109,10 @@ public class StringToIInstruction {
         Matcher mat = regex.matcher(line);
         if (mat.find()) {
             if (mat.group(1) != null && !mat.group(1).isEmpty()) {
-                ret.add(new OperandMemoryEffectiveAddress(null, null, 1, (Long.parseLong(mat.group(1), 16))));
+                ret.add(new OperandMemoryEffectiveAddress(null, null, 1, (getLongVal(mat.group(1)))));
                 return;
             } else if (mat.group(2) != null && !mat.group(2).isEmpty()) {
-                ret.add(new OperandConstant(Long.parseLong(mat.group(2), 16)));
+                ret.add(new OperandConstant(getLongVal(mat.group(2))));
                 return;
             } else if (mat.group(3) != null && !mat.group(3).isEmpty()) {
                 ret.add(new OperandRegister(StringToRegisterType(mat.group(3))));
@@ -122,6 +123,11 @@ public class StringToIInstruction {
                 return;
             }
         }
+    }
+    
+    private long getLongVal(String in){
+        long l = new BigInteger(in, 16).longValue();
+        return l;
     }
 
     private Boolean LogicHelper(Matcher m, List<IOperand> ret) {
@@ -149,9 +155,9 @@ public class StringToIInstruction {
         }
         if (m.group(11) != null && !m.group(11).isEmpty()) {
             if (m.group(10).equals("-")) {
-                offset = Long.parseLong(m.group(11), 16) * (-1);
+                offset = getLongVal(m.group(11)) * (-1);
             } else {
-                offset = Long.parseLong(m.group(11), 16);
+                offset = getLongVal(m.group(11));
             }
             flag = true;
         }
@@ -181,9 +187,9 @@ public class StringToIInstruction {
         }
         if (m.group(5) != null && !m.group(5).isEmpty()) {
             if (m.group(4).equals("-")) {
-                offset = Long.parseLong(m.group(5), 16) * (-1);
+                offset = getLongVal(m.group(5)) * (-1);
             } else {
-                offset = Long.parseLong(m.group(5), 16);
+                offset = getLongVal(m.group(5));
             }
             flag = true;
         }
