@@ -69,7 +69,7 @@ public class StringToIInstruction {
     }
 
     public static void parseOneLine(String line) {
-        String expr = "^\\s*(?:\\w+\\b\\s+)?(\\w+)\\b\\s*?(?:\\s+(\\S+)?)\\s*?(?:\\s+<([^>]+)>)";
+        String expr = "^\\s*(?:\\w+\\b\\s+)?(\\w+)\\b\\s*?(?:\\s+(\\S+)?)?\\s*?(?:\\s+<([^>]+)>)?";
         Pattern regex = Pattern.compile(expr);
         Matcher mat = regex.matcher(line);
         if (mat.find()) {
@@ -104,6 +104,8 @@ public class StringToIInstruction {
         parseOneField("%cs:0x0(%rax,%rax,1)");
         parseOneLine("  mov    %rbp,%rsp  ");
         parseOneLine("  mov    %rbp,-0x28(%rsp)  ");
+        System.out.println("Showing nop");
+        parseOneLine("	nop ");
         parseOneLine("	repz retq ");
         parseOneLine("	repz retq -0x28(%rsp),(%r12,%rbx,8) ");
         parseOneLine("	repz retq -0x28(%rsp),(%r12,%rbx,8)  <__libc_csu_init+0x66>  ");
