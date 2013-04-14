@@ -23,15 +23,17 @@ import edu.syr.bytecast.amd64.api.instruction.IOperand;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AMD64Instruction implements IInstruction {
+public class AMD64Instruction implements IInstructionMutator {
 
   private InstructionType instructionType;
   private String opCode;
   private List<IOperand> operands;
+  private List<Byte> bytes;
 
   public AMD64Instruction(InstructionType instructionType) {
     this.instructionType = instructionType;
     operands = new ArrayList<IOperand>();
+    bytes = new ArrayList<Byte>();
   }
 
   public AMD64Instruction(InstructionType instructionType,List<IOperand> operands) {
@@ -83,13 +85,26 @@ public class AMD64Instruction implements IInstruction {
         if (this.instructionType != other.instructionType) {
             return false;
         }
-        /*if ((this.opCode == null) ? (other.opCode != null) : !this.opCode.equals(other.opCode)) {
-            return false;
-        }*/
         if (this.operands != other.operands && (this.operands == null || !this.operands.equals(other.operands))) {
             return false;
         }
+        if (this.bytes != other.bytes && (this.bytes == null || !this.bytes.equals(other.bytes))) {
+            return false;
+        }
+        
         return true;
+    }
+
+   
+
+    @Override
+    public List<Byte> getBytes() {
+        return bytes;
+    }
+    
+    @Override
+    public void addByte(Byte b){
+        bytes.add(b);
     }
 
  

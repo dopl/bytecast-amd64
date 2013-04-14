@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  *
  * @author bytecast
  */
-public class TestBytecastAmd64 implements IBytecastAMD64{
+public class DepcrecatedMock implements IBytecastAMD64{
 
     @Override
     public IExecutableFile buildInstructionObjects() {
@@ -145,7 +145,7 @@ public class TestBytecastAmd64 implements IBytecastAMD64{
         try {
             fsysObj = new MockBytecastFsys().parse();
         } catch (Exception ex) {
-            Logger.getLogger(TestBytecastAmd64.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DepcrecatedMock.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         IExecutableFile exeFile = new AMD64ExecutableFile(fsysObj.getSegments(),sections, "TEST_EXE_FILE", "ELF", null);

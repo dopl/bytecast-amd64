@@ -8,6 +8,7 @@ import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.api.output.ISection;
 import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionMutator;
 import edu.syr.bytecast.amd64.impl.output.AMD64ExecutableFile;
 import edu.syr.bytecast.amd64.impl.output.AMD64Section;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
@@ -123,9 +124,12 @@ public class AMD64MockGenerator {
         Long mem = Long.parseLong(in.substring(0,in.indexOf(":")).trim(),16);
         String s[] = in.split("\t");
         StringToIInstruction util = new StringToIInstruction();
+        List<Byte> bytes = getInstructionBytes(s[1]);
         
-        IInstruction ins = util.convert(s[s.length-1]);
-        
+        IInstructionMutator ins =(IInstructionMutator) util.convert(s[s.length-1]);
+        for(Byte b: bytes){
+            ins.addByte(b);
+        }
         return new MemoryInstructionPair(mem, ins); 
    }
     
@@ -151,6 +155,17 @@ public class AMD64MockGenerator {
         } catch (IOException ex1) {
             Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex1);
         }
+    }
+
+    private List<Byte> getInstructionBytes(String bytesstr) {
+        bytesstr = bytesstr.trim();
+        List<Byte> bytes = new ArrayList<Byte>();
+        String split[] = bytesstr.split(" ");
+        for(int i=0;i<split.length;++i){
+            int itngr = Integer.parseInt(split[i], 16);
+            bytes.add((byte)itngr);
+        }
+        return bytes;
     }
 
     

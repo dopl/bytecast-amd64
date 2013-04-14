@@ -30,6 +30,7 @@ import edu.syr.bytecast.amd64.impl.decoder.DecoderFactory;
 import edu.syr.bytecast.amd64.impl.dictionary.AMD64Dictionary;
 import edu.syr.bytecast.amd64.impl.dictionary.tables.primaryopcode.OpCodeExtensionGroup;
 import edu.syr.bytecast.amd64.impl.instruction.IInstructionContext;
+import edu.syr.bytecast.amd64.impl.instruction.IInstructionMutator;
 import edu.syr.bytecast.amd64.impl.instruction.InstructionContextImpl;
 import edu.syr.bytecast.amd64.impl.instruction.operand.OperandMemoryEffectiveAddress;
 import edu.syr.bytecast.amd64.impl.parser.ILegacyPrefixParser;
@@ -64,6 +65,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
         List<MemoryInstructionPair> memToInstrMap = new ArrayList<MemoryInstructionPair>();
         InstructionByteListInputStream istream = new InstructionByteListInputStream(bytes, sectionStartMemeAddress);
         IInstructionContext ctx=null ;
+        int startindex=0;
         
         boolean createNewCtx=true;
         try {
@@ -71,6 +73,7 @@ public class AMD64InstructionLexer implements IInstructionLexer {
             {
                 Byte byt = istream.peek();
                 if(createNewCtx){
+                   startindex=istream.getIndex();
                    ctx = new InstructionContextImpl();
                    createNewCtx = false;
                    istream.updateInstructionAddress();
@@ -79,9 +82,13 @@ public class AMD64InstructionLexer implements IInstructionLexer {
                InstructionType itype = getInstructionIfAvailable(ctx,istream);
                 if(itype!=null)
                 {
-                      
                        IInstructionDecoder instructionDecoder = DecoderFactory.getInstructionDecoder(itype);
-                       IInstruction instruction = instructionDecoder.decode(ctx, istream);
+                       IInstructionMutator instruction = (IInstructionMutator)instructionDecoder.decode(ctx, istream);
+                       int endindex = istream.getIndex();
+                       List<Byte> ibytes = istream.getBytesWithinRange(startindex, endindex);
+                       for(Byte ib:ibytes){
+                           instruction.addByte(ib);
+                       }
                        MemoryInstructionPair pair = new MemoryInstructionPair(istream.getInstructionAddress(), instruction);
                        memToInstrMap.add(pair);
                        createNewCtx = true;

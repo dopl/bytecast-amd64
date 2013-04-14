@@ -1,6 +1,7 @@
 package edu.syr.bytecast.amd64.impl.parser;
 
 import java.io.EOFException;
+import java.util.List;
 
 /**
  * An interface to read instruction bytes. It also support peeking and skipping
@@ -83,4 +84,12 @@ public interface IInstructionByteInputStream {
      * @return the actual number of bytes skipped.
      */
     long skip(long n);
+    
+    /**
+     * Gets a list of bytes from the stream within the specified indices
+     * @param start start index
+     * @param end end index
+     * @return list of bytes
+     */
+    List<Byte> getBytesWithinRange(int start, int end);
 }

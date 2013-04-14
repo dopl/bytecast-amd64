@@ -7,7 +7,7 @@ package edu.syr.bytecast.amd64;
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.test.IExecutableFileUtils;
 import edu.syr.bytecast.amd64.test.IExecutableFileUtils.CompareResult;
-import edu.syr.bytecast.amd64.test.TestBytecastAmd64;
+import edu.syr.bytecast.amd64.test.DepcrecatedMock;
 import edu.syr.bytecast.amd64.util.AMD64MockGenerator;
 import edu.syr.bytecast.interfaces.fsys.ExeObj;
 import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;

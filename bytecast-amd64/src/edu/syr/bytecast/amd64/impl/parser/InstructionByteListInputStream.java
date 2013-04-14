@@ -1,6 +1,7 @@
 package edu.syr.bytecast.amd64.impl.parser;
 
 import java.io.EOFException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -150,5 +151,13 @@ public class InstructionByteListInputStream implements IInstructionByteInputStre
             throw new IndexOutOfBoundsException();
         }
         this.index = index;
+    }
+
+    @Override
+    public List<Byte> getBytesWithinRange(int start, int end) {
+        if (index < 0 || index > list.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        return  list.subList(start, end);
     }
 }
