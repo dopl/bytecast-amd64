@@ -10,6 +10,7 @@ import edu.syr.bytecast.amd64.api.output.ISection;
 import edu.syr.bytecast.amd64.api.output.MemoryInstructionPair;
 import edu.syr.bytecast.amd64.impl.output.AMD64ExecutableFile;
 import edu.syr.bytecast.amd64.impl.output.AMD64Section;
+import edu.syr.bytecast.interfaces.fsys.IBytecastFsys;
 import edu.syr.bytecast.test.mockups.MockBytecastFsys;
 import edu.syr.bytecast.util.Paths;
 import java.io.BufferedReader;
@@ -32,14 +33,14 @@ import javax.print.attribute.Size2DSyntax;
  * @author bytecast
  */
 public class AMD64MockGenerator {
-    private final MockBytecastFsys fsys;
+    private final IBytecastFsys fsys;
     
     private String objdumpFile;
     private final String startmethod;
     private HashMap<String, List<String>> sections;
     private final Set<String> fnexclusionlist;
 
-    public AMD64MockGenerator(MockBytecastFsys fsys, String objdumpFile,String startmethod,Set<String> fnexclusionlist) {
+    public AMD64MockGenerator(IBytecastFsys fsys, String objdumpFile,String startmethod,Set<String> fnexclusionlist) {
         this.fsys = fsys;
         this.objdumpFile = objdumpFile;
         this.startmethod = startmethod;
