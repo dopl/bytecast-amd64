@@ -43,11 +43,11 @@ public class AMD64Instruction implements IInstruction {
   public List<IOperand> getOperands() {
     return this.operands;
   }
-
+/*
   @Override
   public String getOpCode() {
     return this.opCode;
-  }
+  }*/
 
   public void addOperand(IOperand op) {
     operands.add(op);
