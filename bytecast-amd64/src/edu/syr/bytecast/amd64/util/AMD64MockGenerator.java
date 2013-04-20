@@ -4,6 +4,7 @@
  */
 package edu.syr.bytecast.amd64.util;
 
+import edu.syr.bytecast.amd64.api.constants.IBytecastAMD64;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.api.output.ISection;
@@ -48,14 +49,21 @@ public class AMD64MockGenerator {
         this.fnexclusionlist = fnexclusionlist;
     }
     
-    public IExecutableFile run() throws FileNotFoundException, IOException, Exception{
+    public IBytecastAMD64 generate() throws FileNotFoundException, IOException, Exception{
         collectSections(); 
         List<MemoryInstructionPair> ins = getDFSOrderInstructions();
         List<ISection> sections = new ArrayList<ISection>();
         ISection sec = new AMD64Section(ins, ins.get(0).getmInstructionAddress(), true);
         sections.add(sec);
-        IExecutableFile ex = new AMD64ExecutableFile(fsys.parse().getSegments(), sections, objdumpFile, "ELF", null);
-        return ex;
+        final IExecutableFile ex = new AMD64ExecutableFile(fsys.parse().getSegments(), sections, objdumpFile, "ELF", null);
+        IBytecastAMD64 amd64 = new IBytecastAMD64() {
+
+            @Override
+            public IExecutableFile buildInstructionObjects() {
+               return ex;
+            }
+        };
+        return amd64;
     }
 
     private void collectSections() throws FileNotFoundException, IOException {
@@ -148,7 +156,7 @@ public class AMD64MockGenerator {
                 "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip01Prototype/a.out.static.objdump",
                 "<main>",exclusion);
         try {
-            IExecutableFile ex = gen.run();
+            IExecutableFile ex = gen.generate().buildInstructionObjects();
             
         } catch (FileNotFoundException ex1) {
             Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex1);
@@ -168,5 +176,6 @@ public class AMD64MockGenerator {
         return bytes;
     }
 
+    
     
 }

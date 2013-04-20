@@ -68,7 +68,7 @@ public class BytecastAmd64Test {
          Set<String> exclusion = new HashSet<String>();
          exclusion.add("<_IO_printf>");
         IExecutableFile expResult = new AMD64MockGenerator(new MockBytecastFsys(), 
-                "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip01Prototype/a.out.static.objdump", "<main>", exclusion).run();
+                "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip01Prototype/a.out.static.objdump", "<main>", exclusion).generate().buildInstructionObjects();
         IExecutableFile result = instance.buildInstructionObjects();
         CompareResult compareSections = IExecutableFileUtils.compareSections(result, expResult);
         System.out.println("TOTAL:" + compareSections.getTotalInstructionCount());
@@ -98,7 +98,7 @@ public class BytecastAmd64Test {
          Set<String> exclusion = new HashSet<String>();
          exclusion.add("<_IO_printf>");
         IExecutableFile expResult = new AMD64MockGenerator(new MockBytecastFsysPoc3(), 
-                "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip02Prototype/a.out.static.objdump", "<main>", exclusion).run();
+                "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip02Prototype/a.out.static.objdump", "<main>", exclusion).generate().buildInstructionObjects();
         IExecutableFile result = instance.buildInstructionObjects();
         CompareResult compareSections = IExecutableFileUtils.compareSections(result, expResult);
         System.out.println("TOTAL:" + compareSections.getTotalInstructionCount());
