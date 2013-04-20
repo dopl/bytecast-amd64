@@ -4,6 +4,7 @@
  */
 package edu.syr.bytecast.amd64.util;
 
+import edu.syr.bytecast.amd64.api.constants.IBytecastAMD64;
 import edu.syr.bytecast.amd64.api.instruction.IInstruction;
 import edu.syr.bytecast.amd64.api.output.IExecutableFile;
 import edu.syr.bytecast.amd64.api.output.ISection;
@@ -33,7 +34,7 @@ import javax.print.attribute.Size2DSyntax;
  *
  * @author bytecast
  */
-public class AMD64MockGenerator {
+public class AMD64MockGenerator implements IBytecastAMD64{
     private final IBytecastFsys fsys;
     
     private String objdumpFile;
@@ -48,7 +49,7 @@ public class AMD64MockGenerator {
         this.fnexclusionlist = fnexclusionlist;
     }
     
-    public IExecutableFile run() throws FileNotFoundException, IOException, Exception{
+    private IExecutableFile run() throws FileNotFoundException, IOException, Exception{
         collectSections(); 
         List<MemoryInstructionPair> ins = getDFSOrderInstructions();
         List<ISection> sections = new ArrayList<ISection>();
@@ -166,6 +167,20 @@ public class AMD64MockGenerator {
             bytes.add((byte)itngr);
         }
         return bytes;
+    }
+
+    @Override
+    public IExecutableFile buildInstructionObjects() {
+        try {
+            return run();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     
