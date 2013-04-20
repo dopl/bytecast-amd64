@@ -134,7 +134,7 @@ public class DepcrecatedMock implements IBytecastAMD64{
             memtoins.add(new MemoryInstructionPair((long)0x400503, instruction("89",InstructionType.MOV    ,new OperandRegister(RegisterType.EAX)                                ,new OperandRegister(RegisterType.EDX))));
             memtoins.add(new MemoryInstructionPair((long)0x400505, instruction("C1",InstructionType.SHR    ,new OperandConstant((long)0x1f)                                       ,new OperandRegister(RegisterType.EDX))));
    /*check*/memtoins.add(new MemoryInstructionPair((long)0x400508, instruction("8D",InstructionType.LEA    ,new OperandMemoryEffectiveAddress(RegisterType.RDX, RegisterType.RAX, 1, 0x0)   ,new OperandRegister(RegisterType.EAX))));
-            memtoins.add(new MemoryInstructionPair((long)0x40050b, instruction("D1",InstructionType.SAR    ,new OperandRegister(RegisterType.EDX)                                 ,null)));
+            memtoins.add(new MemoryInstructionPair((long)0x40050b, instruction("D1",InstructionType.SAR    ,new OperandRegister(RegisterType.EAX)                                 ,null)));
             memtoins.add(new MemoryInstructionPair((long)0x40050d, instruction("C9",InstructionType.LEAVEQ ,null                                                                 ,null)));
             memtoins.add(new MemoryInstructionPair((long)0x40050e, instruction("c3",InstructionType.RETQ   ,null                                                                 ,null)));
         //<halve> ENDS    
