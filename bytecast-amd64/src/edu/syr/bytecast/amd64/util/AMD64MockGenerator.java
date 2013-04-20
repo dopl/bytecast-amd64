@@ -34,7 +34,7 @@ import javax.print.attribute.Size2DSyntax;
  *
  * @author bytecast
  */
-public class AMD64MockGenerator implements IBytecastAMD64{
+public class AMD64MockGenerator {
     private final IBytecastFsys fsys;
     
     private String objdumpFile;
@@ -49,14 +49,21 @@ public class AMD64MockGenerator implements IBytecastAMD64{
         this.fnexclusionlist = fnexclusionlist;
     }
     
-    private IExecutableFile run() throws FileNotFoundException, IOException, Exception{
+    public IBytecastAMD64 generate() throws FileNotFoundException, IOException, Exception{
         collectSections(); 
         List<MemoryInstructionPair> ins = getDFSOrderInstructions();
         List<ISection> sections = new ArrayList<ISection>();
         ISection sec = new AMD64Section(ins, ins.get(0).getmInstructionAddress(), true);
         sections.add(sec);
-        IExecutableFile ex = new AMD64ExecutableFile(fsys.parse().getSegments(), sections, objdumpFile, "ELF", null);
-        return ex;
+        final IExecutableFile ex = new AMD64ExecutableFile(fsys.parse().getSegments(), sections, objdumpFile, "ELF", null);
+        IBytecastAMD64 amd64 = new IBytecastAMD64() {
+
+            @Override
+            public IExecutableFile buildInstructionObjects() {
+               return ex;
+            }
+        };
+        return amd64;
     }
 
     private void collectSections() throws FileNotFoundException, IOException {
@@ -149,7 +156,7 @@ public class AMD64MockGenerator implements IBytecastAMD64{
                 "/home/bytecast/code/bytecast/bytecast-documents/AsciiManip01Prototype/a.out.static.objdump",
                 "<main>",exclusion);
         try {
-            IExecutableFile ex = gen.run();
+            IExecutableFile ex = gen.generate().buildInstructionObjects();
             
         } catch (FileNotFoundException ex1) {
             Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex1);
@@ -169,19 +176,6 @@ public class AMD64MockGenerator implements IBytecastAMD64{
         return bytes;
     }
 
-    @Override
-    public IExecutableFile buildInstructionObjects() {
-        try {
-            return run();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(AMD64MockGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
+    
     
 }
