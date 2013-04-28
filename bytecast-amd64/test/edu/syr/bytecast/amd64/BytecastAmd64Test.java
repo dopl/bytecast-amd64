@@ -75,7 +75,7 @@ public class BytecastAmd64Test {
         System.out.println("PASSED:" + compareSections.getPassedInstructionCount());
         System.out.println("FAILED:" + compareSections.getErrorInstructionCount());
         
-        assertEquals(expResult, result);
+        assertEquals(0, compareSections.getErrorInstructionCount());
         // TODO review the generated test code and remove the default call to fail.
         
     }
@@ -105,7 +105,7 @@ public class BytecastAmd64Test {
         System.out.println("PASSED:" + compareSections.getPassedInstructionCount());
         System.out.println("FAILED:" + compareSections.getErrorInstructionCount());
         
-        assertEquals(expResult, result);
+        assertEquals(0, compareSections.getErrorInstructionCount());
         // TODO review the generated test code and remove the default call to fail.
         
     }
